@@ -69,10 +69,13 @@
     <!-- Flatpickr Date Picker -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <style>
         [x-cloak] { display: none !important; }
         body { font-family: 'Poppins', sans-serif; background-color: #f4f0e6; color: #06281e; }
+        .swal2-popup { font-family: 'Poppins', sans-serif !important; border-radius: 1.5rem !important; }
     </style>
 </head>
 <body class="flex flex-col min-h-full font-sans antialiased" x-data="cartApp()">

@@ -234,8 +234,23 @@
                 try {
                     let res = await axios.post('{{ route("checkout.process") }}', formData);
                     if (res.data.success) {
-                        this.$root.__x.$data.showToast(res.data.message);
-                        window.location.href = res.data.redirect_url;
+                        Swal.fire({
+                            title: 'Order Placed Successfully! 🎉',
+                            html: `<p style="font-size:14px; margin-top:8px;">Order Reference: <strong style="color:#e88d36;">${res.data.order_number || ''}</strong></p><p style="font-size:12px; color:#555; margin-top:6px;">Thank you for choosing E-Bike 4 U! Your order has been placed.</p>`,
+                            icon: 'success',
+                            confirmButtonText: 'Return to Homepage',
+                            confirmButtonColor: '#06281e',
+                            background: '#ffffff',
+                            color: '#06281e',
+                            customClass: {
+                                popup: 'rounded-3xl shadow-2xl p-6',
+                                confirmButton: 'px-8 py-3.5 rounded-2xl font-black text-xs'
+                            },
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                        }).then((result) => {
+                            window.location.href = '{{ route("home") }}';
+                        });
                     } else {
                         this.submitting = false;
                         this.$root.__x.$data.showToast(res.data.message || 'Checkout failed.', true);
