@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-[#f4f0e6]">
+<html lang="en" class="h-full bg-slate-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'E-Bike 4 U | UK Premium E-Bike Rental, Sales & Cycling Accessories')</title>
+    <title>@yield('title', 'Eb4u | UK Premium E-Bike Rental, Sales & Accessories')</title>
 
     <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,40 +21,25 @@
                         sans: ['Poppins', 'sans-serif'],
                     },
                     colors: {
+                        brandOrange: {
+                            400: '#ff621a',
+                            500: '#f24e00',
+                            600: '#d64300',
+                            700: '#b53700',
+                        },
+                        darkBlack: {
+                            800: '#1f1f1f',
+                            900: '#121212',
+                            950: '#0a0a0a',
+                        },
                         brand: {
-                            50: '#faf8f2',
-                            100: '#f4f0e6',
-                            200: '#e8dfcc',
-                            500: '#e88d36',
-                            600: '#06281e',
-                            700: '#0a3d2e',
-                            800: '#041d16',
-                            900: '#03140e',
-                        },
-                        forest: {
-                            50: '#eef8f5',
-                            100: '#d7efea',
-                            700: '#145c47',
-                            800: '#0e4535',
-                            900: '#06281e',
-                            950: '#031913',
-                        },
-                        cream: {
-                            50: '#faf8f2',
-                            100: '#f4f0e6',
-                            200: '#e8dfcc',
-                            300: '#dbcbb0',
-                        },
-                        amberAcc: {
-                            400: '#fb923c',
-                            500: '#e88d36',
-                            600: '#d97706',
-                            700: '#b45309',
-                        },
-                        emeraldAcc: {
-                            500: '#10b981',
-                            600: '#00a86b',
-                            700: '#047857',
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            500: '#f24e00',
+                            600: '#0a0a0a',
+                            700: '#121212',
+                            800: '#1f1f1f',
+                            900: '#0a0a0a',
                         }
                     }
                 }
@@ -74,23 +59,23 @@
     
     <style>
         [x-cloak] { display: none !important; }
-        body { font-family: 'Poppins', sans-serif; background-color: #f4f0e6; color: #06281e; }
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; color: #0f172a; }
         .swal2-popup { font-family: 'Poppins', sans-serif !important; border-radius: 1.5rem !important; }
     </style>
 </head>
 <body class="flex flex-col min-h-full font-sans antialiased" x-data="cartApp()">
 
-    <!-- Top Announcement Bar -->
-    <div class="bg-forest-950 text-cream-100 text-xs py-2 px-4 flex justify-between items-center z-50">
-        <div class="container mx-auto flex justify-between items-center">
+    <!-- Top Announcement Bar (Black & Orange) -->
+    <div class="bg-darkBlack-950 text-white text-xs py-2 px-6 md:px-12 flex justify-between items-center z-50 border-b border-darkBlack-800">
+        <div class="container mx-auto flex justify-between items-center px-2 md:px-6">
             <div class="flex items-center space-x-4">
-                <span><i class="fa-solid fa-truck-fast text-amberAcc-500 mr-1"></i> Free UK Delivery on orders over £500</span>
-                <span class="hidden md:inline">|</span>
-                <span class="hidden md:inline"><i class="fa-solid fa-shield-halved text-amberAcc-500 mr-1"></i> Official UK Warranty & Certified Battery Safety</span>
+                <span><i class="fa-solid fa-truck-fast text-brandOrange-500 mr-1"></i> Free UK Delivery on orders over £500</span>
+                <span class="hidden md:inline text-slate-700">|</span>
+                <span class="hidden md:inline"><i class="fa-solid fa-shield-halved text-brandOrange-500 mr-1"></i> Official UK Warranty & Battery Safety</span>
             </div>
             <div class="flex items-center space-x-4">
-                <span class="font-semibold text-amberAcc-500"><i class="fa-solid fa-sterling-sign mr-1"></i> GBP (£)</span>
-                <span><i class="fa-solid fa-phone text-amberAcc-500 mr-1"></i> +44 (0) 20 7946 0912</span>
+                <span class="font-bold text-brandOrange-500"><i class="fa-solid fa-sterling-sign mr-1"></i> GBP (£)</span>
+                <span><i class="fa-solid fa-phone text-brandOrange-500 mr-1"></i> +44 (0) 20 7946 0912</span>
             </div>
         </div>
     </div>
@@ -98,8 +83,8 @@
     <!-- Main Navigation Header -->
     @include('layouts.partials.header')
 
-    <!-- Flash Messages Container (SweetAlert2 fallback) -->
-    <div class="container mx-auto px-4 mt-4">
+    <!-- Flash Messages Container -->
+    <div class="container mx-auto px-6 md:px-12 mt-4">
         @if(session('success'))
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
@@ -107,7 +92,7 @@
                         icon: 'success',
                         title: 'Success!',
                         text: @json(session('success')),
-                        confirmButtonColor: '#06281e',
+                        confirmButtonColor: '#f24e00',
                         timer: 3500
                     });
                 });
@@ -120,7 +105,7 @@
                         icon: 'error',
                         title: 'Notice',
                         text: @json(session('error')),
-                        confirmButtonColor: '#06281e'
+                        confirmButtonColor: '#f24e00'
                     });
                 });
             </script>
@@ -161,7 +146,7 @@
                         timer: 3000,
                         timerProgressBar: true,
                         background: '#ffffff',
-                        color: '#06281e',
+                        color: '#0f172a',
                     });
                 },
                 async fetchCart() {
@@ -213,8 +198,8 @@
                         text: 'Remove this item from your basket?',
                         icon: 'warning',
                         showCancelButton: true,
-                        confirmButtonColor: '#e88d36',
-                        cancelButtonColor: '#06281e',
+                        confirmButtonColor: '#f24e00',
+                        cancelButtonColor: '#121212',
                         confirmButtonText: 'Yes, remove',
                         cancelButtonText: 'Cancel'
                     });
