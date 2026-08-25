@@ -40,10 +40,6 @@ Route::post('/cart/update/{id}', [CartController::class, 'updateQuantity'])->nam
 Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/coupon', [CartController::class, 'applyCoupon'])->name('cart.coupon');
 
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
-Route::get('/checkout/confirmation/{orderNumber}', [CheckoutController::class, 'confirmation'])->name('checkout.confirmation');
-
 Route::get('/faqs', [CmsController::class, 'faqs'])->name('cms.faqs');
 Route::get('/contact', [CmsController::class, 'contact'])->name('cms.contact');
 Route::post('/contact', [CmsController::class, 'submitContact'])->name('cms.contact.submit');
@@ -51,7 +47,18 @@ Route::get('/page/{slug}', [CmsController::class, 'showPage'])->name('cms.page')
 
 /*
 |--------------------------------------------------------------------------
-| Auth Routes
+| Protected Checkout Routes (Requires Auth)
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/checkout/confirmation/{orderNumber}', [CheckoutController::class, 'confirmation'])->name('checkout.confirmation');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Auth Routes (Common Single Login for Admin & Customer)
 |--------------------------------------------------------------------------
 */
 Route::middleware('guest')->group(function () {

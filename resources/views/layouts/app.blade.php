@@ -98,25 +98,32 @@
     <!-- Main Navigation Header -->
     @include('layouts.partials.header')
 
-    <!-- Flash Messages Container -->
+    <!-- Flash Messages Container (SweetAlert2 fallback) -->
     <div class="container mx-auto px-4 mt-4">
         @if(session('success'))
-            <div class="bg-emerald-50 border-l-4 border-emeraldAcc-600 text-forest-900 p-4 rounded-xl shadow-sm mb-4 flex justify-between items-center">
-                <div class="flex items-center">
-                    <i class="fa-solid fa-circle-check text-emeraldAcc-600 text-xl mr-3"></i>
-                    <span class="text-xs font-bold">{{ session('success') }}</span>
-                </div>
-                <button onclick="this.parentElement.remove()" class="text-forest-700">&times;</button>
-            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: @json(session('success')),
+                        confirmButtonColor: '#06281e',
+                        timer: 3500
+                    });
+                });
+            </script>
         @endif
         @if(session('error'))
-            <div class="bg-rose-50 border-l-4 border-rose-500 text-rose-800 p-4 rounded-xl shadow-sm mb-4 flex justify-between items-center">
-                <div class="flex items-center">
-                    <i class="fa-solid fa-circle-exclamation text-rose-600 text-xl mr-3"></i>
-                    <span class="text-xs font-bold">{{ session('error') }}</span>
-                </div>
-                <button onclick="this.parentElement.remove()" class="text-rose-600">&times;</button>
-            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Notice',
+                        text: @json(session('error')),
+                        confirmButtonColor: '#06281e'
+                    });
+                });
+            </script>
         @endif
     </div>
 
@@ -127,13 +134,6 @@
 
     <!-- Slide-over Mini Cart Drawer -->
     @include('layouts.partials.cart_drawer')
-
-    <!-- Toast Notification Banner -->
-    <div x-show="toast.show" x-transition x-cloak
-         class="fixed bottom-5 right-5 z-50 bg-forest-900 text-cream-50 px-5 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 border border-amberAcc-500">
-        <i class="fa-solid fa-circle-info text-amberAcc-500 text-lg" :class="toast.isError ? 'text-rose-400 fa-circle-xmark' : 'text-amberAcc-500 fa-circle-check'"></i>
-        <span x-text="toast.message" class="text-xs font-bold"></span>
-    </div>
 
     <!-- Footer -->
     @include('layouts.partials.footer')
@@ -147,16 +147,22 @@
                 subtotal: '0.00',
                 tax: '0.00',
                 total: '0.00',
-                toast: { show: false, message: '', isError: false },
 
                 init() {
                     this.fetchCart();
                 },
                 showToast(msg, isErr = false) {
-                    this.toast.message = msg;
-                    this.toast.isError = isErr;
-                    this.toast.show = true;
-                    setTimeout(() => { this.toast.show = false; }, 4000);
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: isErr ? 'error' : 'success',
+                        title: msg,
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        background: '#ffffff',
+                        color: '#06281e',
+                    });
                 },
                 async fetchCart() {
                     try {
@@ -202,14 +208,27 @@
                     }
                 },
                 async removeItem(itemId) {
-                    try {
-                        let res = await axios.delete(`/cart/remove/${itemId}`);
-                        if (res.data.success) {
-                            this.showToast(res.data.message);
-                            this.fetchCart();
+                    let confirmRes = await Swal.fire({
+                        title: 'Remove item?',
+                        text: 'Remove this item from your basket?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#e88d36',
+                        cancelButtonColor: '#06281e',
+                        confirmButtonText: 'Yes, remove',
+                        cancelButtonText: 'Cancel'
+                    });
+
+                    if (confirmRes.isConfirmed) {
+                        try {
+                            let res = await axios.delete(`/cart/remove/${itemId}`);
+                            if (res.data.success) {
+                                this.showToast(res.data.message);
+                                this.fetchCart();
+                            }
+                        } catch (e) {
+                            this.showToast('Failed to remove item.', true);
                         }
-                    } catch (e) {
-                        this.showToast('Failed to remove item.', true);
                     }
                 }
             }));

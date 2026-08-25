@@ -20,15 +20,18 @@
                 <div class="bg-white p-4 rounded-3xl border border-cream-200 shadow-sm flex justify-between text-xs font-black">
                     <div :class="step >= 1 ? 'text-forest-900' : 'text-slate-400'" class="flex items-center space-x-1.5">
                         <span class="w-6 h-6 rounded-full flex items-center justify-center font-black" :class="step >= 1 ? 'bg-amberAcc-500 text-forest-950' : 'bg-slate-200 text-slate-500'">1</span>
-                        <span>Customer Info</span>
+                        <span class="hidden sm:inline">Customer Info</span>
+                        <span class="sm:hidden">Customer</span>
                     </div>
                     <div :class="step >= 2 ? 'text-forest-900' : 'text-slate-400'" class="flex items-center space-x-1.5">
                         <span class="w-6 h-6 rounded-full flex items-center justify-center font-black" :class="step >= 2 ? 'bg-amberAcc-500 text-forest-950' : 'bg-slate-200 text-slate-500'">2</span>
-                        <span>Fulfillment & Address</span>
+                        <span class="hidden sm:inline">Fulfillment & Address</span>
+                        <span class="sm:hidden">Shipping</span>
                     </div>
                     <div :class="step >= 3 ? 'text-forest-900' : 'text-slate-400'" class="flex items-center space-x-1.5">
                         <span class="w-6 h-6 rounded-full flex items-center justify-center font-black" :class="step >= 3 ? 'bg-amberAcc-500 text-forest-950' : 'bg-slate-200 text-slate-500'">3</span>
-                        <span>Payment & Place Order</span>
+                        <span class="hidden sm:inline">Payment & Place Order</span>
+                        <span class="sm:hidden">Payment</span>
                     </div>
                 </div>
 
@@ -52,7 +55,7 @@
                     </div>
 
                     <div class="pt-4 flex justify-end">
-                        <button type="button" @click="step = 2" class="py-3.5 px-7 bg-forest-900 hover:bg-forest-800 text-white text-xs font-black rounded-2xl shadow-lg transition-all">
+                        <button type="button" @click="step = 2" class="w-full sm:w-auto py-3.5 px-7 bg-forest-900 hover:bg-forest-800 text-white text-xs font-black rounded-2xl shadow-lg transition-all text-center">
                             Next: Delivery & Address <i class="fa-solid fa-arrow-right ml-1"></i>
                         </button>
                     </div>
@@ -64,7 +67,7 @@
 
                     <div class="space-y-3">
                         <label class="block text-xs font-black text-forest-900 uppercase">Select Fulfillment Mode</label>
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <label class="border p-4 rounded-2xl cursor-pointer flex items-center space-x-3 transition-colors" :class="fulfillment === 'delivery' ? 'border-amberAcc-500 bg-cream-100/80' : 'border-slate-200'">
                                 <input type="radio" name="fulfillment_type" value="delivery" x-model="fulfillment" class="text-amberAcc-600">
                                 <div>
@@ -99,9 +102,9 @@
                         </div>
                     </div>
 
-                    <div class="pt-4 flex justify-between">
-                        <button type="button" @click="step = 1" class="py-3 px-6 bg-slate-200 hover:bg-slate-300 text-slate-900 font-bold text-xs rounded-xl border border-slate-300">Back</button>
-                        <button type="button" @click="step = 3" class="py-3.5 px-7 bg-forest-900 hover:bg-forest-800 text-white text-xs font-black rounded-2xl shadow-lg transition-all">Next: Payment <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                    <div class="pt-4 flex flex-col-reverse sm:flex-row gap-3 justify-between items-stretch sm:items-center">
+                        <button type="button" @click="step = 1" class="w-full sm:w-auto py-3.5 px-6 bg-slate-200 hover:bg-slate-300 text-slate-900 font-bold text-xs rounded-2xl border border-slate-300 text-center">Back</button>
+                        <button type="button" @click="step = 3" class="w-full sm:w-auto py-3.5 px-7 bg-forest-900 hover:bg-forest-800 text-white text-xs font-black rounded-2xl shadow-lg transition-all text-center">Next: Payment <i class="fa-solid fa-arrow-right ml-1"></i></button>
                     </div>
                 </div>
 
@@ -115,7 +118,7 @@
                     <!-- Advance vs Full Payment Toggle -->
                     <div class="space-y-3">
                         <label class="block text-xs font-black text-forest-900 uppercase">Payment Plan</label>
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <label class="border p-4 rounded-2xl cursor-pointer flex items-center space-x-3 transition-colors" :class="paymentType === 'advance' ? 'border-amberAcc-500 bg-cream-100/80' : 'border-slate-200'">
                                 <input type="radio" name="payment_type" value="advance" x-model="paymentType" class="text-amberAcc-600">
                                 <div>
@@ -159,9 +162,10 @@
                         </div>
                     </div>
 
-                    <div class="pt-4 flex justify-between">
-                        <button type="button" @click="step = 2" class="py-3 px-6 bg-slate-200 hover:bg-slate-300 text-slate-900 font-bold text-xs rounded-xl border border-slate-300">Back</button>
-                        <button type="submit" :disabled="submitting" class="py-4 px-8 bg-amberAcc-500 hover:bg-amberAcc-400 text-forest-950 text-xs font-black rounded-2xl shadow-xl transition-all uppercase tracking-wider">
+                    <!-- Responsive Action Buttons Matching Screenshot Request -->
+                    <div class="pt-4 flex flex-col-reverse sm:flex-row gap-3 justify-between items-stretch sm:items-center">
+                        <button type="button" @click="step = 2" class="w-full sm:w-auto py-3.5 px-6 bg-slate-200 hover:bg-slate-300 text-slate-900 font-bold text-xs rounded-2xl border border-slate-300 text-center">Back</button>
+                        <button type="submit" :disabled="submitting" class="w-full sm:w-auto flex-1 py-3.5 px-6 bg-amberAcc-500 hover:bg-amberAcc-400 text-forest-950 text-xs font-black rounded-2xl shadow-xl transition-all uppercase tracking-wider text-center flex items-center justify-center">
                             <span x-show="!submitting"><i class="fa-solid fa-lock mr-2"></i> Confirm & Authorize Payment</span>
                             <span x-show="submitting"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Processing Order...</span>
                         </button>
@@ -253,12 +257,22 @@
                         });
                     } else {
                         this.submitting = false;
-                        this.$root.__x.$data.showToast(res.data.message || 'Checkout failed.', true);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Checkout Error',
+                            text: res.data.message || 'Checkout failed.',
+                            confirmButtonColor: '#06281e'
+                        });
                     }
                 } catch (e) {
                     this.submitting = false;
                     let msg = e.response?.data?.message || 'Checkout failed. Please try again.';
-                    this.$root.__x.$data.showToast(msg, true);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Checkout Error',
+                        text: msg,
+                        confirmButtonColor: '#06281e'
+                    });
                 }
             }
         }
