@@ -3,18 +3,26 @@
 @section('title', 'Catalog & E-Bike Rental | E-Bike 4 U')
 
 @section('content')
-<div class="bg-forest-900 text-white py-12 border-b border-forest-800">
+<div class="bg-forest-900 text-white py-8 md:py-12 border-b border-forest-800">
     <div class="container mx-auto px-4">
-        <h1 class="text-3xl font-black text-white">E-Bikes & Accessories Catalog</h1>
+        <h1 class="text-2xl md:text-3xl font-black text-white">E-Bikes & Accessories Catalog</h1>
         <p class="text-xs text-cream-200/80 mt-1">Browse British certified electric bikes for sale, flexible rentals & top-rated cycling gear.</p>
     </div>
 </div>
 
-<div class="container mx-auto px-4 py-10" x-data="catalogApp()">
-    <div class="flex flex-col lg:flex-row gap-8">
+<div class="container mx-auto px-4 py-6 md:py-10" x-data="catalogApp()">
+    <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
         
-        <!-- Filter Sidebar matching reference image design with warm beige & dark green typography -->
-        <div class="w-full lg:w-64 flex-shrink-0 bg-white p-6 rounded-3xl border border-cream-200 shadow-sm h-fit">
+        <!-- Mobile Filter Toggle Button -->
+        <div class="lg:hidden">
+            <button @click="mobileFilterOpen = !mobileFilterOpen" class="w-full py-3 px-4 bg-white border border-cream-200 rounded-2xl font-black text-xs text-forest-900 flex justify-between items-center shadow-xs">
+                <span><i class="fa-solid fa-sliders text-amberAcc-600 mr-2"></i> Filter Products</span>
+                <i class="fa-solid" :class="mobileFilterOpen ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+            </button>
+        </div>
+
+        <!-- Filter Sidebar -->
+        <div x-show="mobileFilterOpen || isDesktop" x-cloak class="w-full lg:w-64 flex-shrink-0 bg-white p-5 md:p-6 rounded-3xl border border-cream-200 shadow-sm h-fit">
             <div class="flex justify-between items-center mb-6 pb-3 border-b border-cream-100">
                 <h3 class="text-xs font-black text-forest-900 uppercase tracking-wider"><i class="fa-solid fa-sliders text-amberAcc-600 mr-2"></i> Filters</h3>
                 <button @click="resetFilters()" class="text-[11px] font-bold text-slate-400 hover:text-amberAcc-600">Reset All</button>
@@ -47,7 +55,7 @@
                 <!-- Categories List -->
                 <div>
                     <label class="block text-xs font-black text-forest-900 uppercase tracking-wider mb-2">Categories</label>
-                    <select name="category" class="w-full text-xs bg-cream-100/70 border border-cream-200 rounded-xl p-2.5 font-bold focus:ring-2 focus:ring-amberAcc-500">
+                    <select name="category" class="w-full text-xs bg-cream-100/70 border border-cream-200 rounded-xl p-2.5 font-bold focus:ring-2 focus:ring-amberAcc-500 text-forest-900">
                         <option value="">All Categories</option>
                         @foreach($categories as $cat)
                             <option value="{{ $cat->slug }}" {{ request('category') == $cat->slug ? 'selected' : '' }}>{{ $cat->name }}</option>
@@ -58,7 +66,7 @@
                 <!-- Brands List -->
                 <div>
                     <label class="block text-xs font-black text-forest-900 uppercase tracking-wider mb-2">Brands</label>
-                    <select name="brand" class="w-full text-xs bg-cream-100/70 border border-cream-200 rounded-xl p-2.5 font-bold focus:ring-2 focus:ring-amberAcc-500">
+                    <select name="brand" class="w-full text-xs bg-cream-100/70 border border-cream-200 rounded-xl p-2.5 font-bold focus:ring-2 focus:ring-amberAcc-500 text-forest-900">
                         <option value="">All Brands</option>
                         @foreach($brands as $b)
                             <option value="{{ $b->slug }}" {{ request('brand') == $b->slug ? 'selected' : '' }}>{{ $b->name }}</option>
@@ -70,8 +78,8 @@
                 <div>
                     <label class="block text-xs font-black text-forest-900 uppercase tracking-wider mb-2">Price Range (£)</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="Min £" class="text-xs bg-cream-100/70 border border-cream-200 rounded-xl p-2 font-bold">
-                        <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="Max £" class="text-xs bg-cream-100/70 border border-cream-200 rounded-xl p-2 font-bold">
+                        <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="Min £" class="text-xs bg-cream-100/70 border border-cream-200 rounded-xl p-2 font-bold text-forest-900">
+                        <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="Max £" class="text-xs bg-cream-100/70 border border-cream-200 rounded-xl p-2 font-bold text-forest-900">
                     </div>
                 </div>
             </form>
@@ -79,14 +87,14 @@
 
         <!-- Catalog Product Grid & Sort -->
         <div class="flex-grow">
-            <div class="flex flex-col sm:flex-row justify-between items-center mb-6 bg-white p-4 rounded-3xl border border-cream-200 shadow-xs">
-                <span class="text-xs text-slate-600 font-bold mb-2 sm:mb-0">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-6 bg-white p-4 rounded-3xl border border-cream-200 shadow-xs gap-3">
+                <span class="text-xs text-slate-600 font-bold">
                     Showing <strong class="text-forest-900" x-text="count"></strong> items
                 </span>
 
-                <div class="flex items-center space-x-3 text-xs">
+                <div class="flex items-center space-x-3 text-xs w-full sm:w-auto justify-between sm:justify-end">
                     <span class="text-slate-600 font-bold">Sort By:</span>
-                    <select @change="filterProducts()" form="filterForm" name="sort" class="bg-cream-100/70 border border-cream-200 rounded-xl p-2 font-bold focus:ring-2 focus:ring-amberAcc-500">
+                    <select @change="filterProducts()" form="filterForm" name="sort" class="bg-cream-100/70 border border-cream-200 rounded-xl p-2 font-bold focus:ring-2 focus:ring-amberAcc-500 text-forest-900">
                         <option value="latest">Newest Arrivals</option>
                         <option value="price_asc">Price: Low to High</option>
                         <option value="price_desc">Price: High to Low</option>
@@ -112,6 +120,13 @@
     function catalogApp() {
         return {
             count: {{ $products->total() }},
+            mobileFilterOpen: false,
+            isDesktop: window.innerWidth >= 1024,
+            init() {
+                window.addEventListener('resize', () => {
+                    this.isDesktop = window.innerWidth >= 1024;
+                });
+            },
             async filterProducts() {
                 let form = document.getElementById('filterForm');
                 let formData = new FormData(form);
