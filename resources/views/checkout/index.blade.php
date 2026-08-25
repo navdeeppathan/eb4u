@@ -39,15 +39,15 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
-                            <input type="text" name="customer_name" value="{{ $user->name ?? '' }}" required class="w-full text-xs bg-cream-100/60 border border-cream-200 rounded-xl p-3 font-semibold text-slate-900 focus:ring-2 focus:ring-amberAcc-500">
+                            <input type="text" name="customer_name" value="{{ $user->name ?? 'James Harrison' }}" class="w-full text-xs bg-cream-100/60 border border-cream-200 rounded-xl p-3 font-semibold text-slate-900 focus:ring-2 focus:ring-amberAcc-500">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
-                            <input type="email" name="customer_email" value="{{ $user->email ?? '' }}" required class="w-full text-xs bg-cream-100/60 border border-cream-200 rounded-xl p-3 font-semibold text-slate-900 focus:ring-2 focus:ring-amberAcc-500">
+                            <input type="email" name="customer_email" value="{{ $user->email ?? 'james@example.co.uk' }}" class="w-full text-xs bg-cream-100/60 border border-cream-200 rounded-xl p-3 font-semibold text-slate-900 focus:ring-2 focus:ring-amberAcc-500">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Phone (for delivery updates)</label>
-                            <input type="text" name="customer_phone" value="{{ $user->phone ?? '+44 ' }}" required class="w-full text-xs bg-cream-100/60 border border-cream-200 rounded-xl p-3 font-semibold text-slate-900 focus:ring-2 focus:ring-amberAcc-500">
+                            <input type="text" name="customer_phone" value="{{ $user->phone ?? '+44 7700 900077' }}" class="w-full text-xs bg-cream-100/60 border border-cream-200 rounded-xl p-3 font-semibold text-slate-900 focus:ring-2 focus:ring-amberAcc-500">
                         </div>
                     </div>
 
@@ -107,7 +107,10 @@
 
                 <!-- Step 3: Payment & Order Finalization -->
                 <div x-show="step === 3" class="bg-white p-6 rounded-3xl border border-cream-200 shadow-sm space-y-6">
-                    <h3 class="text-sm font-black text-forest-900 uppercase tracking-wider pb-3 border-b border-cream-200">Step 3: Payment Options & Card Entry</h3>
+                    <div class="flex justify-between items-center pb-3 border-b border-cream-200">
+                        <h3 class="text-sm font-black text-forest-900 uppercase tracking-wider">Step 3: Payment Options & Place Order</h3>
+                        <span class="text-xs font-black text-emeraldAcc-600 bg-emerald-50 px-2.5 py-1 rounded-full"><i class="fa-solid fa-shield-check"></i> Instant Approval Mode</span>
+                    </div>
 
                     <!-- Advance vs Full Payment Toggle -->
                     <div class="space-y-3">
@@ -138,20 +141,20 @@
                         
                         <div>
                             <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">Cardholder Name</label>
-                            <input type="text" name="card_holder" value="James Harrison" required class="w-full text-xs bg-white border border-cream-200 rounded-xl p-2.5 font-bold text-slate-900">
+                            <input type="text" name="card_holder" value="James Harrison" class="w-full text-xs bg-white border border-cream-200 rounded-xl p-2.5 font-bold text-slate-900">
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">Card Number</label>
-                            <input type="text" name="card_number" value="4532 •••• •••• 8821" required class="w-full text-xs bg-white border border-cream-200 rounded-xl p-2.5 font-mono text-slate-900">
+                            <input type="text" name="card_number" value="4532 •••• •••• 8821" class="w-full text-xs bg-white border border-cream-200 rounded-xl p-2.5 font-mono text-slate-900">
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">Expiry (MM/YY)</label>
-                                <input type="text" name="card_expiry" value="08/28" required class="w-full text-xs bg-white border border-cream-200 rounded-xl p-2.5 text-center font-mono text-slate-900">
+                                <input type="text" name="card_expiry" value="08/28" class="w-full text-xs bg-white border border-cream-200 rounded-xl p-2.5 text-center font-mono text-slate-900">
                             </div>
                             <div>
                                 <label class="block text-[10px] font-bold uppercase text-slate-600 mb-1">Security Code (CVV)</label>
-                                <input type="text" name="card_cvv" value="731" required class="w-full text-xs bg-white border border-cream-200 rounded-xl p-2.5 text-center font-mono text-slate-900">
+                                <input type="text" name="card_cvv" value="731" class="w-full text-xs bg-white border border-cream-200 rounded-xl p-2.5 text-center font-mono text-slate-900">
                             </div>
                         </div>
                     </div>
@@ -160,7 +163,7 @@
                         <button type="button" @click="step = 2" class="py-3 px-6 bg-slate-200 hover:bg-slate-300 text-slate-900 font-bold text-xs rounded-xl border border-slate-300">Back</button>
                         <button type="submit" :disabled="submitting" class="py-4 px-8 bg-amberAcc-500 hover:bg-amberAcc-400 text-forest-950 text-xs font-black rounded-2xl shadow-xl transition-all uppercase tracking-wider">
                             <span x-show="!submitting"><i class="fa-solid fa-lock mr-2"></i> Confirm & Authorize Payment</span>
-                            <span x-show="submitting"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Processing...</span>
+                            <span x-show="submitting"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Processing Order...</span>
                         </button>
                     </div>
                 </div>
@@ -233,10 +236,13 @@
                     if (res.data.success) {
                         this.$root.__x.$data.showToast(res.data.message);
                         window.location.href = res.data.redirect_url;
+                    } else {
+                        this.submitting = false;
+                        this.$root.__x.$data.showToast(res.data.message || 'Checkout failed.', true);
                     }
                 } catch (e) {
                     this.submitting = false;
-                    let msg = e.response?.data?.message || 'Checkout failed. Please check form details.';
+                    let msg = e.response?.data?.message || 'Checkout failed. Please try again.';
                     this.$root.__x.$data.showToast(msg, true);
                 }
             }
