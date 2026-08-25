@@ -65,18 +65,33 @@
 </head>
 <body class="flex flex-col min-h-full font-sans antialiased" x-data="cartApp()">
 
-    <!-- Top Announcement Bar (Black & Orange) -->
-    <div class="bg-darkBlack-950 text-white text-xs py-2 px-6 md:px-12 flex justify-between items-center z-50 border-b border-darkBlack-800">
-        <div class="container mx-auto flex justify-between items-center px-2 md:px-6">
-            <div class="flex items-center space-x-4">
-                <span><i class="fa-solid fa-truck-fast text-brandOrange-500 mr-1"></i> Free UK Delivery on orders over £500</span>
-                <span class="hidden md:inline text-slate-700">|</span>
-                <span class="hidden md:inline"><i class="fa-solid fa-shield-halved text-brandOrange-500 mr-1"></i> Official UK Warranty & Battery Safety</span>
+    <!-- Top Announcement Bar (Fully Responsive & Mobile Optimized) -->
+    <div class="bg-darkBlack-950 text-white text-xs py-2.5 px-4 md:px-12 z-50 border-b border-darkBlack-800">
+        <div class="container mx-auto flex items-center justify-between">
+            
+            <!-- Mobile View (Single clean line, no text wrapping) -->
+            <div class="flex sm:hidden w-full justify-between items-center text-[10px] font-medium">
+                <span class="truncate pr-2"><i class="fa-solid fa-truck-fast text-brandOrange-500 mr-1"></i> Free UK Delivery > £500</span>
+                <a href="tel:+442079460912" class="whitespace-nowrap text-brandOrange-400 font-bold hover:underline">
+                    <i class="fa-solid fa-phone mr-1"></i> +44 20 7946 0912
+                </a>
             </div>
-            <div class="flex items-center space-x-4">
-                <span class="font-bold text-brandOrange-500"><i class="fa-solid fa-sterling-sign mr-1"></i> GBP (£)</span>
-                <span><i class="fa-solid fa-phone text-brandOrange-500 mr-1"></i> +44 (0) 20 7946 0912</span>
+
+            <!-- Tablet & Desktop View -->
+            <div class="hidden sm:flex items-center justify-between w-full text-xs">
+                <div class="flex items-center space-x-4">
+                    <span class="whitespace-nowrap"><i class="fa-solid fa-truck-fast text-brandOrange-500 mr-1"></i> Free UK Delivery on orders over £500</span>
+                    <span class="hidden md:inline text-slate-700">|</span>
+                    <span class="hidden md:inline whitespace-nowrap"><i class="fa-solid fa-shield-halved text-brandOrange-500 mr-1"></i> Official UK Warranty & Battery Safety</span>
+                </div>
+                <div class="flex items-center space-x-4 whitespace-nowrap">
+                    <span class="font-bold text-brandOrange-500"><i class="fa-solid fa-sterling-sign mr-1"></i> GBP (£)</span>
+                    <a href="tel:+442079460912" class="hover:text-brandOrange-400 transition-colors">
+                        <i class="fa-solid fa-phone text-brandOrange-500 mr-1"></i> +44 (0) 20 7946 0912
+                    </a>
+                </div>
             </div>
+
         </div>
     </div>
 
