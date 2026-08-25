@@ -8,7 +8,7 @@
     <div class="absolute inset-0 bg-cover bg-center opacity-25 transform scale-105"
          style="background-image: url('{{ $banners->first()->image ?? 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=1600&auto=format&fit=crop&q=80' }}');">
     </div>
-    <div class="absolute inset-0 bg-gradient-to-r from-darkBlack-950 via-darkBlack-950/90 to-transparent"></div>
+    {{-- <div class="absolute inset-0 bg-gradient-to-r from-darkBlack-950 via-darkBlack-950/90 to-transparent"></div> --}}
 
     <div class="relative container mx-auto px-6 md:px-12 py-20 md:py-32 flex flex-col justify-center max-w-5xl">
         <span class="inline-block bg-brandOrange-500 text-white text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full mb-4 w-max shadow-md">

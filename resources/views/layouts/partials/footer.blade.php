@@ -3,14 +3,9 @@
         
         <!-- Column 1: Brand & UK Store Info -->
         <div class="lg:col-span-2 space-y-4">
-            <div class="flex items-center space-x-3">
-                <div class="text-brandOrange-500 text-3xl flex items-center justify-center">
-                    <i class="fa-solid fa-bicycle"></i>
-                </div>
-                <span class="text-2xl font-black tracking-tight text-brandOrange-500 italic">
-                    Eb4u
-                </span>
-            </div>
+            <a href="{{ route('home') }}" class="inline-block">
+                <img src="{{ asset('images/logo.webp') }}" alt="Eb4u Logo" class="h-10 sm:h-12 w-auto object-contain bg-white px-3.5 py-1.5 rounded-2xl shadow-md">
+            </a>
             <p class="text-xs text-slate-400 leading-relaxed pr-6 font-normal">
                 Britain's premier destination for electric bike sales, flexible short-term and monthly e-bike rentals, and certified cycling accessories. Engineered for UK city commuting and countryside adventures.
             </p>

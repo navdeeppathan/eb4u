@@ -71,11 +71,9 @@
             <div>
                 <!-- Brand Header -->
                 <div class="h-16 flex items-center justify-between px-6 bg-black border-b border-darkBlack-800">
-                    <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-2.5">
-                        <div class="text-brandOrange-500 text-2xl flex items-center justify-center">
-                            <i class="fa-solid fa-bicycle"></i>
-                        </div>
-                        <span class="text-xl font-black text-white italic">Eb4u <span class="text-xs uppercase tracking-widest text-brandOrange-500 font-bold not-italic">Admin</span></span>
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-2">
+                        <img src="{{ asset('images/logo.webp') }}" alt="Eb4u Logo" class="h-8 w-auto object-contain bg-white px-2 py-1 rounded-xl">
+                        <span class="text-xs uppercase tracking-widest text-brandOrange-500 font-extrabold">Admin</span>
                     </a>
                     <button @click="sidebarOpen = false" class="md:hidden text-slate-400 hover:text-white">&times;</button>
                 </div>

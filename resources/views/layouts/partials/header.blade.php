@@ -1,14 +1,10 @@
 <header class="sticky top-0 z-40 bg-darkBlack-900 border-b border-darkBlack-800 shadow-md text-white" x-data="{ mobileMenuOpen: false }">
-    <div class="container mx-auto px-6 md:px-12 py-4 flex items-center justify-between">
+    <div class="container mx-auto px-6 md:px-12 py-3 flex items-center justify-between">
         
-        <!-- Logo matching uploaded image: Orange Bicycle Icon + Eb4u typography -->
-        <a href="{{ route('home') }}" class="flex items-center space-x-3 flex-shrink-0 group">
-            <div class="text-brandOrange-500 text-3xl sm:text-4xl flex items-center justify-center transition-transform group-hover:scale-105">
-                <i class="fa-solid fa-bicycle"></i>
-            </div>
-            <span class="text-2xl sm:text-3xl font-black tracking-tight text-brandOrange-500 font-sans italic" style="font-family: 'Poppins', sans-serif;">
-                Eb4u
-            </span>
+        <!-- Responsive Official Eb4u Image Logo -->
+        <a href="{{ route('home') }}" class="flex items-center flex-shrink-0 group">
+            <img src="{{ asset('images/logo.webp') }}" alt="Eb4u Logo" 
+                 class="h-8 sm:h-10 md:h-11 w-auto object-contain bg-white/95 px-2.5 py-1 rounded-2xl shadow-sm border border-white/20 transition-transform group-hover:scale-105">
         </a>
 
         <!-- Desktop Navigation Menu (Home, E-Bikes, Accessories ONLY) -->
