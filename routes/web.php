@@ -40,6 +40,10 @@ Route::post('/cart/update/{id}', [CartController::class, 'updateQuantity'])->nam
 Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/coupon', [CartController::class, 'applyCoupon'])->name('cart.coupon');
 
+/* Static Legal & Policy Pages (Non-database static templates) */
+Route::get('/privacy-policy', [CmsController::class, 'privacyPolicy'])->name('pages.privacy');
+Route::get('/terms-and-conditions', [CmsController::class, 'termsAndConditions'])->name('pages.terms');
+
 Route::get('/faqs', [CmsController::class, 'faqs'])->name('cms.faqs');
 Route::get('/contact', [CmsController::class, 'contact'])->name('cms.contact');
 Route::post('/contact', [CmsController::class, 'submitContact'])->name('cms.contact.submit');

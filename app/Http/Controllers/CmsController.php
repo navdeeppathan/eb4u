@@ -10,8 +10,45 @@ class CmsController extends Controller
 {
     public function showPage(string $slug)
     {
-        $page = CmsPage::where('slug', $slug)->where('is_active', true)->firstOrFail();
-        return view('cms.page', compact('page'));
+        // Map common static legal & informational pages to static Blade views
+        switch ($slug) {
+            case 'privacy-policy':
+            case 'privacy':
+                return view('pages.privacy_policy');
+            
+            case 'terms-and-conditions':
+            case 'terms':
+            case 'terms-of-service':
+                return view('pages.terms_and_conditions');
+
+            case 'rental-policy':
+                return view('pages.rental_policy');
+
+            case 'refund-policy':
+            case 'shipping-policy':
+            case 'about-us':
+            case 'about':
+                // Fallback to static legal view
+                return view('pages.terms_and_conditions');
+        }
+
+        // Database lookup fallback for dynamic pages
+        $page = CmsPage::where('slug', $slug)->where('is_active', true)->first();
+        if ($page) {
+            return view('cms.page', compact('page'));
+        }
+
+        return view('pages.terms_and_conditions');
+    }
+
+    public function privacyPolicy()
+    {
+        return view('pages.privacy_policy');
+    }
+
+    public function termsAndConditions()
+    {
+        return view('pages.terms_and_conditions');
     }
 
     public function faqs()
@@ -36,7 +73,7 @@ class CmsController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Thank you for reaching out to E-Bike 4 U! Our UK customer support team will reply within 2 hours.'
+            'message' => 'Thank you for reaching out to eb4u! Our UK customer support team will reply within 2 hours.'
         ]);
     }
 }
