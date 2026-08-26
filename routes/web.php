@@ -128,6 +128,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->as('admin.')->group(funct
 
     Route::get('/cms/banners', [AdminCmsController::class, 'banners'])->name('cms.banners');
     Route::post('/cms/banners', [AdminCmsController::class, 'storeBanner'])->name('cms.banners.store');
+    Route::get('/cms/banners/{id}/edit', [AdminCmsController::class, 'editBanner'])->name('cms.banners.edit');
+    Route::put('/cms/banners/{id}', [AdminCmsController::class, 'updateBanner'])->name('cms.banners.update');
+    Route::delete('/cms/banners/{id}', [AdminCmsController::class, 'destroyBanner'])->name('cms.banners.destroy');
+    Route::post('/cms/banners/{id}/toggle', [AdminCmsController::class, 'toggleBanner'])->name('cms.banners.toggle');
     Route::get('/cms/pages', [AdminCmsController::class, 'pages'])->name('cms.pages');
     Route::get('/cms/pages/{id}/edit', [AdminCmsController::class, 'editPage'])->name('cms.pages.edit');
     Route::put('/cms/pages/{id}', [AdminCmsController::class, 'updatePage'])->name('cms.pages.update');
