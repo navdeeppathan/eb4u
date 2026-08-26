@@ -55,17 +55,75 @@
             </div>
         </div>
 
-        <!-- Right Hero Banner Image Card -->
-        <div class="w-full lg:w-1/2 max-w-lg relative">
+        <!-- Right Hero Banner Image Card (Dynamic Multi-Banner Slider) -->
+        <div class="w-full lg:w-1/2 max-w-lg relative" x-data="heroBannerSlider({{ $banners->count() }})">
             <div class="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-darkBlack-900 group">
-                <img src="{{ $banners->first()->image ?? 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=1200&auto=format&fit=crop&q=80' }}" alt="Featured E-Bike" class="w-full h-[340px] object-cover group-hover:scale-105 transition-transform duration-700">
-                <div class="absolute inset-0 bg-gradient-to-t from-darkBlack-950 via-transparent to-transparent"></div>
-                <div class="absolute bottom-6 left-6 right-6">
-                    <span class="bg-brandOrange-500 text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-md mb-2 inline-block">
-                        ⚡ Certified 250W German Motor
-                    </span>
-                    <h3 class="text-lg font-black text-white">Urban Commuter Pro E-Bike</h3>
-                </div>
+                
+                @forelse($banners as $index => $b)
+                    <div x-show="activeSlide === {{ $index }}" 
+                         x-transition:enter="transition ease-out duration-500"
+                         x-transition:enter-start="opacity-0 scale-95"
+                         x-transition:enter-end="opacity-100 scale-100"
+                         x-transition:leave="transition ease-in duration-300"
+                         x-transition:leave-start="opacity-100 scale-100"
+                         x-transition:leave-end="opacity-0 scale-95"
+                         class="relative">
+                        
+                        <img src="{{ Str::startsWith($b->image, 'http') ? $b->image : asset($b->image) }}" 
+                             alt="{{ $b->title }}" 
+                             class="w-full h-[360px] sm:h-[400px] object-cover group-hover:scale-105 transition-transform duration-700">
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-darkBlack-950 via-darkBlack-950/40 to-transparent"></div>
+                        
+                        <div class="absolute bottom-6 left-6 right-6 space-y-2">
+                            @if($b->badge)
+                                <span class="bg-brandOrange-500 text-white text-[10px] font-black uppercase px-3 py-1 rounded-md inline-block shadow-sm">
+                                    {{ $b->badge }}
+                                </span>
+                            @endif
+                            <h3 class="text-xl font-black text-white leading-snug drop-shadow-md">{{ $b->title }}</h3>
+                            @if($b->subtitle)
+                                <p class="text-xs text-slate-300 font-medium line-clamp-2 leading-relaxed">{{ $b->subtitle }}</p>
+                            @endif
+                            @if($b->button_text)
+                                <a href="{{ $b->button_url ?? route('catalog.index') }}" class="inline-flex items-center text-xs font-bold text-brandOrange-400 hover:text-brandOrange-300 pt-1 transition-all">
+                                    <span>{{ $b->button_text }}</span> <i class="fa-solid fa-arrow-right ml-1.5 text-[10px]"></i>
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                @empty
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=1200&auto=format&fit=crop&q=80" alt="Featured E-Bike" class="w-full h-[360px] object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-darkBlack-950 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 right-6">
+                            <span class="bg-brandOrange-500 text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-md mb-2 inline-block">
+                                ⚡ Certified 250W German Motor
+                            </span>
+                            <h3 class="text-lg font-black text-white">Urban Commuter Pro E-Bike</h3>
+                        </div>
+                    </div>
+                @endforelse
+
+                @if($banners->count() > 1)
+                    <!-- Navigation Prev & Next Arrows -->
+                    <button @click="prev()" class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-darkBlack-950/80 hover:bg-brandOrange-500 text-white flex items-center justify-center transition-all opacity-80 hover:opacity-100 z-20 border border-white/20">
+                        <i class="fa-solid fa-chevron-left text-xs"></i>
+                    </button>
+                    <button @click="next()" class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-darkBlack-950/80 hover:bg-brandOrange-500 text-white flex items-center justify-center transition-all opacity-80 hover:opacity-100 z-20 border border-white/20">
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+
+                    <!-- Top Right Slide Indicator Dots -->
+                    <div class="absolute top-4 right-4 z-20 flex items-center space-x-1.5 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
+                        <template x-for="(b, i) in totalSlides" :key="i">
+                            <button @click="activeSlide = i" 
+                                    :class="activeSlide === i ? 'w-5 bg-brandOrange-500' : 'w-2 bg-white/40 hover:bg-white'" 
+                                    class="h-2 rounded-full transition-all duration-300"></button>
+                        </template>
+                    </div>
+                @endif
+
             </div>
         </div>
 
@@ -307,4 +365,30 @@
         <div x-show="message" x-cloak class="mt-3 text-xs font-bold text-brandOrange-400" x-text="message"></div>
     </div>
 </section>
+
+<script>
+    function heroBannerSlider(count) {
+        return {
+            activeSlide: 0,
+            totalSlides: count || 1,
+            timer: null,
+            init() {
+                if (this.totalSlides > 1) {
+                    this.startAutoPlay();
+                }
+            },
+            startAutoPlay() {
+                this.timer = setInterval(() => {
+                    this.next();
+                }, 5000);
+            },
+            next() {
+                this.activeSlide = (this.activeSlide + 1) % this.totalSlides;
+            },
+            prev() {
+                this.activeSlide = (this.activeSlide - 1 + this.totalSlides) % this.totalSlides;
+            }
+        }
+    }
+</script>
 @endsection

@@ -13,7 +13,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $banners = CmsBanner::where('position', 'home_hero')->where('is_active', true)->orderBy('sort_order')->get();
+        $banners = CmsBanner::where('is_active', true)->orderBy('sort_order')->get();
         $ebikeCategories = Category::where('type', 'ebike')->where('is_active', true)->orderBy('sort_order')->take(8)->get();
         $accessoryCategories = Category::where('type', 'accessory')->where('is_active', true)->orderBy('sort_order')->take(8)->get();
         
