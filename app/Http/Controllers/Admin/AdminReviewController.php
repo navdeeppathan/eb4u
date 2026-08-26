@@ -31,7 +31,7 @@ class AdminReviewController extends Controller
             Notification::send(
                 $review->user_id,
                 'review_approved',
-                "Review Published! ⭐",
+                "Review Published!",
                 "Your product review for " . ($review->product->name ?? 'E-Bike') . " has been approved and published.",
                 route('products.show', $review->product->slug ?? ''),
                 'fa-star'

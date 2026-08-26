@@ -198,12 +198,12 @@ class CheckoutController extends Controller
             CartItem::where('session_id', $this->getSessionId())->delete();
             session()->forget('applied_coupon');
 
-            // Dispatch Notifications to User
+            // Dispatch Notifications to User (Clean text without 4-byte unicode emojis)
             if (auth()->check()) {
                 Notification::send(
                     auth()->id(),
                     'order_placed',
-                    'Order Placed Successfully! 🎉',
+                    'Order Placed Successfully!',
                     "Thank you! Your order #{$order->order_number} has been confirmed. Total paid: £" . number_format($payNow, 2),
                     route('customer.order_detail', $order->order_number),
                     'fa-bag-shopping',
@@ -214,7 +214,7 @@ class CheckoutController extends Controller
                     Notification::send(
                         auth()->id(),
                         'rental_booked',
-                        'E-Bike Rental Confirmed ⚡',
+                        'E-Bike Rental Confirmed',
                         "Your E-Bike rental (Order #{$order->order_number}) is active. Check your customer portal for pickup/delivery details.",
                         route('customer.rentals'),
                         'fa-bicycle',

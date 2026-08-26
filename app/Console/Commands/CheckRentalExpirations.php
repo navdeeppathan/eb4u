@@ -9,29 +9,14 @@ use Carbon\Carbon;
 
 class CheckRentalExpirations extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'ebike:check-rental-expirations';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Checks for upcoming and expired e-bike rentals and dispatches user notifications';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
         $today = Carbon::today();
         $tomorrow = Carbon::tomorrow();
 
-        // 1. Fetch active rental items
         $rentalItems = OrderItem::whereNotNull('rental_start_date')
             ->whereNotNull('rental_end_date')
             ->whereHas('order', function ($q) {
@@ -51,7 +36,6 @@ class CheckRentalExpirations extends Command
             $productName = $item->product->name ?? 'E-Bike';
             $orderNumber = $item->order->order_number ?? '';
 
-            // Check if rental is expiring today or tomorrow (1-2 days left)
             if ($endDate->equalTo($today) || $endDate->equalTo($tomorrow)) {
                 $alreadyNotified = Notification::where('user_id', $user->id)
                     ->where('type', 'rental_expiring')
@@ -62,7 +46,7 @@ class CheckRentalExpirations extends Command
                     Notification::send(
                         $user->id,
                         'rental_expiring',
-                        'E-Bike Rental Expiring Soon! ⏰',
+                        'E-Bike Rental Expiring Soon!',
                         "Your rental for {$productName} (Order #{$orderNumber}) is set to expire on " . $endDate->format('d M Y') . ". Extend your lease online or prepare for return.",
                         route('customer.rentals'),
                         'fa-clock',
@@ -71,7 +55,6 @@ class CheckRentalExpirations extends Command
                     $expiringCount++;
                 }
             }
-            // Check if rental is already past end date (Overdue)
             elseif ($endDate->lt($today)) {
                 $alreadyNotified = Notification::where('user_id', $user->id)
                     ->where('type', 'rental_expired')
@@ -82,7 +65,7 @@ class CheckRentalExpirations extends Command
                     Notification::send(
                         $user->id,
                         'rental_expired',
-                        'E-Bike Rental Expired / Overdue 🚨',
+                        'E-Bike Rental Expired / Overdue',
                         "Your rental period for {$productName} (Order #{$orderNumber}) ended on " . $endDate->format('d M Y') . ". Please return the vehicle to our London hub or extend your rental.",
                         route('customer.rentals'),
                         'fa-triangle-exclamation',

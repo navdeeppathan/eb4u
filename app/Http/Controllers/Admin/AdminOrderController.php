@@ -37,8 +37,6 @@ class AdminOrderController extends Controller
         }
 
         $orders = $query->latest()->paginate(15);
-
-        // Count active rentals expiring soon or overdue
         $expiringCount = Order::where('type', 'rental')->whereIn('status', ['active', 'ready_for_pickup', 'extension_requested', 'overdue'])->count();
 
         return view('admin.orders.index', compact('orders', 'expiringCount'));
@@ -87,7 +85,7 @@ class AdminOrderController extends Controller
             Notification::send(
                 $order->user_id,
                 'order_status_update',
-                "Order Status Update: {$readableStatus} 🚚",
+                "Order Status Update: {$readableStatus}",
                 "Your order #{$order->order_number} status has been updated to {$readableStatus}.",
                 route('customer.order_detail', $order->order_number),
                 'fa-truck-fast',
@@ -114,7 +112,7 @@ class AdminOrderController extends Controller
             Notification::send(
                 $item->order->user_id,
                 'unit_assigned',
-                "Physical E-Bike Unit Assigned 🚲",
+                "Physical E-Bike Unit Assigned",
                 "E-Bike unit {$unit->ebike_code} (Serial: {$unit->serial_number}) has been assigned to your order #{$item->order->order_number}.",
                 route('customer.order_detail', $item->order->order_number),
                 'fa-barcode'
@@ -124,9 +122,6 @@ class AdminOrderController extends Controller
         return back()->with('success', "Physical E-Bike {$unit->ebike_code} assigned to order item.");
     }
 
-    /**
-     * Send Expiration Reminder to a specific user (In-App Notification + HTML Email).
-     */
     public function sendExpirationReminder(Request $request, int $orderId)
     {
         $order = Order::with(['user', 'items.product'])->findOrFail($orderId);
@@ -139,8 +134,7 @@ class AdminOrderController extends Controller
         $customNote = $request->input('custom_note', '');
         $rentalItem = $order->items()->where('item_type', 'rental')->first();
 
-        // 1. Send In-App Notification
-        $title = "Rental Expiration Reminder ⏰";
+        $title = "Rental Expiration Reminder";
         $message = "Admin Notice for Order #{$order->order_number}: Your rental period is ending. Extend online or prepare for return.";
         if ($customNote) {
             $message .= " Store Note: " . $customNote;
@@ -156,7 +150,6 @@ class AdminOrderController extends Controller
             ['order_id' => $order->id, 'custom_note' => $customNote]
         );
 
-        // 2. Send HTML Email
         try {
             Mail::to($user->email)->send(new RentalExpiringMail($order, $user, $rentalItem, $customNote));
         } catch (\Throwable $e) {
@@ -166,9 +159,6 @@ class AdminOrderController extends Controller
         return back()->with('success', "Expiration reminder sent to {$user->name} ({$user->email}) via In-App Notification & Email!");
     }
 
-    /**
-     * Send Bulk Expiration Reminders to ALL renters whose rental is active/expiring/overdue.
-     */
     public function sendBulkExpirationReminders(Request $request)
     {
         $expiringOrders = Order::with(['user', 'items.product'])
@@ -186,7 +176,7 @@ class AdminOrderController extends Controller
             Notification::send(
                 $user->id,
                 'rental_expiring',
-                "Rental Expiration Notice (Order #{$order->order_number}) ⏰",
+                "Rental Expiration Notice (Order #{$order->order_number})",
                 "Reminder: Your rental for Order #{$order->order_number} is expiring soon. Please extend online or return your vehicle.",
                 route('customer.rentals'),
                 'fa-clock'

@@ -87,11 +87,10 @@ class CustomerDashboardController extends Controller
             'subtotal' => $firstItem->subtotal + $additionalAmount,
         ]);
 
-        // Send Notification to Renter
         Notification::send(
             auth()->id(),
             'rental_extended',
-            'Rental Extension Requested 🎉',
+            'Rental Extension Requested',
             "Your extension of {$days} day(s) for Order #{$order->order_number} has been logged. New end date: " . $newEndDate->format('d M Y') . ".",
             route('customer.rentals'),
             'fa-calendar-plus',
@@ -113,11 +112,10 @@ class CustomerDashboardController extends Controller
             'customer_notes' => ($order->customer_notes ? $order->customer_notes . "\n" : "") . "Return requested by customer on " . now()->format('d M Y H:i') . ".",
         ]);
 
-        // Send Notification to Renter
         Notification::send(
             auth()->id(),
             'return_requested',
-            'Return Request Received 📦',
+            'Return Request Received',
             "Return request for Order #{$order->order_number} received. Your deposit of £" . number_format($order->security_deposit_total, 2) . " will be refunded after inspection.",
             route('customer.rentals'),
             'fa-truck-ramp-box',

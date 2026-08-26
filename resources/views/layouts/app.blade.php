@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-[#f5f7fb]">
+<html lang="en" class="h-full bg-slate-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'eb4u | UK Premium E-Bike Rental, Sales & Accessories')</title>
 
-    <!-- Google Fonts: Space Grotesk (Headings) & Outfit (Body & UI) -->
+    <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,28 +18,21 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
-                        grotesk: ['Space Grotesk', 'sans-serif'],
+                        sans: ['Poppins', 'sans-serif'],
                     },
                     colors: {
                         brandOrange: {
-                            50: 'rgba(249,115,22,.09)',
-                            100: 'rgba(249,115,22,.15)',
-                            500: '#f97316',
-                            600: '#ea580c',
-                            700: '#c2410c',
+                            50: '#fff5f0',
+                            100: '#ffe4d6',
+                            500: '#f24e00',
+                            600: '#d94100',
+                            700: '#b33300',
                         },
-                        darkSlate: {
-                            800: '#1e293b',
-                            900: '#0f172a',
-                            950: '#020617',
-                        },
-                        surf: '#edf1f8',
-                        cardHover: '#f0f4fc',
-                        borderLight: '#dde4f0',
-                        borderMid: '#b8cce0',
-                        textSec: '#445568',
-                        textMuted: '#8898b0',
+                        darkBlack: {
+                            800: '#1f1f1f',
+                            900: '#121212',
+                            950: '#0a0a0a',
+                        }
                     }
                 }
             }
@@ -58,12 +51,41 @@
     
     <style>
         [x-cloak] { display: none !important; }
-        body { font-family: 'Outfit', sans-serif; background-color: #f5f7fb; color: #0f172a; -webkit-font-smoothing: antialiased; }
-        h1, h2, h3, h4, .font-grotesk { font-family: 'Space Grotesk', sans-serif; }
-        .swal2-popup { font-family: 'Outfit', sans-serif !important; border-radius: 1.25rem !important; }
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; color: #0f172a; }
+        .swal2-popup { font-family: 'Poppins', sans-serif !important; border-radius: 1.5rem !important; }
     </style>
 </head>
 <body class="flex flex-col min-h-full font-sans antialiased" x-data="cartApp()">
+
+    <!-- Top Announcement Bar (Black & Orange - Fully Responsive) -->
+    <div class="bg-darkBlack-950 text-white text-xs py-2.5 px-4 md:px-12 z-50 border-b border-darkBlack-800">
+        <div class="container mx-auto flex items-center justify-between">
+            
+            <!-- Mobile View -->
+            <div class="flex sm:hidden w-full justify-between items-center text-[10px] font-medium">
+                <span class="truncate pr-2"><i class="fa-solid fa-truck-fast text-brandOrange-500 mr-1"></i> Free UK Delivery > £500</span>
+                <a href="tel:+442079460912" class="whitespace-nowrap text-brandOrange-400 font-bold hover:underline">
+                    <i class="fa-solid fa-phone mr-1"></i> +44 20 7946 0912
+                </a>
+            </div>
+
+            <!-- Tablet & Desktop View -->
+            <div class="hidden sm:flex items-center justify-between w-full text-xs">
+                <div class="flex items-center space-x-4">
+                    <span class="whitespace-nowrap"><i class="fa-solid fa-truck-fast text-brandOrange-500 mr-1"></i> Free UK Delivery on orders over £500</span>
+                    <span class="hidden md:inline text-slate-700">|</span>
+                    <span class="hidden md:inline whitespace-nowrap"><i class="fa-solid fa-shield-halved text-brandOrange-500 mr-1"></i> Official UK Warranty & Battery Safety</span>
+                </div>
+                <div class="flex items-center space-x-4 whitespace-nowrap">
+                    <span class="font-bold text-brandOrange-500"><i class="fa-solid fa-sterling-sign mr-1"></i> GBP (£)</span>
+                    <a href="tel:+442079460912" class="hover:text-brandOrange-400 transition-colors">
+                        <i class="fa-solid fa-phone text-brandOrange-500 mr-1"></i> +44 (0) 20 7946 0912
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
     <!-- Main Navigation Header -->
     @include('layouts.partials.header')
@@ -77,7 +99,7 @@
                         icon: 'success',
                         title: 'Success!',
                         text: @json(session('success')),
-                        confirmButtonColor: '#f97316',
+                        confirmButtonColor: '#f24e00',
                         timer: 3500
                     });
                 });
@@ -90,7 +112,7 @@
                         icon: 'error',
                         title: 'Notice',
                         text: @json(session('error')),
-                        confirmButtonColor: '#f97316'
+                        confirmButtonColor: '#f24e00'
                     });
                 });
             </script>
@@ -124,7 +146,7 @@
                 showToast(msg, isErr = false) {
                     Swal.fire({
                         toast: true,
-                        position: 'bottom-end',
+                        position: 'top-end',
                         icon: isErr ? 'error' : 'success',
                         title: msg,
                         showConfirmButton: false,
@@ -132,9 +154,6 @@
                         timerProgressBar: true,
                         background: '#ffffff',
                         color: '#0f172a',
-                        customClass: {
-                            popup: 'shadow-2xl border border-borderMid rounded-2xl'
-                        }
                     });
                 },
                 async fetchCart() {
@@ -186,8 +205,8 @@
                         text: 'Remove this item from your basket?',
                         icon: 'warning',
                         showCancelButton: true,
-                        confirmButtonColor: '#f97316',
-                        cancelButtonColor: '#0f172a',
+                        confirmButtonColor: '#f24e00',
+                        cancelButtonColor: '#121212',
                         confirmButtonText: 'Yes, remove',
                         cancelButtonText: 'Cancel'
                     });
