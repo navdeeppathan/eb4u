@@ -9,6 +9,7 @@ use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\EBikeUnit;
 use App\Models\SystemSetting;
+use App\Models\Notification;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
@@ -62,7 +63,6 @@ class CheckoutController extends Controller
 
     public function process(Request $request)
     {
-        // Flexible validation: payment gateway skipped as requested
         $request->validate([
             'customer_name' => 'nullable|string|max:255',
             'customer_email' => 'nullable|email|max:255',
@@ -150,7 +150,6 @@ class CheckoutController extends Controller
                 $assignedUnit = null;
 
                 if ($cItem->item_type === 'rental') {
-                    // Find available physical unit or assign first unit
                     $unit = EBikeUnit::where('product_id', $cItem->product_id)
                         ->where('status', 'available')
                         ->first() ?: EBikeUnit::where('product_id', $cItem->product_id)->first();
@@ -160,7 +159,6 @@ class CheckoutController extends Controller
                         $assignedUnit = $unit->id;
                     }
                 } else {
-                    // Decrement stock safely
                     if ($cItem->product->stock_quantity > 0) {
                         $cItem->product->decrement('stock_quantity', min($cItem->product->stock_quantity, $cItem->quantity));
                     }
@@ -185,7 +183,7 @@ class CheckoutController extends Controller
                 ]);
             }
 
-            // Record Payment directly as completed (bypassing external gateway)
+            // Record Payment directly as completed
             Payment::create([
                 'order_id' => $order->id,
                 'transaction_id' => 'TXN-' . strtoupper(Str::random(10)),
@@ -200,10 +198,36 @@ class CheckoutController extends Controller
             CartItem::where('session_id', $this->getSessionId())->delete();
             session()->forget('applied_coupon');
 
+            // Dispatch Notifications to User
+            if (auth()->check()) {
+                Notification::send(
+                    auth()->id(),
+                    'order_placed',
+                    'Order Placed Successfully! 🎉',
+                    "Thank you! Your order #{$order->order_number} has been confirmed. Total paid: £" . number_format($payNow, 2),
+                    route('customer.order_detail', $order->order_number),
+                    'fa-bag-shopping',
+                    ['order_id' => $order->id, 'order_number' => $order->order_number]
+                );
+
+                if ($hasRental) {
+                    Notification::send(
+                        auth()->id(),
+                        'rental_booked',
+                        'E-Bike Rental Confirmed ⚡',
+                        "Your E-Bike rental (Order #{$order->order_number}) is active. Check your customer portal for pickup/delivery details.",
+                        route('customer.rentals'),
+                        'fa-bicycle',
+                        ['order_id' => $order->id]
+                    );
+                }
+            }
+
             DB::commit();
 
             return response()->json([
                 'success' => true,
+                'order_number' => $order->order_number,
                 'message' => 'Order placed successfully! Redirecting...',
                 'redirect_url' => route('checkout.confirmation', $order->order_number),
             ]);

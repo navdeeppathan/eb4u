@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Review;
+use App\Models\Notification;
 
 class AdminReviewController extends Controller
 {
@@ -25,6 +26,17 @@ class AdminReviewController extends Controller
             'status' => $request->status,
             'is_featured' => $request->boolean('is_featured'),
         ]);
+
+        if ($request->status === 'approved' && $review->user_id) {
+            Notification::send(
+                $review->user_id,
+                'review_approved',
+                "Review Published! ⭐",
+                "Your product review for " . ($review->product->name ?? 'E-Bike') . " has been approved and published.",
+                route('products.show', $review->product->slug ?? ''),
+                'fa-star'
+            );
+        }
 
         return back()->with('success', 'Review status updated.');
     }

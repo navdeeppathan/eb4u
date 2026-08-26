@@ -41,6 +41,56 @@
                 <span x-text="cartCount" class="absolute top-1.5 right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-brandOrange-500 text-white text-[9px] font-black flex items-center justify-center shadow-xs"></span>
             </button>
 
+            <!-- Real-Time Notification Bell Dropdown -->
+            @auth
+                <div class="relative" x-data="notificationDropdown()">
+                    <button @click="open = !open" class="relative w-10 h-10 rounded-xl text-textSec hover:text-darkSlate-900 hover:bg-slate-100 flex items-center justify-center transition-colors" title="Notifications">
+                        <i class="fa-regular fa-bell text-base"></i>
+                        <span x-show="unreadCount > 0" x-text="unreadCount" x-cloak class="absolute top-1.5 right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-rose-600 text-white text-[9px] font-black flex items-center justify-center shadow-xs animate-pulse"></span>
+                    </button>
+
+                    <div x-show="open" @click.outside="open = false" x-transition x-cloak class="absolute right-0 mt-2 w-80 sm:w-96 bg-white text-darkSlate-900 rounded-2xl shadow-2xl border border-borderLight overflow-hidden z-50">
+                        <div class="p-4 bg-darkSlate-900 text-white flex justify-between items-center">
+                            <div class="flex items-center space-x-2">
+                                <i class="fa-solid fa-bell text-brandOrange-500"></i>
+                                <h4 class="font-grotesk text-xs font-bold uppercase tracking-wider">Notifications</h4>
+                            </div>
+                            <button @click="markAllRead()" class="text-[10px] text-brandOrange-500 hover:underline font-bold">Mark all read</button>
+                        </div>
+
+                        <div class="max-h-80 overflow-y-auto divide-y divide-slate-100">
+                            <template x-if="notifications.length === 0">
+                                <div class="p-6 text-center text-xs text-textMuted font-medium">
+                                    <i class="fa-solid fa-circle-check text-2xl text-emerald-500 mb-2 block"></i>
+                                    No notifications right now.
+                                </div>
+                            </template>
+
+                            <template x-for="item in notifications" :key="item.id">
+                                <div :class="item.is_read ? 'bg-white' : 'bg-brandOrange-50/40'" class="p-3.5 hover:bg-slate-50 transition-colors flex space-x-3 items-start relative group">
+                                    <div class="w-8 h-8 rounded-xl bg-brandOrange-50 border border-brandOrange-500/30 text-brandOrange-500 flex items-center justify-center flex-shrink-0 text-xs mt-0.5">
+                                        <i :class="'fa-solid ' + (item.icon || 'fa-bell')"></i>
+                                    </div>
+                                    <div class="flex-grow min-w-0">
+                                        <div class="flex justify-between items-baseline mb-0.5">
+                                            <h5 class="font-grotesk text-xs font-bold text-darkSlate-900 truncate" x-text="item.title"></h5>
+                                            <span class="text-[9px] text-textMuted ml-2 flex-shrink-0" x-text="item.created_at_human"></span>
+                                        </div>
+                                        <p class="text-[11px] text-textSec leading-snug font-normal line-clamp-2" x-text="item.message"></p>
+
+                                        <template x-if="item.action_url">
+                                            <a :href="item.action_url" @click="markRead(item.id)" class="inline-block mt-1.5 text-[10px] font-bold text-brandOrange-600 hover:underline">
+                                                View Details &rarr;
+                                            </a>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            @endauth
+
             <!-- User Account / Admin Badge -->
             @auth
                 <div class="relative" x-data="{ open: false }">
@@ -89,3 +139,49 @@
         </nav>
     </div>
 </header>
+
+<script>
+    function notificationDropdown() {
+        return {
+            open: false,
+            unreadCount: 0,
+            notifications: [],
+
+            init() {
+                this.pollNotifications();
+                // Real-time polling every 10 seconds
+                setInterval(() => {
+                    this.pollNotifications();
+                }, 10000);
+            },
+            async pollNotifications() {
+                try {
+                    let res = await axios.get('{{ route("customer.notifications.index") }}');
+                    if (res.data.success) {
+                        this.unreadCount = res.data.count;
+                        this.notifications = res.data.notifications;
+                    }
+                } catch (e) {
+                    // Handled silently
+                }
+            },
+            async markRead(id) {
+                try {
+                    let res = await axios.post(`/customer/notifications/read/${id}`);
+                    if (res.data.success) {
+                        this.pollNotifications();
+                    }
+                } catch (e) {}
+            },
+            async markAllRead() {
+                try {
+                    let res = await axios.post('{{ route("customer.notifications.read_all") }}');
+                    if (res.data.success) {
+                        this.unreadCount = 0;
+                        this.notifications.forEach(n => n.is_read = true);
+                    }
+                } catch (e) {}
+            }
+        }
+    }
+</script>

@@ -9,6 +9,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CustomerDashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CmsController;
+use App\Http\Controllers\NotificationController;
 
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminProductController;
@@ -75,7 +76,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 
 /*
 |--------------------------------------------------------------------------
-| Customer Portal Routes
+| Customer Portal & Notification Routes
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->prefix('customer')->as('customer.')->group(function () {
@@ -89,6 +90,11 @@ Route::middleware('auth')->prefix('customer')->as('customer.')->group(function (
     Route::post('/wishlist/toggle/{productId}', [CustomerDashboardController::class, 'toggleWishlist'])->name('wishlist.toggle');
     Route::get('/profile', [CustomerDashboardController::class, 'profile'])->name('profile');
     Route::post('/profile', [CustomerDashboardController::class, 'updateProfile'])->name('profile.update');
+
+    /* Real-Time Notification Routes */
+    Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications.index');
+    Route::post('/notifications/read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read_all');
 });
 
 /*
@@ -114,6 +120,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->as('admin.')->group(funct
     Route::get('/orders/{id}', [AdminOrderController::class, 'show'])->name('orders.show');
     Route::post('/orders/{id}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.status');
     Route::post('/orders/item/{orderItemId}/assign-unit', [AdminOrderController::class, 'assignUnit'])->name('orders.assign_unit');
+    Route::post('/orders/{id}/send-expiration-reminder', [AdminOrderController::class, 'sendExpirationReminder'])->name('orders.send_expiration_reminder');
+    Route::post('/orders/send-bulk-expiration-reminders', [AdminOrderController::class, 'sendBulkExpirationReminders'])->name('orders.send_bulk_expiration_reminders');
 
     Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings.index');
     Route::post('/settings', [AdminSettingsController::class, 'update'])->name('settings.update');

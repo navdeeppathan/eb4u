@@ -8,6 +8,7 @@ use App\Models\OrderItem;
 use App\Models\Wishlist;
 use App\Models\Review;
 use App\Models\Address;
+use App\Models\Notification;
 use Carbon\Carbon;
 
 class CustomerDashboardController extends Controller
@@ -86,6 +87,17 @@ class CustomerDashboardController extends Controller
             'subtotal' => $firstItem->subtotal + $additionalAmount,
         ]);
 
+        // Send Notification to Renter
+        Notification::send(
+            auth()->id(),
+            'rental_extended',
+            'Rental Extension Requested 🎉',
+            "Your extension of {$days} day(s) for Order #{$order->order_number} has been logged. New end date: " . $newEndDate->format('d M Y') . ".",
+            route('customer.rentals'),
+            'fa-calendar-plus',
+            ['order_id' => $order->id]
+        );
+
         return response()->json([
             'success' => true,
             'message' => "Rental extension request submitted for {$days} extra day(s)! Added £" . number_format($additionalAmount, 2) . " to order balance.",
@@ -100,6 +112,17 @@ class CustomerDashboardController extends Controller
             'actual_return_date' => now(),
             'customer_notes' => ($order->customer_notes ? $order->customer_notes . "\n" : "") . "Return requested by customer on " . now()->format('d M Y H:i') . ".",
         ]);
+
+        // Send Notification to Renter
+        Notification::send(
+            auth()->id(),
+            'return_requested',
+            'Return Request Received 📦',
+            "Return request for Order #{$order->order_number} received. Your deposit of £" . number_format($order->security_deposit_total, 2) . " will be refunded after inspection.",
+            route('customer.rentals'),
+            'fa-truck-ramp-box',
+            ['order_id' => $order->id]
+        );
 
         return response()->json([
             'success' => true,

@@ -54,4 +54,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Review::class);
     }
+
+    public function userNotifications()
+    {
+        return $this->hasMany(Notification::class)->latest();
+    }
+
+    public function unreadNotificationsCount(): int
+    {
+        return $this->hasMany(Notification::class)->where('is_read', false)->count();
+    }
 }
