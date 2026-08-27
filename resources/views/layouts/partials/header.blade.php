@@ -92,11 +92,12 @@
                     </button>
                     <div x-show="open" @click.outside="open = false" x-transition x-cloak class="absolute right-0 mt-2 w-48 bg-darkBlack-900 text-white rounded-2xl shadow-2xl border border-darkBlack-800 py-2 z-50">
                         @if(auth()->user()->isAdmin())
-                            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-xs font-bold text-brandOrange-500 hover:bg-darkBlack-800"><i class="fa-solid fa-gauge mr-2"></i> Admin Suite</a>
+                            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2.5 text-xs font-black text-brandOrange-500 hover:bg-darkBlack-800 transition-colors"><i class="fa-solid fa-gauge mr-2"></i> Admin Suite</a>
+                        @else
+                            <a href="{{ route('customer.dashboard') }}" class="block px-4 py-2 text-xs text-white hover:bg-darkBlack-800 font-semibold"><i class="fa-solid fa-user mr-2 text-slate-400"></i> Dashboard</a>
+                            <a href="{{ route('customer.orders') }}" class="block px-4 py-2 text-xs text-white hover:bg-darkBlack-800 font-semibold"><i class="fa-solid fa-box mr-2 text-slate-400"></i> Sales Orders</a>
+                            <a href="{{ route('customer.rentals') }}" class="block px-4 py-2 text-xs text-white hover:bg-darkBlack-800 font-semibold"><i class="fa-solid fa-bicycle mr-2 text-brandOrange-500"></i> Active Rentals</a>
                         @endif
-                        <a href="{{ route('customer.dashboard') }}" class="block px-4 py-2 text-xs text-white hover:bg-darkBlack-800 font-semibold"><i class="fa-solid fa-user mr-2 text-slate-400"></i> Dashboard</a>
-                        <a href="{{ route('customer.orders') }}" class="block px-4 py-2 text-xs text-white hover:bg-darkBlack-800 font-semibold"><i class="fa-solid fa-box mr-2 text-slate-400"></i> Sales Orders</a>
-                        <a href="{{ route('customer.rentals') }}" class="block px-4 py-2 text-xs text-white hover:bg-darkBlack-800 font-semibold"><i class="fa-solid fa-bicycle mr-2 text-brandOrange-500"></i> Active Rentals</a>
                         <div class="border-t border-darkBlack-800 my-1"></div>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
