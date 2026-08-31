@@ -22,9 +22,7 @@
             <ul class="space-y-2 text-xs font-semibold text-slate-400">
                 <li><a href="{{ route('catalog.index', ['tag' => 'sell']) }}" class="text-white font-bold hover:text-brandOrange-500 transition-colors flex items-center"><i class="fa-solid fa-tag text-brandOrange-500 mr-1.5"></i> Buy E-Bike (Sales)</a></li>
                 <li><a href="{{ route('catalog.index', ['tag' => 'rent']) }}" class="text-brandOrange-500 font-extrabold hover:underline flex items-center"><i class="fa-solid fa-calendar-check mr-1.5"></i> ⚡ E-Bike Rental</a></li>
-                <li><a href="{{ route('catalog.index', ['category' => 'city-e-bikes']) }}" class="hover:text-brandOrange-500 transition-colors">City E-Bikes</a></li>
-                <li><a href="{{ route('catalog.index', ['category' => 'mountain-e-bikes']) }}" class="hover:text-brandOrange-500 transition-colors">Mountain E-Bikes</a></li>
-                <li><a href="{{ route('catalog.index', ['category' => 'folding-e-bikes']) }}" class="hover:text-brandOrange-500 transition-colors">Folding E-Bikes</a></li>
+                
                 <li><a href="{{ route('catalog.index', ['type' => 'accessory']) }}" class="hover:text-brandOrange-500 transition-colors">Accessories & Gear</a></li>
             </ul>
         </div>
