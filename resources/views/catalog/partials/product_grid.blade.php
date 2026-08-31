@@ -4,7 +4,7 @@
             <div class="relative h-44 bg-gradient-to-br from-[#dde8f7] to-[#cddaf2] flex items-center justify-center overflow-hidden">
                 <img src="{{ $product->primary_image_url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 
-                <span class="absolute top-2.5 left-2.5 bg-darkSlate-900 text-white text-[10px] font-bold px-2 py-0.5 rounded-md">
+                <span class="absolute top-2.5 left-2.5 bg-slate-900 text-white text-[10px] font-bold px-2 py-0.5 rounded-md">
                     {{ $product->type === 'ebike' ? 'E-Bike' : 'Accessory' }}
                 </span>
 
@@ -13,7 +13,7 @@
                         ⚡ Rent Only
                     </span>
                 @else
-                    <span class="absolute top-2.5 right-2.5 bg-slate-900 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-xs">
+                    <span class="absolute top-2.5 right-2.5 bg-slate-900 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-md shadow-xs">
                         🛒 Buy Only
                     </span>
                 @endif
@@ -22,13 +22,13 @@
             <div class="p-4 flex-grow flex flex-col justify-between">
                 <div>
                     <div class="text-[10px] font-bold text-brandOrange-600 uppercase tracking-wider mb-1">{{ $product->brand->name ?? 'Premium' }}</div>
-                    <a href="{{ route('products.show', $product->slug) }}" class="font-grotesk text-sm font-bold text-darkSlate-900 hover:text-brandOrange-500 line-clamp-1 mb-2">
+                    <a href="{{ route('products.show', $product->slug) }}" class="font-grotesk text-sm font-bold text-slate-900 hover:text-brandOrange-500 line-clamp-1 mb-2">
                         {{ $product->name }}
                     </a>
 
                     <div class="flex items-center gap-1 mb-3">
                         <span class="text-amber-400 text-xs"><i class="fa-solid fa-star"></i></span>
-                        <span class="text-xs font-semibold text-darkSlate-900">{{ $product->average_rating }}</span>
+                        <span class="text-xs font-semibold text-slate-900">{{ $product->average_rating }}</span>
                         <span class="text-[11px] text-textMuted">({{ $product->reviews_count }})</span>
                     </div>
 
@@ -57,22 +57,22 @@
                                     <span class="text-xs text-textMuted line-through">£{{ number_format($product->price, 2) }}</span>
                                 @endif
                             </div>
-                            <button @click="addToCart({{ $product->id }}, 'purchase')" class="w-8 h-8 rounded-lg bg-brandOrange-50 border border-brandOrange-500/30 text-brandOrange-500 hover:bg-brandOrange-500 hover:text-white flex items-center justify-center transition-colors">
+                            <button @click="addToCart({{ $product->id }}, 'purchase')" class="w-8 h-8 rounded-lg bg-brandOrange-50 border border-brandOrange-500/30 text-brandOrange-500 hover:bg-brandOrange-500 hover:text-white flex items-center justify-center transition-colors cursor-pointer">
                                 <i class="fa-solid fa-plus text-xs"></i>
                             </button>
                         @endif
                     </div>
 
                     <div class="grid grid-cols-2 gap-2">
-                        <a href="{{ route('products.show', $product->slug) }}" class="text-center py-2 bg-darkSlate-900 hover:bg-black text-white rounded-xl text-xs font-bold transition-colors">
+                        <a href="{{ route('products.show', $product->slug) }}" class="text-center py-2.5 bg-slate-900 hover:bg-black text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center cursor-pointer">
                             Details
                         </a>
                         @if($product->product_tag === 'rent' || $product->is_rental_eligible)
-                            <a href="{{ route('products.show', $product->slug) }}" class="text-center py-2 bg-brandOrange-500 hover:bg-brandOrange-600 text-white rounded-xl text-xs font-bold transition-colors shadow-xs">
+                            <a href="{{ route('products.show', $product->slug) }}" class="text-center py-2.5 bg-brandOrange-500 hover:bg-brandOrange-600 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center cursor-pointer">
                                 ⚡ Rent E-Bike
                             </a>
                         @else
-                            <button @click="addToCart({{ $product->id }}, 'purchase')" class="py-2 bg-brandOrange-500 hover:bg-brandOrange-600 text-white rounded-xl text-xs font-bold transition-colors shadow-xs">
+                            <button @click="addToCart({{ $product->id }}, 'purchase')" class="py-2.5 bg-brandOrange-500 hover:bg-brandOrange-600 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center cursor-pointer">
                                 Add to Cart
                             </button>
                         @endif
@@ -83,7 +83,7 @@
     @empty
         <div class="col-span-full text-center py-16 bg-white rounded-2xl border border-borderLight">
             <i class="fa-solid fa-bicycle text-4xl text-textMuted mb-3"></i>
-            <h3 class="font-grotesk text-base font-bold text-darkSlate-900">No products found</h3>
+            <h3 class="font-grotesk text-base font-bold text-slate-900">No products found</h3>
             <p class="text-xs text-textMuted mt-1">Try resetting your filter parameters.</p>
         </div>
     @endforelse
