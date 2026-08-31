@@ -8,9 +8,13 @@
                     {{ $product->type === 'ebike' ? 'E-Bike' : 'Accessory' }}
                 </span>
 
-                @if($product->is_rental_eligible)
-                    <span class="absolute top-2.5 right-2.5 bg-brandOrange-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-xs">
-                        Rent £{{ number_format($product->rental_price_daily, 0) }}/day
+                @if($product->product_tag === 'rent' || $product->is_rental_eligible)
+                    <span class="absolute top-2.5 right-2.5 bg-brandOrange-500 text-white text-[10px] font-black px-2.5 py-0.5 rounded-md shadow-xs">
+                        ⚡ Rent Only
+                    </span>
+                @else
+                    <span class="absolute top-2.5 right-2.5 bg-slate-900 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-xs">
+                        🛒 Buy Only
                     </span>
                 @endif
             </div>
@@ -40,24 +44,32 @@
 
                 <div>
                     <div class="flex items-baseline justify-between mb-3">
-                        <div class="flex items-baseline gap-1.5">
-                            <span class="font-grotesk text-lg font-extrabold text-brandOrange-500">£{{ number_format($product->effective_price, 2) }}</span>
-                            @if($product->discount_price)
-                                <span class="text-xs text-textMuted line-through">£{{ number_format($product->price, 2) }}</span>
-                            @endif
-                        </div>
-                        <button @click="addToCart({{ $product->id }}, 'purchase')" class="w-8 h-8 rounded-lg bg-brandOrange-50 border border-brandOrange-500/30 text-brandOrange-500 hover:bg-brandOrange-500 hover:text-white flex items-center justify-center transition-colors">
-                            <i class="fa-solid fa-plus text-xs"></i>
-                        </button>
+                        @if($product->product_tag === 'rent' || $product->is_rental_eligible)
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-xs text-textMuted font-medium">From</span>
+                                <span class="font-grotesk text-lg font-extrabold text-brandOrange-500">£{{ number_format($product->rental_price_daily, 0) }}</span>
+                                <span class="text-xs text-textMuted font-bold">/day</span>
+                            </div>
+                        @else
+                            <div class="flex items-baseline gap-1.5">
+                                <span class="font-grotesk text-lg font-extrabold text-brandOrange-500">£{{ number_format($product->effective_price, 2) }}</span>
+                                @if($product->discount_price)
+                                    <span class="text-xs text-textMuted line-through">£{{ number_format($product->price, 2) }}</span>
+                                @endif
+                            </div>
+                            <button @click="addToCart({{ $product->id }}, 'purchase')" class="w-8 h-8 rounded-lg bg-brandOrange-50 border border-brandOrange-500/30 text-brandOrange-500 hover:bg-brandOrange-500 hover:text-white flex items-center justify-center transition-colors">
+                                <i class="fa-solid fa-plus text-xs"></i>
+                            </button>
+                        @endif
                     </div>
 
                     <div class="grid grid-cols-2 gap-2">
                         <a href="{{ route('products.show', $product->slug) }}" class="text-center py-2 bg-darkSlate-900 hover:bg-black text-white rounded-xl text-xs font-bold transition-colors">
                             Details
                         </a>
-                        @if($product->is_rental_eligible)
-                            <a href="{{ route('products.show', $product->slug) }}#rental" class="text-center py-2 bg-brandOrange-500 hover:bg-brandOrange-600 text-white rounded-xl text-xs font-bold transition-colors shadow-xs">
-                                Rent Bike
+                        @if($product->product_tag === 'rent' || $product->is_rental_eligible)
+                            <a href="{{ route('products.show', $product->slug) }}" class="text-center py-2 bg-brandOrange-500 hover:bg-brandOrange-600 text-white rounded-xl text-xs font-bold transition-colors shadow-xs">
+                                ⚡ Rent E-Bike
                             </a>
                         @else
                             <button @click="addToCart({{ $product->id }}, 'purchase')" class="py-2 bg-brandOrange-500 hover:bg-brandOrange-600 text-white rounded-xl text-xs font-bold transition-colors shadow-xs">

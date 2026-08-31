@@ -48,6 +48,30 @@
                 </select>
             </div>
 
+            <!-- Product Tag: Sell (Buy Only) vs Rent (Rent Only) -->
+            <div class="sm:col-span-2 bg-amber-50/60 border border-amber-200/80 p-4 rounded-2xl">
+                <label class="block font-extrabold text-slate-800 text-xs mb-2">
+                    <i class="fa-solid fa-tags text-brandOrange-500 mr-1"></i> Product Tag / Purpose <span class="text-rose-500">*</span>
+                </label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <label class="flex items-center space-x-3 bg-white p-3 rounded-xl border border-slate-200 cursor-pointer hover:border-brandOrange-500 transition-all">
+                        <input type="radio" name="product_tag" value="sell" {{ old('product_tag', 'sell') == 'sell' ? 'checked' : '' }} class="text-brandOrange-500 focus:ring-brandOrange-500">
+                        <div>
+                            <span class="font-extrabold text-slate-900 block text-xs">🛒 Buy Only (Sell Tag)</span>
+                            <span class="text-[10px] text-slate-500 font-medium">Customer can ONLY purchase outright. Cannot be rented.</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-center space-x-3 bg-white p-3 rounded-xl border border-slate-200 cursor-pointer hover:border-brandOrange-500 transition-all">
+                        <input type="radio" name="product_tag" value="rent" {{ old('product_tag') == 'rent' ? 'checked' : '' }} class="text-brandOrange-500 focus:ring-brandOrange-500">
+                        <div>
+                            <span class="font-extrabold text-slate-900 block text-xs">⚡ Rent Only (Rent Tag)</span>
+                            <span class="text-[10px] text-slate-500 font-medium">Customer can ONLY rent. Cannot be bought outright.</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
             <div>
                 <label class="block font-bold text-slate-700 mb-1">Category <span class="text-rose-500">*</span></label>
                 <select name="category_id" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-bold text-slate-900 focus:ring-2 focus:ring-brandOrange-500">

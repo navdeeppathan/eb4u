@@ -47,12 +47,12 @@ class AdminProductController extends Controller
             'name' => 'required|string|max:255',
             'sku' => 'required|string|unique:products,sku',
             'type' => 'required|in:ebike,accessory',
+            'product_tag' => 'required|in:sell,rent',
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'nullable|exists:brands,id',
             'price' => 'required|numeric|min:0',
             'discount_price' => 'nullable|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
-            'is_rental_eligible' => 'nullable|boolean',
             'rental_price_daily' => 'nullable|numeric|min:0',
             'rental_price_weekly' => 'nullable|numeric|min:0',
             'rental_price_monthly' => 'nullable|numeric|min:0',
@@ -67,17 +67,21 @@ class AdminProductController extends Controller
             'gallery_images.*.mimes' => 'Gallery images must be valid files of type: jpeg, png, jpg, webp.',
         ]);
 
+        $productTag = $request->input('product_tag', 'sell');
+        $isRental = ($productTag === 'rent');
+
         $product = Product::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name) . '-' . Str::random(5),
             'sku' => strtoupper($request->sku),
             'type' => $request->type,
+            'product_tag' => $productTag,
             'category_id' => $request->category_id,
             'brand_id' => $request->brand_id,
             'price' => $request->price,
             'discount_price' => $request->discount_price,
             'stock_quantity' => $request->stock_quantity,
-            'is_rental_eligible' => $request->boolean('is_rental_eligible'),
+            'is_rental_eligible' => $isRental,
             'rental_price_daily' => $request->rental_price_daily,
             'rental_price_weekly' => $request->rental_price_weekly,
             'rental_price_monthly' => $request->rental_price_monthly,
@@ -160,6 +164,7 @@ class AdminProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'required|string|unique:products,sku,' . $product->id,
+            'product_tag' => 'required|in:sell,rent',
             'price' => 'required|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
             'primary_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
@@ -169,13 +174,17 @@ class AdminProductController extends Controller
             'gallery_images.*.max' => 'Each gallery image file size must not exceed 2MB.',
         ]);
 
+        $productTag = $request->input('product_tag', 'sell');
+        $isRental = ($productTag === 'rent');
+
         $product->update([
             'name' => $request->name,
             'sku' => strtoupper($request->sku),
+            'product_tag' => $productTag,
             'price' => $request->price,
             'discount_price' => $request->discount_price,
             'stock_quantity' => $request->stock_quantity,
-            'is_rental_eligible' => $request->boolean('is_rental_eligible'),
+            'is_rental_eligible' => $isRental,
             'rental_price_daily' => $request->rental_price_daily,
             'rental_price_weekly' => $request->rental_price_weekly,
             'rental_price_monthly' => $request->rental_price_monthly,

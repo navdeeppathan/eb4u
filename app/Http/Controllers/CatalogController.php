@@ -13,10 +13,27 @@ class CatalogController extends Controller
     {
         $query = Product::with(['category', 'brand', 'images'])->where('is_active', true);
 
+        // Filter by Tag (sell vs rent)
+        if ($request->filled('tag')) {
+            if ($request->tag === 'rent') {
+                $query->where(function ($q) {
+                    $q->where('product_tag', 'rent')->orWhere('is_rental_eligible', true);
+                });
+            } elseif ($request->tag === 'sell') {
+                $query->where(function ($q) {
+                    $q->where('product_tag', 'sell')->orWhere(function ($sub) {
+                        $sub->where('is_rental_eligible', false)->where('product_tag', '!=', 'rent');
+                    });
+                });
+            }
+        }
+
         // Filter by Type (ebike, accessory, or rental)
         if ($request->filled('type')) {
             if ($request->type === 'rental') {
-                $query->where('is_rental_eligible', true);
+                $query->where(function ($q) {
+                    $q->where('product_tag', 'rent')->orWhere('is_rental_eligible', true);
+                });
             } else {
                 $query->where('type', $request->type);
             }

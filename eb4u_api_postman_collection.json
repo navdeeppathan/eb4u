@@ -1,0 +1,635 @@
+{
+	"info": {
+		"_postman_id": "eb4u-flutter-api-collection-v1",
+		"name": "eb4u E-Bike Platform - Flutter REST API Collection",
+		"description": "Complete Postman v2.1 Collection for eb4u UK E-Bike Rental, Sales & Accessories Flutter App APIs.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "authToken",
+			"value": "1|sanctum_bearer_token_here",
+			"type": "string"
+		},
+		{
+			"key": "sessionId",
+			"value": "flutter_guest_session_99",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Register New Customer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Oliver Smith\",\n  \"email\": \"oliver.smith@example.co.uk\",\n  \"password\": \"password123\",\n  \"phone\": \"+44 7700 900077\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "register"]
+						}
+					},
+					"response": [
+						{
+							"name": "201 Created - Registration Successful",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Oliver Smith\",\n  \"email\": \"oliver.smith@example.co.uk\",\n  \"password\": \"password123\",\n  \"phone\": \"+44 7700 900077\"\n}"
+								},
+								"url": {"raw": "{{baseUrl}}/auth/register"}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"success\": true,\n  \"message\": \"Registration successful.\",\n  \"token\": \"1|8XqZ...sanctum_token...\",\n  \"user\": {\n    \"id\": 5,\n    \"name\": \"Oliver Smith\",\n    \"email\": \"oliver.smith@example.co.uk\",\n    \"phone\": \"+44 7700 900077\",\n    \"role\": \"customer\",\n    \"avatar\": null\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "User Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"customer@eb4u.co.uk\",\n  \"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "login"]
+						}
+					},
+					"response": [
+						{
+							"name": "200 OK - Login Successful",
+							"originalRequest": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {"mode": "raw", "raw": "{\n  \"email\": \"customer@eb4u.co.uk\",\n  \"password\": \"password\"\n}"},
+								"url": {"raw": "{{baseUrl}}/auth/login"}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"success\": true,\n  \"message\": \"Login successful.\",\n  \"token\": \"2|9YpA...sanctum_token...\",\n  \"user\": {\n    \"id\": 2,\n    \"name\": \"Jane Customer\",\n    \"email\": \"customer@eb4u.co.uk\",\n    \"phone\": \"+44 7700 900123\",\n    \"role\": \"customer\",\n    \"avatar\": null\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Authenticated User Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/auth/me",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "me"]
+						}
+					},
+					"response": [
+						{
+							"name": "200 OK - Profile & Notifications Count",
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"success\": true,\n  \"user\": {\n    \"id\": 2,\n    \"name\": \"Jane Customer\",\n    \"email\": \"customer@eb4u.co.uk\",\n    \"phone\": \"+44 7700 900123\",\n    \"role\": \"customer\",\n    \"avatar\": null,\n    \"unread_notifications_count\": 2\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "User Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/auth/logout",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "logout"]
+						}
+					},
+					"response": [
+						{
+							"name": "200 OK - Logged Out",
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"success\": true,\n  \"message\": \"Logged out successfully.\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "2. Home & Showcase",
+			"item": [
+				{
+					"name": "Get Home Screen Data",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/home",
+							"host": ["{{baseUrl}}"],
+							"path": ["home"]
+						}
+					},
+					"response": [
+						{
+							"name": "200 OK - Home Screen Payload",
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"success\": true,\n  \"banners\": [\n    {\n      \"id\": 1,\n      \"title\": \"Ride Electric. Ride Free.\",\n      \"subtitle\": \"Buy, rent, or try premium electric bikes across the UK.\",\n      \"badge\": \"⚡ UK #1 E-Bike Platform\",\n      \"button_text\": \"Shop E-Bikes\",\n      \"button_url\": \"/catalog?type=ebike\",\n      \"image\": \"https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=1200&auto=format&fit=crop&q=80\"\n    }\n  ],\n  \"categories\": [\n    {\"id\": 1, \"name\": \"City E-Bikes\", \"slug\": \"city-e-bikes\"},\n    {\"id\": 2, \"name\": \"Mountain E-Bikes\", \"slug\": \"mountain-e-bikes\"}\n  ],\n  \"featured_ebikes\": [\n    {\n      \"id\": 1,\n      \"name\": \"Gazelle Ultimate C380 HMB Step-Through\",\n      \"slug\": \"gazelle-ultimate-c380-hmb-step-through\",\n      \"type\": \"ebike\",\n      \"brand_name\": \"Gazelle\",\n      \"price\": 3499,\n      \"discount_price\": 3299,\n      \"effective_price\": 3299,\n      \"discount_percentage\": 6,\n      \"rental_price_daily\": 35,\n      \"is_rental_eligible\": true,\n      \"primary_image\": \"https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=800&auto=format&fit=crop&q=80\",\n      \"motor_specs\": \"Bosch Performance Line 3.0 (75 Nm)\",\n      \"battery_specs\": \"625Wh\",\n      \"range_specs\": \"75 Miles\",\n      \"average_rating\": 4.9,\n      \"reviews_count\": 12,\n      \"stock_quantity\": 5\n    }\n  ],\n  \"stats\": {\n    \"ebikes_count\": \"500+\",\n    \"rating\": \"4.9 ★\",\n    \"delivery\": \"Free UK Delivery > £500\",\n    \"warranty\": \"2-Year Official UK Warranty\"\n  }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "3. Products & Live Rentals",
+			"item": [
+				{
+					"name": "Get Filtered Products List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/products?type=ebike&sort=latest&page=1",
+							"host": ["{{baseUrl}}"],
+							"path": ["products"],
+							"query": [
+								{"key": "type", "value": "ebike"},
+								{"key": "category", "value": "city-e-bikes", "disabled": true},
+								{"key": "sort", "value": "latest"},
+								{"key": "page", "value": "1"}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200 OK - Paginated Products",
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"success\": true,\n  \"current_page\": 1,\n  \"last_page\": 1,\n  \"per_page\": 12,\n  \"total\": 5,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Gazelle Ultimate C380 HMB Step-Through\",\n      \"slug\": \"gazelle-ultimate-c380-hmb-step-through\",\n      \"type\": \"ebike\",\n      \"brand_name\": \"Gazelle\",\n      \"price\": 3499,\n      \"discount_price\": 3299,\n      \"effective_price\": 3299,\n      \"discount_percentage\": 6,\n      \"rental_price_daily\": 35,\n      \"is_rental_eligible\": true,\n      \"primary_image\": \"https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=800&auto=format&fit=crop&q=80\",\n      \"stock_quantity\": 5\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Product Detail by Slug",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/products/gazelle-ultimate-c380-hmb-step-through",
+							"host": ["{{baseUrl}}"],
+							"path": ["products", "gazelle-ultimate-c380-hmb-step-through"]
+						}
+					},
+					"response": [
+						{
+							"name": "200 OK - Product Full Detail",
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"success\": true,\n  \"product\": {\n    \"id\": 1,\n    \"name\": \"Gazelle Ultimate C380 HMB Step-Through\",\n    \"slug\": \"gazelle-ultimate-c380-hmb-step-through\",\n    \"sku\": \"GAZ-ULT-C380\",\n    \"type\": \"ebike\",\n    \"brand\": {\"id\": 1, \"name\": \"Gazelle\"},\n    \"category\": {\"id\": 1, \"name\": \"City E-Bikes\"},\n    \"price\": 3499,\n    \"discount_price\": 3299,\n    \"effective_price\": 3299,\n    \"rental_price_daily\": 35,\n    \"is_rental_eligible\": true,\n    \"stock_quantity\": 5,\n    \"motor_specs\": \"Bosch Performance Line 3.0 (75 Nm)\",\n    \"battery_specs\": \"625Wh\",\n    \"range_specs\": \"75 Miles / 120 km\",\n    \"primary_image\": \"https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=800&auto=format&fit=crop&q=80\",\n    \"gallery_images\": [],\n    \"variants\": [\n      {\"id\": 1, \"name\": \"Frame Size: Medium\", \"sku\": \"GAZ-M\", \"price_modifier\": 0},\n      {\"id\": 2, \"name\": \"Frame Size: Large\", \"sku\": \"GAZ-L\", \"price_modifier\": 0}\n    ]\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Check Live Rental Availability & Pricing",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"start_date\": \"2026-09-01\",\n  \"end_date\": \"2026-09-08\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products/1/check-rental",
+							"host": ["{{baseUrl}}"],
+							"path": ["products", "1", "check-rental"]
+						}
+					},
+					"response": [
+						{
+							"name": "200 OK - Rental Dates Available",
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"success\": true,\n  \"is_available\": true,\n  \"rental_days\": 7,\n  \"daily_rate\": 29.75,\n  \"subtotal\": 208.25,\n  \"security_deposit\": 150,\n  \"advance_percentage\": 30,\n  \"advance_30_percent\": 212.48,\n  \"message\": \"E-Bike is available for selected rental dates!\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Categories List",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Accept", "value": "application/json"}],
+						"url": {"raw": "{{baseUrl}}/categories", "host": ["{{baseUrl}}"], "path": ["categories"]}
+					}
+				},
+				{
+					"name": "Get Brands List",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Accept", "value": "application/json"}],
+						"url": {"raw": "{{baseUrl}}/brands", "host": ["{{baseUrl}}"], "path": ["brands"]}
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Shopping Cart",
+			"item": [
+				{
+					"name": "Get Cart Summary & Items",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "X-Session-ID",
+								"value": "{{sessionId}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/cart",
+							"host": ["{{baseUrl}}"],
+							"path": ["cart"]
+						}
+					},
+					"response": [
+						{
+							"name": "200 OK - Cart Data",
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"success\": true,\n  \"count\": 1,\n  \"subtotal\": 3299,\n  \"tax\": 659.8,\n  \"delivery_fee\": 0,\n  \"deposit_total\": 0,\n  \"discount\": 0,\n  \"total\": 3958.8,\n  \"advance_30_percent\": 1187.64,\n  \"items\": [\n    {\n      \"id\": 10,\n      \"product_id\": 1,\n      \"name\": \"Gazelle Ultimate C380 HMB Step-Through\",\n      \"type\": \"purchase\",\n      \"quantity\": 1,\n      \"subtotal\": 3299,\n      \"rental_dates_formatted\": null,\n      \"image\": \"https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=800&auto=format&fit=crop&q=80\"\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Add Item to Cart (Purchase or Rental)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "X-Session-ID",
+								"value": "{{sessionId}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product_id\": 1,\n  \"item_type\": \"rental\",\n  \"quantity\": 1,\n  \"rental_start_date\": \"2026-09-01\",\n  \"rental_end_date\": \"2026-09-08\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cart/add",
+							"host": ["{{baseUrl}}"],
+							"path": ["cart", "add"]
+						}
+					},
+					"response": [
+						{
+							"name": "200 OK - Added to Basket",
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"success\": true,\n  \"message\": \"Item added to basket successfully.\",\n  \"item_id\": 12\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Cart Item Quantity",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{authToken}}"},
+							{"key": "X-Session-ID", "value": "{{sessionId}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"quantity\": 2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cart/update/10",
+							"host": ["{{baseUrl}}"],
+							"path": ["cart", "update", "10"]
+						}
+					}
+				},
+				{
+					"name": "Remove Item from Cart",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{authToken}}"},
+							{"key": "X-Session-ID", "value": "{{sessionId}}"}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/cart/remove/10",
+							"host": ["{{baseUrl}}"],
+							"path": ["cart", "remove", "10"]
+						}
+					}
+				},
+				{
+					"name": "Apply Coupon Discount Code",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"coupon_code\": \"WELCOME10\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cart/coupon",
+							"host": ["{{baseUrl}}"],
+							"path": ["cart", "coupon"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "5. Mobile Checkout",
+			"item": [
+				{
+					"name": "Process Mobile Checkout (30% Advance or Full)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customer_name\": \"Jane Customer\",\n  \"customer_email\": \"customer@eb4u.co.uk\",\n  \"customer_phone\": \"+44 7700 900123\",\n  \"fulfillment_type\": \"delivery\",\n  \"payment_type\": \"advance\",\n  \"address_line_1\": \"14 Baker Street\",\n  \"city\": \"London\",\n  \"postcode\": \"NW1 6XE\",\n  \"customer_notes\": \"Please call before delivery.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/checkout/process",
+							"host": ["{{baseUrl}}"],
+							"path": ["checkout", "process"]
+						}
+					},
+					"response": [
+						{
+							"name": "200 OK - Order Placed Successfully",
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"success\": true,\n  \"message\": \"Checkout completed successfully!\",\n  \"order\": {\n    \"id\": 8,\n    \"order_number\": \"UK-RNT-2026-8812\",\n    \"type\": \"rental\",\n    \"status\": \"active\",\n    \"payment_status\": \"partially_paid\",\n    \"paid_now\": 212.48,\n    \"remaining_balance\": 145.77,\n    \"total_amount\": 358.25\n  }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "6. Customer Portal & Rentals",
+			"item": [
+				{
+					"name": "Get Customer Dashboard Metrics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{authToken}}"},
+							{"key": "Accept", "value": "application/json"}
+						],
+						"url": {"raw": "{{baseUrl}}/customer/dashboard", "host": ["{{baseUrl}}"], "path": ["customer", "dashboard"]}
+					}
+				},
+				{
+					"name": "Get Customer Orders List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{authToken}}"},
+							{"key": "Accept", "value": "application/json"}
+						],
+						"url": {"raw": "{{baseUrl}}/customer/orders", "host": ["{{baseUrl}}"], "path": ["customer", "orders"]}
+					}
+				},
+				{
+					"name": "Get Order Detail by Number",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{authToken}}"},
+							{"key": "Accept", "value": "application/json"}
+						],
+						"url": {"raw": "{{baseUrl}}/customer/orders/UK-RNT-2026-8812", "host": ["{{baseUrl}}"], "path": ["customer", "orders", "UK-RNT-2026-8812"]}
+					}
+				},
+				{
+					"name": "Get Customer Active & Past Rentals",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{authToken}}"},
+							{"key": "Accept", "value": "application/json"}
+						],
+						"url": {"raw": "{{baseUrl}}/customer/rentals", "host": ["{{baseUrl}}"], "path": ["customer", "rentals"]}
+					}
+				},
+				{
+					"name": "Request Rental Extension",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{authToken}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"extension_days\": 3\n}"
+						},
+						"url": {"raw": "{{baseUrl}}/customer/rentals/8/extend", "host": ["{{baseUrl}}"], "path": ["customer", "rentals", "8", "extend"]}
+					}
+				},
+				{
+					"name": "Request Vehicle Return & Deposit Refund",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{authToken}}"}
+						],
+						"url": {"raw": "{{baseUrl}}/customer/rentals/8/return", "host": ["{{baseUrl}}"], "path": ["customer", "rentals", "8", "return"]}
+					}
+				},
+				{
+					"name": "Get Wishlist Products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{authToken}}"}
+						],
+						"url": {"raw": "{{baseUrl}}/customer/wishlist", "host": ["{{baseUrl}}"], "path": ["customer", "wishlist"]}
+					}
+				},
+				{
+					"name": "Toggle Product Wishlist Status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{authToken}}"}
+						],
+						"url": {"raw": "{{baseUrl}}/customer/wishlist/toggle/1", "host": ["{{baseUrl}}"], "path": ["customer", "wishlist", "toggle", "1"]}
+					}
+				}
+			]
+		},
+		{
+			"name": "7. Real-Time Notifications",
+			"item": [
+				{
+					"name": "Get Customer Real-Time Notifications",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{authToken}}"},
+							{"key": "Accept", "value": "application/json"}
+						],
+						"url": {"raw": "{{baseUrl}}/customer/notifications", "host": ["{{baseUrl}}"], "path": ["customer", "notifications"]}
+					},
+					"response": [
+						{
+							"name": "200 OK - Notifications List",
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"success\": true,\n  \"unread_count\": 1,\n  \"notifications\": [\n    {\n      \"id\": 15,\n      \"type\": \"rental_booked\",\n      \"title\": \"E-Bike Rental Confirmed\",\n      \"message\": \"Your E-Bike rental (Order #UK-RNT-2026-8812) is active.\",\n      \"action_url\": \"/customer/rentals\",\n      \"icon\": \"fa-bicycle\",\n      \"is_read\": false,\n      \"created_at_human\": \"3 minutes ago\",\n      \"created_at\": \"2026-08-27 13:20:00\"\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Mark Single Notification Read",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{authToken}}"}
+						],
+						"url": {"raw": "{{baseUrl}}/customer/notifications/read/15", "host": ["{{baseUrl}}"], "path": ["customer", "notifications", "read", "15"]}
+					}
+				},
+				{
+					"name": "Mark All Notifications Read",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{authToken}}"}
+						],
+						"url": {"raw": "{{baseUrl}}/customer/notifications/read-all", "host": ["{{baseUrl}}"], "path": ["customer", "notifications", "read-all"]}
+					}
+				}
+			]
+		}
+	]
+}

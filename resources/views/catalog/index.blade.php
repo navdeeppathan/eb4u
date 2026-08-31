@@ -31,24 +31,20 @@
             </div>
 
             <form @change="filterProducts()" id="filterForm">
-                <!-- Categories -->
+                <!-- Purpose Tag (Buy vs Rent) -->
                 <div class="p-4 border-b border-borderLight space-y-2">
-                    <div class="font-grotesk text-[11px] font-bold text-textSec uppercase tracking-wider mb-2">Category Type</div>
+                    <div class="font-grotesk text-[11px] font-bold text-textSec uppercase tracking-wider mb-2">Product Purpose</div>
                     <label class="flex items-center space-x-2 text-xs font-semibold text-textSec cursor-pointer hover:text-darkSlate-900">
-                        <input type="radio" name="type" value="" {{ request('type') == '' ? 'checked' : '' }} class="text-brandOrange-500 focus:ring-brandOrange-500">
+                        <input type="radio" name="tag" value="" {{ request('tag') == '' && request('type') == '' ? 'checked' : '' }} class="text-brandOrange-500 focus:ring-brandOrange-500">
                         <span>All Products</span>
                     </label>
-                    <label class="flex items-center space-x-2 text-xs font-semibold text-textSec cursor-pointer hover:text-darkSlate-900">
-                        <input type="radio" name="type" value="ebike" {{ request('type') == 'ebike' ? 'checked' : '' }} class="text-brandOrange-500 focus:ring-brandOrange-500">
-                        <span>E-Bikes Only</span>
+                    <label class="flex items-center space-x-2 text-xs font-bold text-darkSlate-900 cursor-pointer hover:text-brandOrange-500">
+                        <input type="radio" name="tag" value="sell" {{ request('tag') == 'sell' ? 'checked' : '' }} class="text-brandOrange-500 focus:ring-brandOrange-500">
+                        <span>🛒 Buy Only (Sales)</span>
                     </label>
-                    <label class="flex items-center space-x-2 text-xs font-bold text-brandOrange-600 cursor-pointer">
-                        <input type="radio" name="type" value="rental" {{ request('type') == 'rental' ? 'checked' : '' }} class="text-brandOrange-500 focus:ring-brandOrange-500">
-                        <span>Rental Eligible</span>
-                    </label>
-                    <label class="flex items-center space-x-2 text-xs font-semibold text-textSec cursor-pointer hover:text-darkSlate-900">
-                        <input type="radio" name="type" value="accessory" {{ request('type') == 'accessory' ? 'checked' : '' }} class="text-brandOrange-500 focus:ring-brandOrange-500">
-                        <span>Accessories</span>
+                    <label class="flex items-center space-x-2 text-xs font-black text-brandOrange-600 cursor-pointer">
+                        <input type="radio" name="tag" value="rent" {{ request('tag') == 'rent' || request('type') == 'rental' ? 'checked' : '' }} class="text-brandOrange-500 focus:ring-brandOrange-500">
+                        <span>⚡ Rent Only (Rentals)</span>
                     </label>
                 </div>
 

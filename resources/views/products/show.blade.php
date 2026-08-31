@@ -99,58 +99,24 @@
 
             <!-- Tab Selection: Buy vs Rent -->
             <div class="bg-white p-6 rounded-3xl border border-borderLight shadow-xs space-y-6">
-                <div class="flex border-b border-borderLight">
-                    <button @click="activeTab = 'buy'" :class="activeTab === 'buy' ? 'border-darkSlate-900 text-darkSlate-900 font-extrabold' : 'border-transparent text-textMuted font-bold'" class="font-grotesk pb-3 px-4 text-sm border-b-2 transition-colors">
-                        <i class="fa-solid fa-tag mr-2"></i> Buy E-Bike (£{{ number_format($product->effective_price, 2) }})
-                    </button>
-                    @if($product->is_rental_eligible)
-                        <button @click="activeTab = 'rent'" id="rental" :class="activeTab === 'rent' ? 'border-brandOrange-500 text-brandOrange-500 font-extrabold' : 'border-transparent text-textMuted font-bold'" class="font-grotesk pb-3 px-4 text-sm border-b-2 transition-colors">
-                            <i class="fa-solid fa-calendar-check mr-2"></i> Rent E-Bike (from £{{ number_format($product->rental_price_daily, 0) }}/day)
-                        </button>
-                    @endif
-                </div>
-
-                <!-- Tab 1: Buy Purchase -->
-                <div x-show="activeTab === 'buy'" class="space-y-4">
-                    <div class="flex items-baseline space-x-3">
-                        <span class="font-grotesk text-3xl font-extrabold text-brandOrange-500">£{{ number_format($product->effective_price, 2) }}</span>
-                        @if($product->discount_price)
-                            <span class="text-sm text-textMuted line-through">£{{ number_format($product->price, 2) }}</span>
-                            <span class="text-xs font-bold text-brandOrange-600 bg-brandOrange-50 px-2 py-0.5 rounded-full">Save {{ $product->discount_percentage }}%</span>
-                        @endif
+                @if($product->product_tag === 'rent' || $product->is_rental_eligible)
+                    <!-- Rent Only Header -->
+                    <div class="border-b border-borderLight pb-3 flex items-center justify-between">
+                        <span class="font-grotesk text-sm font-extrabold text-brandOrange-500 flex items-center">
+                            <i class="fa-solid fa-calendar-check mr-2"></i> ⚡ Rent E-Bike (from £{{ number_format($product->rental_price_daily, 0) }}/day)
+                        </span>
+                        <span class="bg-brandOrange-50 text-brandOrange-600 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider border border-brandOrange-200">
+                            Rental Only
+                        </span>
                     </div>
-                    <p class="text-xs text-textSec font-medium"><i class="fa-solid fa-check text-brandOrange-500 mr-1"></i> In Stock ({{ $product->stock_quantity }} available) | Free UK Shipping</p>
 
-                    <div class="flex gap-3">
-                        <button @click="addToCart({{ $product->id }}, 'purchase')" class="flex-1 py-3.5 bg-brandOrange-500 hover:bg-brandOrange-600 text-white text-xs font-bold rounded-xl shadow-lg shadow-brandOrange-500/20 transition-all flex items-center justify-center">
-                            <i class="fa-solid fa-basket-shopping mr-2"></i> Add to Basket
-                        </button>
-                        <button @click="toggleWishlist({{ $product->id }})" class="p-3.5 bg-[#f5f7fb] hover:bg-rose-50 text-textSec hover:text-rose-600 rounded-xl transition-colors">
-                            <i class="fa-regular fa-heart text-lg"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Tab 2: Rental Booking Widget -->
-                @if($product->is_rental_eligible)
-                    <div x-show="activeTab === 'rent'" class="space-y-4">
+                    <!-- Rental Booking Widget -->
+                    <div class="space-y-4">
                         <div class="bg-[#f5f7fb] p-4 rounded-2xl border border-borderLight space-y-3">
                             <h4 class="font-grotesk text-xs font-bold uppercase text-darkSlate-900 tracking-wider"><i class="fa-solid fa-calendar-days text-brandOrange-500 mr-1.5"></i> Select Rental Dates</h4>
                             
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label class="block text-[10px] font-bold uppercase text-textSec mb-1">Start Date</label>
-                                    <input type="date" x-model="startDate" @change="checkAvailability()" class="w-full text-xs bg-white border border-borderLight rounded-xl p-2.5 font-semibold text-darkSlate-900">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold uppercase text-textSec mb-1">End Date</label>
-                                    <input type="date" x-model="endDate" @change="checkAvailability()" class="w-full text-xs bg-white border border-borderLight rounded-xl p-2.5 font-semibold text-darkSlate-900">
-                                </div>
-                            </div>
-
-                            <!-- Price Breakdown Box -->
-                            <div x-show="rentalResult" x-cloak class="bg-white p-3.5 rounded-xl border border-borderLight text-xs space-y-2">
-                                <div class="flex justify-between">
                                     <span class="text-textSec">Duration & Rate:</span>
                                     <span class="font-bold text-darkSlate-900" x-text="rentalResult.rental_days + ' Days @ £' + rentalResult.daily_rate + '/day'"></span>
                                 </div>

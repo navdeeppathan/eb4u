@@ -10,8 +10,8 @@
         <!-- Desktop Navigation Menu -->
         <nav class="hidden lg:flex items-center space-x-8 font-bold text-white text-sm">
             <a href="{{ route('home') }}" class="hover:text-brandOrange-500 transition-colors border-b-2 py-1 {{ request()->routeIs('home') ? 'border-brandOrange-500 text-brandOrange-500' : 'border-transparent' }}">Home</a>
-            <a href="{{ route('catalog.index', ['type' => 'ebike']) }}" class="hover:text-brandOrange-500 transition-colors py-1 {{ request('type') == 'ebike' ? 'text-brandOrange-500 font-extrabold' : '' }}">E-Bikes</a>
-            <a href="{{ route('catalog.index', ['type' => 'rental']) }}" class="hover:text-brandOrange-500 transition-colors py-1 text-brandOrange-400 font-extrabold flex items-center">
+            <a href="{{ route('catalog.index', ['tag' => 'sell']) }}" class="hover:text-brandOrange-500 transition-colors py-1 {{ request('tag') == 'sell' ? 'text-brandOrange-500 font-extrabold' : '' }}">Buy E-Bike</a>
+            <a href="{{ route('catalog.index', ['tag' => 'rent']) }}" class="hover:text-brandOrange-500 transition-colors py-1 text-brandOrange-400 font-extrabold flex items-center {{ request('tag') == 'rent' ? 'text-brandOrange-500 font-extrabold' : '' }}">
                 <span class="w-2 h-2 rounded-full bg-brandOrange-500 animate-pulse mr-1.5"></span> E-Bike Rental
             </a>
             <a href="{{ route('catalog.index', ['type' => 'accessory']) }}" class="hover:text-brandOrange-500 transition-colors py-1">Accessories</a>
@@ -123,8 +123,8 @@
     <div x-show="mobileMenuOpen" x-transition x-cloak class="lg:hidden bg-darkBlack-950 text-white border-b border-darkBlack-800 px-6 py-5 space-y-4 shadow-2xl">
         <nav class="space-y-3 font-bold text-sm">
             <a href="{{ route('home') }}" class="block py-2 text-white border-b border-darkBlack-800">Home</a>
-            <a href="{{ route('catalog.index', ['type' => 'ebike']) }}" class="block py-2 text-white border-b border-darkBlack-800">E-Bikes</a>
-            <a href="{{ route('catalog.index', ['type' => 'rental']) }}" class="block py-2 text-brandOrange-500 font-extrabold border-b border-darkBlack-800">⚡ E-Bike Rental</a>
+            <a href="{{ route('catalog.index', ['tag' => 'sell']) }}" class="block py-2 text-white border-b border-darkBlack-800">Buy E-Bike</a>
+            <a href="{{ route('catalog.index', ['tag' => 'rent']) }}" class="block py-2 text-brandOrange-500 font-extrabold border-b border-darkBlack-800">⚡ E-Bike Rental</a>
             <a href="{{ route('catalog.index', ['type' => 'accessory']) }}" class="block py-2 text-white">Accessories</a>
             <a href="{{ route('cms.faqs') }}" class="block py-2 text-white border-b border-darkBlack-800">FAQs</a>
             <a href="{{ route('cms.contact') }}" class="block py-2 text-white">Contact Us</a>

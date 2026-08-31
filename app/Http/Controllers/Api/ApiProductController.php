@@ -16,9 +16,25 @@ class ApiProductController extends Controller
     {
         $query = Product::with(['brand', 'category', 'images'])->where('is_active', true);
 
+        if ($request->filled('tag')) {
+            if ($request->tag === 'rent') {
+                $query->where(function ($q) {
+                    $q->where('product_tag', 'rent')->orWhere('is_rental_eligible', true);
+                });
+            } elseif ($request->tag === 'sell') {
+                $query->where(function ($q) {
+                    $q->where('product_tag', 'sell')->orWhere(function ($sub) {
+                        $sub->where('is_rental_eligible', false)->where('product_tag', '!=', 'rent');
+                    });
+                });
+            }
+        }
+
         if ($request->filled('type')) {
             if ($request->type === 'rental') {
-                $query->where('is_rental_eligible', true);
+                $query->where(function ($q) {
+                    $q->where('product_tag', 'rent')->orWhere('is_rental_eligible', true);
+                });
             } else {
                 $query->where('type', $request->type);
             }
@@ -223,6 +239,7 @@ class ApiProductController extends Controller
             'name' => $p->name,
             'slug' => $p->slug,
             'type' => $p->type,
+            'product_tag' => $p->product_tag,
             'brand_name' => $p->brand->name ?? 'Premium',
             'price' => (float) $p->price,
             'discount_price' => $p->discount_price ? (float) $p->discount_price : null,

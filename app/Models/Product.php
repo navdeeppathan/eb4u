@@ -14,6 +14,7 @@ class Product extends Model
         'slug',
         'sku',
         'type',
+        'product_tag', // 'sell' or 'rent'
         'category_id',
         'brand_id',
         'price',
@@ -95,6 +96,24 @@ class Product extends Model
         return 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600&auto=format&fit=crop&q=80';
     }
 
+    public function getProductTagAttribute(): string
+    {
+        if (isset($this->attributes['product_tag']) && in_array($this->attributes['product_tag'], ['sell', 'rent'])) {
+            return $this->attributes['product_tag'];
+        }
+        return $this->is_rental_eligible ? 'rent' : 'sell';
+    }
+
+    public function getIsSellOnlyAttribute(): bool
+    {
+        return $this->product_tag === 'sell';
+    }
+
+    public function getIsRentOnlyAttribute(): bool
+    {
+        return $this->product_tag === 'rent';
+    }
+
     public function getEffectivePriceAttribute(): float
     {
         return $this->discount_price && $this->discount_price > 0 ? (float) $this->discount_price : (float) $this->price;
@@ -118,12 +137,10 @@ class Product extends Model
         return $this->reviews()->count();
     }
 
-    // Availability for rental check given start date and end date
     public function getAvailableRentalUnitsCount($startDate, $endDate): int
     {
-        if (!$this->is_rental_eligible) return 0;
+        if (!$this->is_rental_eligible || $this->product_tag === 'sell') return 0;
 
-        // Get all units for this product that are NOT under maintenance or retired
         $totalOperationalUnits = $this->ebikeUnits()
             ->whereIn('status', ['available', 'rented'])
             ->get();
@@ -135,7 +152,6 @@ class Product extends Model
         $availableCount = 0;
 
         foreach ($totalOperationalUnits as $unit) {
-            // Check if unit has any overlapping active/confirmed rental order item
             $hasOverlap = OrderItem::where('ebike_unit_id', $unit->id)
                 ->where('item_type', 'rental')
                 ->whereHas('order', function ($query) {
