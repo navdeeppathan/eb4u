@@ -17,12 +17,12 @@
             </div>
 
             <h1 class="text-4xl sm:text-6xl font-black text-white leading-tight tracking-tight">
-                Ride Electric. <br>
-                <span class="text-brandOrange-500">Ride Free.</span>
+                Buy Bike. <br>
+                <span class="text-brandOrange-500">Rent Bike.</span>
             </h1>
 
             <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-xl font-normal">
-                Buy, rent, or try premium electric bikes across the UK. Flexible daily, weekly & monthly rentals with 30% advance booking and instant security deposit protection.
+                Buy, rent, or try delivery electric bikes across the UK. Flexible daily, weekly & monthly rentals with 30% advance booking and instant security deposit protection.
             </p>
 
             <div class="flex flex-wrap gap-4 pt-2">
@@ -138,7 +138,7 @@
 </section>
 
 <!-- Categories Section -->
-<section class="py-16 bg-slate-50">
+<!-- <section class="py-16 bg-slate-50">
     <div class="container mx-auto px-6 md:px-12">
         <div class="flex justify-between items-end mb-8">
             <div>
@@ -161,7 +161,7 @@
             @endforeach
         </div>
     </div>
-</section>
+</section> -->
 
 <!-- 🛒 Buy E-Bikes & Retail Sales Section -->
 <section class="py-16 bg-white border-t border-slate-200">

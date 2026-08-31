@@ -16,19 +16,19 @@
     <div class="flex flex-col lg:flex-row gap-8 items-start">
         
         <!-- Mobile Filter Toggle Button -->
-        <div class="lg:hidden w-full">
+        <!-- <div class="lg:hidden w-full">
             <button @click="mobileFilterOpen = !mobileFilterOpen" class="w-full py-3 px-4 bg-white border border-borderLight rounded-xl font-bold text-xs text-darkSlate-900 flex justify-between items-center shadow-xs">
                 <span><i class="fa-solid fa-sliders text-brandOrange-500 mr-2"></i> Filter Products</span>
                 <i class="fa-solid" :class="mobileFilterOpen ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
             </button>
-        </div>
+        </div> -->
 
         <!-- Sidebar Filters (Exact design from Testing Platform Products.dc.html) -->
         <aside x-show="mobileFilterOpen || isDesktop" x-cloak class="w-full lg:w-60 flex-shrink-0 bg-white border border-borderLight rounded-2xl overflow-hidden shadow-xs">
-            <div class="p-4 border-b border-borderLight flex items-center justify-between">
+            <!-- <div class="p-4 border-b border-borderLight flex items-center justify-between">
                 <span class="font-grotesk text-sm font-bold text-darkSlate-900">Filters</span>
                 <button @click="resetFilters()" class="text-xs font-semibold text-brandOrange-500 hover:opacity-80">Clear all</button>
-            </div>
+            </div> -->
 
             <form @change="filterProducts()" id="filterForm">
                 <!-- Purpose Tag (Buy vs Rent) -->
@@ -40,7 +40,7 @@
                     </label>
                     <label class="flex items-center space-x-2 text-xs font-bold text-darkSlate-900 cursor-pointer hover:text-brandOrange-500">
                         <input type="radio" name="tag" value="sell" {{ request('tag') == 'sell' ? 'checked' : '' }} class="text-brandOrange-500 focus:ring-brandOrange-500">
-                        <span>🛒 Buy Only (Sales)</span>
+                        <span>🛒 Buy Only (Sell)</span>
                     </label>
                     <label class="flex items-center space-x-2 text-xs font-black text-brandOrange-600 cursor-pointer">
                         <input type="radio" name="tag" value="rent" {{ request('tag') == 'rent' || request('type') == 'rental' ? 'checked' : '' }} class="text-brandOrange-500 focus:ring-brandOrange-500">
@@ -49,7 +49,7 @@
                 </div>
 
                 <!-- Category Selector -->
-                <div class="p-4 border-b border-borderLight">
+                <!-- <div class="p-4 border-b border-borderLight">
                     <div class="font-grotesk text-[11px] font-bold text-textSec uppercase tracking-wider mb-2">Category</div>
                     <select name="category" class="w-full text-xs bg-[#f5f7fb] border border-borderLight rounded-xl p-2.5 font-semibold text-darkSlate-900 focus:ring-2 focus:ring-brandOrange-500">
                         <option value="">All Categories</option>
@@ -57,10 +57,10 @@
                             <option value="{{ $cat->slug }}" {{ request('category') == $cat->slug ? 'selected' : '' }}>{{ $cat->name }}</option>
                         @endforeach
                     </select>
-                </div>
+                </div> -->
 
                 <!-- Brand Selector -->
-                <div class="p-4 border-b border-borderLight">
+                <!-- <div class="p-4 border-b border-borderLight">
                     <div class="font-grotesk text-[11px] font-bold text-textSec uppercase tracking-wider mb-2">Brand</div>
                     <select name="brand" class="w-full text-xs bg-[#f5f7fb] border border-borderLight rounded-xl p-2.5 font-semibold text-darkSlate-900 focus:ring-2 focus:ring-brandOrange-500">
                         <option value="">All Brands</option>
@@ -68,16 +68,16 @@
                             <option value="{{ $b->slug }}" {{ request('brand') == $b->slug ? 'selected' : '' }}>{{ $b->name }}</option>
                         @endforeach
                     </select>
-                </div>
+                </div> -->
 
                 <!-- Price Range -->
-                <div class="p-4">
+                <!-- <div class="p-4">
                     <div class="font-grotesk text-[11px] font-bold text-textSec uppercase tracking-wider mb-2">Price Range (£)</div>
                     <div class="grid grid-cols-2 gap-2">
                         <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="Min £" class="text-xs bg-[#f5f7fb] border border-borderLight rounded-xl p-2 font-bold text-darkSlate-900">
                         <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="Max £" class="text-xs bg-[#f5f7fb] border border-borderLight rounded-xl p-2 font-bold text-darkSlate-900">
                     </div>
-                </div>
+                </div> -->
             </form>
         </aside>
 

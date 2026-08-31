@@ -20,7 +20,7 @@
         <div>
             <h4 class="text-xs font-black text-white uppercase tracking-wider mb-4 border-b border-darkBlack-800 pb-2">Categories</h4>
             <ul class="space-y-2 text-xs font-semibold text-slate-400">
-                <li><a href="{{ route('catalog.index', ['tag' => 'sell']) }}" class="text-white font-bold hover:text-brandOrange-500 transition-colors flex items-center"><i class="fa-solid fa-tag text-brandOrange-500 mr-1.5"></i> Buy E-Bike (Sales)</a></li>
+                <li><a href="{{ route('catalog.index', ['tag' => 'sell']) }}" class="text-white font-bold hover:text-brandOrange-500 transition-colors flex items-center"><i class="fa-solid fa-tag text-brandOrange-500 mr-1.5"></i> Buy E-Bike (Sell)</a></li>
                 <li><a href="{{ route('catalog.index', ['tag' => 'rent']) }}" class="text-brandOrange-500 font-extrabold hover:underline flex items-center"><i class="fa-solid fa-calendar-check mr-1.5"></i> ⚡ E-Bike Rental</a></li>
                 
                 <li><a href="{{ route('catalog.index', ['type' => 'accessory']) }}" class="hover:text-brandOrange-500 transition-colors">Accessories & Gear</a></li>
