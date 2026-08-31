@@ -29,7 +29,7 @@
                     @foreach($product->images as $img)
                         <button @click="activeImage = '{{ asset($img->image_path) }}'" 
                                 :class="activeImage === '{{ asset($img->image_path) }}' ? 'border-brandOrange-500 ring-2 ring-brandOrange-500/20' : 'border-borderLight'"
-                                class="w-20 h-20 rounded-2xl border bg-white p-1 overflow-hidden flex-shrink-0 transition-all">
+                                class="w-20 h-20 rounded-2xl border bg-white p-1 overflow-hidden flex-shrink-0 transition-all cursor-pointer">
                             <img src="{{ asset($img->image_path) }}" class="w-full h-full object-cover rounded-xl">
                         </button>
                     @endforeach
@@ -40,56 +40,58 @@
         <!-- Right: Details & Purchase/Rental Form -->
         <div class="lg:col-span-6 space-y-6">
             <div>
-                <div class="flex items-center space-x-3 mb-2">
-                    <span class="bg-brandOrange-50 text-brandOrange-600 text-[10px] font-bold uppercase px-3 py-1 rounded-full border border-brandOrange-500/20">
-                        {{ $product->brand->name ?? 'Brand' }}
-                    </span>
-                    <span class="text-xs text-textMuted font-mono">SKU: {{ $product->sku }}</span>
-                    <div class="flex items-center text-amber-400 text-xs">
-                        <i class="fa-solid fa-star mr-1"></i> <strong class="text-darkSlate-900 mr-1">{{ $product->average_rating }}</strong> ({{ $product->reviews_count }} reviews)
-                    </div>
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xs font-bold text-brandOrange-600 uppercase tracking-wider bg-brandOrange-50 px-2.5 py-1 rounded-md">{{ $product->brand->name ?? 'Premium' }}</span>
+                    <span class="text-xs font-semibold text-textMuted">• SKU: {{ $product->sku }}</span>
                 </div>
+                <h1 class="font-grotesk text-2xl sm:text-3xl font-extrabold text-darkSlate-900 leading-tight mb-3">{{ $product->name }}</h1>
 
-                <h1 class="font-grotesk text-3xl sm:text-4xl font-extrabold text-darkSlate-900 leading-tight mb-3">{{ $product->name }}</h1>
-                
-                <p class="text-xs sm:text-sm text-textSec leading-relaxed mb-4 font-normal">{{ $product->short_description }}</p>
+                <!-- Rating -->
+                <div class="flex items-center gap-2">
+                    <div class="flex text-amber-400 text-sm">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star-half-stroke"></i>
+                    </div>
+                    <span class="text-xs font-bold text-darkSlate-900">{{ $product->average_rating }}</span>
+                    <span class="text-xs text-textMuted">({{ $product->reviews_count }} verified rider reviews)</span>
+                </div>
             </div>
 
-            <!-- Specs Grid -->
+            <!-- Specs Badges Grid -->
             @if($product->type === 'ebike')
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white p-4 rounded-2xl border border-borderLight shadow-xs">
-                    <div class="text-center p-2.5 bg-[#f5f7fb] rounded-xl border border-borderLight">
-                        <i class="fa-solid fa-microchip text-brandOrange-500 text-base mb-1"></i>
-                        <span class="block text-[10px] uppercase font-bold text-textMuted">Motor</span>
-                        <span class="font-grotesk text-xs font-bold text-darkSlate-900 leading-tight">{{ $product->motor_specs ?? '250W Mid-Drive' }}</span>
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="bg-white p-3 rounded-2xl border border-borderLight flex flex-col items-center text-center">
+                        <i class="fa-solid fa-bolt text-brandOrange-500 text-base mb-1"></i>
+                        <span class="text-[10px] text-textMuted font-medium uppercase">Motor</span>
+                        <span class="text-xs font-bold text-darkSlate-900">{{ $product->motor_specs ?? '250W German' }}</span>
                     </div>
-                    <div class="text-center p-2.5 bg-[#f5f7fb] rounded-xl border border-borderLight">
-                        <i class="fa-solid fa-battery-three-quarters text-darkSlate-900 text-base mb-1"></i>
-                        <span class="block text-[10px] uppercase font-bold text-textMuted">Battery</span>
-                        <span class="font-grotesk text-xs font-bold text-darkSlate-900 leading-tight">{{ $product->battery_specs ?? '625Wh' }}</span>
+                    <div class="bg-white p-3 rounded-2xl border border-borderLight flex flex-col items-center text-center">
+                        <i class="fa-solid fa-battery-full text-brandOrange-500 text-base mb-1"></i>
+                        <span class="text-[10px] text-textMuted font-medium uppercase">Battery</span>
+                        <span class="text-xs font-bold text-darkSlate-900">{{ $product->battery_specs ?? '625Wh Bosch' }}</span>
                     </div>
-                    <div class="text-center p-2.5 bg-[#f5f7fb] rounded-xl border border-borderLight">
-                        <i class="fa-solid fa-route text-textSec text-base mb-1"></i>
-                        <span class="block text-[10px] uppercase font-bold text-textMuted">Range</span>
-                        <span class="font-grotesk text-xs font-bold text-darkSlate-900 leading-tight">{{ $product->range_specs ?? '75 Miles' }}</span>
-                    </div>
-                    <div class="text-center p-2.5 bg-[#f5f7fb] rounded-xl border border-borderLight">
-                        <i class="fa-solid fa-shield-halved text-brandOrange-600 text-base mb-1"></i>
-                        <span class="block text-[10px] uppercase font-bold text-textMuted">Warranty</span>
-                        <span class="font-grotesk text-xs font-bold text-darkSlate-900 leading-tight">{{ $product->warranty_specs ?? '5 Years UK' }}</span>
+                    <div class="bg-white p-3 rounded-2xl border border-borderLight flex flex-col items-center text-center">
+                        <i class="fa-solid fa-gauge-high text-brandOrange-500 text-base mb-1"></i>
+                        <span class="text-[10px] text-textMuted font-medium uppercase">Range</span>
+                        <span class="text-xs font-bold text-darkSlate-900">{{ $product->range_specs ?? '75 Miles' }}</span>
                     </div>
                 </div>
             @endif
 
             <!-- Variant Selector -->
             @if($product->variants->count() > 0)
-                <div>
-                    <label class="font-grotesk block text-xs font-bold uppercase text-darkSlate-900 mb-2">Select Variant / Frame Size</label>
-                    <div class="flex flex-wrap gap-2">
+                <div class="bg-white p-5 rounded-3xl border border-borderLight shadow-xs">
+                    <label class="font-grotesk block text-xs font-black uppercase text-darkSlate-900 mb-2.5">
+                        <i class="fa-solid fa-ruler-combined text-brandOrange-500 mr-1.5"></i> Select Variant / Frame Size
+                    </label>
+                    <div class="flex flex-wrap gap-2.5">
                         @foreach($product->variants as $variant)
-                            <button @click="selectedVariant = {{ $variant->id }}"
-                                    :class="selectedVariant === {{ $variant->id }} ? 'bg-darkSlate-900 text-white border-darkSlate-900' : 'bg-white text-textSec border-borderLight hover:border-brandOrange-500'"
-                                    class="px-4 py-2 text-xs font-bold rounded-xl border transition-all">
+                            <button type="button" @click="selectedVariant = {{ $variant->id }}"
+                                    :class="selectedVariant === {{ $variant->id }} ? 'bg-brandOrange-500 text-white font-black border-brandOrange-500 shadow-md ring-2 ring-brandOrange-500/30' : 'bg-slate-100 text-slate-800 font-extrabold border-slate-300 hover:border-brandOrange-500 hover:text-brandOrange-600 hover:bg-brandOrange-50'"
+                                    class="px-4 py-2.5 text-xs rounded-xl border transition-all cursor-pointer">
                                 {{ $variant->name }}
                             </button>
                         @endforeach
@@ -117,26 +119,70 @@
                             
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
-                                    <span class="text-textSec">Duration & Rate:</span>
-                                    <span class="font-bold text-darkSlate-900" x-text="rentalResult.rental_days + ' Days @ £' + rentalResult.daily_rate + '/day'"></span>
+                                    <label class="block text-[10px] font-bold text-textSec uppercase mb-1">Start Date</label>
+                                    <input type="date" x-model="startDate" @change="checkAvailability()" class="w-full text-xs bg-white border border-borderLight rounded-xl p-2.5 font-semibold text-darkSlate-900">
                                 </div>
-                                <div class="flex justify-between">
-                                    <span class="text-textSec">Rental Fee:</span>
-                                    <span class="font-grotesk font-extrabold text-darkSlate-900">£<span x-text="rentalResult.subtotal"></span></span>
-                                </div>
-                                <div class="flex justify-between text-[11px] text-textMuted">
-                                    <span>Refundable Deposit:</span>
-                                    <span>£<span x-text="rentalResult.security_deposit"></span></span>
-                                </div>
-                                <div class="border-t border-borderLight pt-2 flex justify-between font-bold text-darkSlate-900">
-                                    <span>Pay 30% Advance Now:</span>
-                                    <span class="font-grotesk text-brandOrange-500 font-extrabold">£<span x-text="rentalResult.advance_30_percent"></span></span>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-textSec uppercase mb-1">End Date</label>
+                                    <input type="date" x-model="endDate" @change="checkAvailability()" class="w-full text-xs bg-white border border-borderLight rounded-xl p-2.5 font-semibold text-darkSlate-900">
                                 </div>
                             </div>
+
+                            <template x-if="rentalResult">
+                                <div class="bg-white p-3.5 rounded-xl border border-borderLight text-xs space-y-2">
+                                    <div class="flex justify-between">
+                                        <span class="text-textSec">Duration & Rate:</span>
+                                        <span class="font-bold text-darkSlate-900" x-text="rentalResult.rental_days + ' Days @ £' + rentalResult.daily_rate + '/day'"></span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-textSec">Rental Fee:</span>
+                                        <span class="font-grotesk font-extrabold text-darkSlate-900">£<span x-text="rentalResult.subtotal"></span></span>
+                                    </div>
+                                    <div class="flex justify-between text-[11px] text-textMuted">
+                                        <span>Refundable Deposit:</span>
+                                        <span>£<span x-text="rentalResult.security_deposit"></span></span>
+                                    </div>
+                                    <div class="border-t border-borderLight pt-2 flex justify-between font-bold text-darkSlate-900">
+                                        <span>Pay 30% Advance Now:</span>
+                                        <span class="font-grotesk text-brandOrange-500 font-extrabold">£<span x-text="rentalResult.advance_30_percent"></span></span>
+                                    </div>
+                                </div>
+                            </template>
 
                             <button @click="reserveRental()" :disabled="!rentalResult || !rentalResult.is_available"
                                     class="w-full py-3.5 bg-brandOrange-500 hover:bg-brandOrange-600 disabled:bg-slate-300 text-white text-xs font-bold rounded-xl shadow-lg transition-all flex items-center justify-center">
                                 <i class="fa-solid fa-calendar-check mr-2"></i> Reserve & Rent Now
+                            </button>
+                        </div>
+                    </div>
+                @else
+                    <!-- Buy Only Header -->
+                    <div class="border-b border-borderLight pb-3 flex items-center justify-between">
+                        <span class="font-grotesk text-sm font-extrabold text-darkSlate-900 flex items-center">
+                            <i class="fa-solid fa-tag mr-2 text-brandOrange-500"></i> Buy E-Bike (£{{ number_format($product->effective_price, 2) }})
+                        </span>
+                        <span class="bg-slate-100 text-slate-700 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider border border-slate-200">
+                            Sales Only
+                        </span>
+                    </div>
+
+                    <!-- Buy Purchase Section -->
+                    <div class="space-y-4">
+                        <div class="flex items-baseline space-x-3">
+                            <span class="font-grotesk text-3xl font-extrabold text-brandOrange-500">£{{ number_format($product->effective_price, 2) }}</span>
+                            @if($product->discount_price)
+                                <span class="text-sm text-textMuted line-through">£{{ number_format($product->price, 2) }}</span>
+                                <span class="text-xs font-bold text-brandOrange-600 bg-brandOrange-50 px-2 py-0.5 rounded-full">Save {{ $product->discount_percentage }}%</span>
+                            @endif
+                        </div>
+                        <p class="text-xs text-textSec font-medium"><i class="fa-solid fa-check text-brandOrange-500 mr-1"></i> In Stock ({{ $product->stock_quantity }} available) | Free UK Shipping</p>
+
+                        <div class="flex gap-3">
+                            <button @click="addToCart({{ $product->id }}, 'purchase')" class="flex-1 py-3.5 bg-brandOrange-500 hover:bg-brandOrange-600 text-white text-xs font-bold rounded-xl shadow-lg shadow-brandOrange-500/20 transition-all flex items-center justify-center">
+                                <i class="fa-solid fa-basket-shopping mr-2"></i> Add to Basket
+                            </button>
+                            <button @click="toggleWishlist({{ $product->id }})" class="p-3.5 bg-[#f5f7fb] hover:bg-rose-50 text-textSec hover:text-rose-600 rounded-xl transition-colors">
+                                <i class="fa-regular fa-heart text-lg"></i>
                             </button>
                         </div>
                     </div>
@@ -158,13 +204,13 @@
         return {
             activeImage: '{{ $product->primary_image_url }}',
             selectedVariant: {{ $product->variants->first()->id ?? 'null' }},
-            activeTab: 'buy',
+            activeTab: '{{ ($product->product_tag === "rent" || $product->is_rental_eligible) ? "rent" : "buy" }}',
             startDate: '{{ now()->addDay()->format("Y-m-d") }}',
             endDate: '{{ now()->addDays(8)->format("Y-m-d") }}',
             rentalResult: null,
 
             init() {
-                if ({{ $product->is_rental_eligible ? 'true' : 'false' }}) {
+                if ({{ ($product->product_tag === 'rent' || $product->is_rental_eligible) ? 'true' : 'false' }}) {
                     this.checkAvailability();
                 }
             },
@@ -184,14 +230,16 @@
             },
             async reserveRental() {
                 if (!this.rentalResult) return;
-                this.$root.__x.$data.addToCart({{ $product->id }}, 'rental', 1, this.startDate, this.endDate);
+                if (window.addToCart) {
+                    window.addToCart({{ $product->id }}, 'rental', 1, this.startDate, this.endDate);
+                }
             },
             async toggleWishlist(productId) {
                 try {
                     let res = await axios.post(`/customer/wishlist/toggle/${productId}`);
-                    this.$root.__x.$data.showToast(res.data.message);
+                    if (window.showToast) window.showToast(res.data.message);
                 } catch (e) {
-                    this.$root.__x.$data.showToast('Please sign in to save wishlist items.', true);
+                    if (window.showToast) window.showToast('Please sign in to save wishlist items.', true);
                 }
             }
         }

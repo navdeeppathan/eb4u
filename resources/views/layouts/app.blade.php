@@ -141,6 +141,13 @@
                 total: '0.00',
 
                 init() {
+                    window.cartApp = this;
+                    window.addToCart = (productId, type = 'purchase', qty = 1, startDate = null, endDate = null) => {
+                        return this.addToCart(productId, type, qty, startDate, endDate);
+                    };
+                    window.showToast = (msg, isErr = false) => {
+                        return this.showToast(msg, isErr);
+                    };
                     this.fetchCart();
                 },
                 showToast(msg, isErr = false) {
