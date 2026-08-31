@@ -163,36 +163,32 @@
     </div>
 </section>
 
-<!-- Featured Products Grid -->
-<section class="py-20 bg-white border-t border-slate-200">
+<!-- 🛒 Buy E-Bikes & Retail Sales Section -->
+<section class="py-16 bg-white border-t border-slate-200">
     <div class="container mx-auto px-6 md:px-12">
         <div class="flex justify-between items-end mb-10">
             <div>
-                <span class="text-xs font-black text-brandOrange-500 uppercase tracking-widest">Handpicked Fleet</span>
-                <h2 class="text-2xl md:text-3xl font-black text-slate-900 mt-1">Featured E-Bikes & Gear</h2>
+                <span class="text-xs font-black text-brandOrange-500 uppercase tracking-widest flex items-center gap-1.5">
+                    <i class="fa-solid fa-tag"></i> Immediate Purchase & Fast UK Shipping
+                </span>
+                <h2 class="text-2xl md:text-3xl font-black text-slate-900 mt-1">🛒 Buy E-Bikes & Accessories</h2>
             </div>
-            <a href="{{ route('catalog.index') }}" class="text-xs font-black text-slate-900 hover:text-brandOrange-500 flex items-center">
-                Explore Full Catalog <i class="fa-solid fa-arrow-right ml-1 text-brandOrange-500"></i>
+            <a href="{{ route('catalog.index', ['tag' => 'sell']) }}" class="text-xs font-black text-slate-900 hover:text-brandOrange-500 flex items-center">
+                Explore Buy Catalog <i class="fa-solid fa-arrow-right ml-1 text-brandOrange-500"></i>
             </a>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            @foreach($featuredEBikes as $product)
+            @foreach($buyProducts as $product)
                 <div class="group bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
                     <div class="relative h-48 bg-slate-100 flex items-center justify-center overflow-hidden">
                         <img src="{{ $product->primary_image_url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         
-                        @if($product->product_tag === 'rent' || $product->is_rental_eligible)
-                            <span class="absolute top-3 right-3 bg-brandOrange-500 text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-md shadow-sm">
-                                ⚡ Rent Only
-                            </span>
-                        @else
-                            <span class="absolute top-3 right-3 bg-slate-900 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-sm">
-                                🛒 Buy Only
-                            </span>
-                        @endif
+                        <span class="absolute top-3 right-3 bg-slate-900 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-sm">
+                            🛒 Buy Only
+                        </span>
 
-                        @if($product->discount_percentage > 0 && ($product->product_tag === 'sell' || !$product->is_rental_eligible))
+                        @if($product->discount_percentage > 0)
                             <span class="absolute top-3 left-3 bg-brandOrange-500 text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-md shadow-sm">
                                 SAVE {{ $product->discount_percentage }}%
                             </span>
@@ -219,45 +215,96 @@
                         </div>
 
                         <div>
-                            @if($product->product_tag === 'rent' || $product->is_rental_eligible)
-                                <div class="flex items-baseline justify-between mb-3">
-                                    <div class="flex items-baseline space-x-1">
-                                        <span class="text-xs text-slate-400 font-medium">From</span>
-                                        <span class="text-lg font-black text-brandOrange-500">£{{ number_format($product->rental_price_daily, 0) }}</span>
-                                        <span class="text-xs text-slate-400 font-bold">/day</span>
-                                    </div>
+                            <div class="flex items-baseline justify-between mb-3">
+                                <div class="flex items-baseline space-x-1.5">
+                                    <span class="text-lg font-black text-brandOrange-500">£{{ number_format($product->effective_price, 2) }}</span>
+                                    @if($product->discount_price)
+                                        <span class="text-xs text-slate-400 line-through">£{{ number_format($product->price, 2) }}</span>
+                                    @endif
                                 </div>
+                                <button @click="addToCart({{ $product->id }}, 'purchase')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-700 hover:bg-brandOrange-500 hover:text-white flex items-center justify-center transition-colors">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                </button>
+                            </div>
 
-                                <div class="grid grid-cols-2 gap-2">
-                                    <a href="{{ route('products.show', $product->slug) }}" class="text-center py-2 bg-darkBlack-950 hover:bg-black text-white rounded-xl text-xs font-bold transition-colors">
-                                        Details
-                                    </a>
-                                    <a href="{{ route('products.show', $product->slug) }}" class="text-center py-2 bg-brandOrange-500 hover:bg-brandOrange-600 text-white rounded-xl text-xs font-bold transition-colors shadow-sm">
-                                        ⚡ Rent E-Bike
-                                    </a>
-                                </div>
-                            @else
-                                <div class="flex items-baseline justify-between mb-3">
-                                    <div class="flex items-baseline space-x-1.5">
-                                        <span class="text-lg font-black text-brandOrange-500">£{{ number_format($product->effective_price, 2) }}</span>
-                                        @if($product->discount_price)
-                                            <span class="text-xs text-slate-400 line-through">£{{ number_format($product->price, 2) }}</span>
-                                        @endif
-                                    </div>
-                                    <button @click="addToCart({{ $product->id }}, 'purchase')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-700 hover:bg-brandOrange-500 hover:text-white flex items-center justify-center transition-colors">
-                                        <i class="fa-solid fa-plus text-xs"></i>
-                                    </button>
-                                </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <a href="{{ route('products.show', $product->slug) }}" class="text-center py-2.5 bg-slate-900 hover:bg-black text-white rounded-xl text-xs font-bold transition-colors">
+                                    Details
+                                </a>
+                                <button @click="addToCart({{ $product->id }}, 'purchase')" class="py-2.5 bg-brandOrange-500 hover:bg-brandOrange-600 text-white rounded-xl text-xs font-bold transition-colors shadow-sm">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
 
-                                <div class="grid grid-cols-2 gap-2">
-                                    <a href="{{ route('products.show', $product->slug) }}" class="text-center py-2 bg-darkBlack-950 hover:bg-black text-white rounded-xl text-xs font-bold transition-colors">
-                                        Details
-                                    </a>
-                                    <button @click="addToCart({{ $product->id }}, 'purchase')" class="py-2 bg-brandOrange-500 hover:bg-brandOrange-600 text-white rounded-xl text-xs font-bold transition-colors shadow-sm">
-                                        Add to Cart
-                                    </button>
+<!-- ⚡ E-Bike Rentals Hub Section -->
+<section class="py-16 bg-slate-50 border-t border-slate-200">
+    <div class="container mx-auto px-6 md:px-12">
+        <div class="flex justify-between items-end mb-10">
+            <div>
+                <span class="text-xs font-black text-brandOrange-500 uppercase tracking-widest flex items-center gap-1.5">
+                    <i class="fa-solid fa-calendar-check"></i> Flexible Daily, Weekly & Monthly Rentals
+                </span>
+                <h2 class="text-2xl md:text-3xl font-black text-slate-900 mt-1">⚡ Certified E-Bike Rental Fleet</h2>
+            </div>
+            <a href="{{ route('catalog.index', ['tag' => 'rent']) }}" class="text-xs font-black text-slate-900 hover:text-brandOrange-500 flex items-center">
+                Explore Rental Fleet <i class="fa-solid fa-arrow-right ml-1 text-brandOrange-500"></i>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            @foreach($rentalProducts as $product)
+                <div class="group bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                    <div class="relative h-48 bg-slate-100 flex items-center justify-center overflow-hidden">
+                        <img src="{{ $product->primary_image_url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        
+                        <span class="absolute top-3 right-3 bg-brandOrange-500 text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-md shadow-sm">
+                            ⚡ Rent Only
+                        </span>
+                    </div>
+
+                    <div class="p-5 flex-grow flex flex-col justify-between">
+                        <div>
+                            <div class="text-[10px] font-bold text-brandOrange-600 uppercase tracking-wider mb-1">{{ $product->brand->name ?? 'Premium' }}</div>
+                            <a href="{{ route('products.show', $product->slug) }}" class="text-sm font-black text-slate-900 hover:text-brandOrange-500 line-clamp-1 mb-2">
+                                {{ $product->name }}
+                            </a>
+
+                            <div class="flex items-center space-x-1 mb-3">
+                                <span class="text-amber-500 text-xs"><i class="fa-solid fa-star"></i></span>
+                                <span class="text-xs font-bold text-slate-900">{{ $product->average_rating }}</span>
+                                <span class="text-[11px] text-slate-400">({{ $product->reviews_count }})</span>
+                            </div>
+
+                            <div class="flex flex-wrap gap-1.5 mb-4">
+                                <span class="px-2 py-0.5 bg-slate-100 rounded-md text-[10px] font-semibold text-slate-600">⚡ {{ $product->range_specs ?? '75 miles' }}</span>
+                                <span class="px-2 py-0.5 bg-slate-100 rounded-md text-[10px] font-semibold text-slate-600">◎ {{ $product->motor_specs ?? '250W' }}</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline justify-between mb-3">
+                                <div class="flex items-baseline space-x-1">
+                                    <span class="text-xs text-slate-400 font-medium">From</span>
+                                    <span class="text-lg font-black text-brandOrange-500">£{{ number_format($product->rental_price_daily, 0) }}</span>
+                                    <span class="text-xs text-slate-400 font-bold">/day</span>
                                 </div>
-                            @endif
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <a href="{{ route('products.show', $product->slug) }}" class="text-center py-2.5 bg-slate-900 hover:bg-black text-white rounded-xl text-xs font-bold transition-colors">
+                                    Details
+                                </a>
+                                <a href="{{ route('products.show', $product->slug) }}" class="text-center py-2.5 bg-brandOrange-500 hover:bg-brandOrange-600 text-white rounded-xl text-xs font-bold transition-colors shadow-sm">
+                                    ⚡ Rent E-Bike
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
