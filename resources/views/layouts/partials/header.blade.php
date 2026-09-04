@@ -15,7 +15,7 @@
                 <span class="w-2 h-2 rounded-full bg-brandOrange-500 animate-pulse mr-1.5"></span> E-Bike Rental
             </a>
             <a href="{{ route('catalog.index', ['type' => 'accessory']) }}" class="hover:text-brandOrange-500 transition-colors py-1">Accessories</a>
-            <a href="{{ route('cms.page', 'about-us') }}" class="hover:text-brandOrange-500 transition-colors py-1">About</a>
+            <a href="{{ route('cms.about') }}" class="hover:text-brandOrange-500 transition-colors py-1">About</a>
         </nav>
 
         <!-- Header Actions (Wishlist, Cart, Real-Time Notifications, Account) -->

@@ -41,6 +41,11 @@ class CmsController extends Controller
         return view('pages.terms_and_conditions');
     }
 
+    public function about()
+    {
+        return view('cms.about');
+    }
+
     public function privacyPolicy()
     {
         return view('pages.privacy_policy');
