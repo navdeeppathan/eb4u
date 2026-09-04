@@ -1,216 +1,372 @@
 @extends('layouts.app')
 
-@section('title', 'Terms & Conditions | eb4u')
+@section('title', 'About Us | eb4u')
 
 @section('content')
+
 <!-- Breadcrumb -->
 <div class="border-b border-borderLight bg-[#edf1f8] text-xs">
     <div class="max-w-[1320px] mx-auto px-6 py-3 flex items-center gap-2 text-textMuted font-medium">
-        <a href="{{ route('home') }}" class="hover:text-darkSlate-900 transition-colors">Home</a>
+        <a href="{{ route('home') }}" class="hover:text-darkSlate-900 transition-colors">
+            Home
+        </a>
+
         <span>/</span>
-        <span class="text-darkSlate-900 font-bold">About</span>
+
+        <span class="text-darkSlate-900 font-bold">
+            About Us
+        </span>
     </div>
 </div>
 
-<div class="max-w-[1000px] mx-auto px-6 py-12">
-    <div class="bg-white rounded-3xl border border-borderLight shadow-xs p-8 md:p-12 space-y-8">
-        
-        <section class="about-us py-5">
-    <div class="container">
+<div class="max-w-[1100px] mx-auto px-6 py-12">
 
-        <div class="text-center mb-5">
-            <span class="text-uppercase fw-bold text-warning">About eb4u</span>
-            <h1 class="fw-bold mt-2">Ride More. Spend Less. Go Further.</h1>
-            <p class="text-muted mx-auto" style="max-width: 750px;">
-                Welcome to <strong>eb4u</strong> — your trusted destination for quality electric bikes,
-                flexible rentals and essential e-bike accessories across the UK.
-            </p>
-        </div>
+    <div class="bg-white rounded-3xl border border-borderLight shadow-xs overflow-hidden">
 
-        <div class="row align-items-center mb-5">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <h2 class="fw-bold">Making Electric Mobility Simple</h2>
+        <!-- Hero / Page Header -->
+        <div class="px-8 md:px-12 pt-10 pb-10 border-b border-borderLight">
 
-                <p>
-                    At eb4u, we believe electric bikes should make everyday travel
-                    <strong>simpler, smarter and more affordable</strong>.
+            <div class="max-w-3xl">
+
+                <span class="bg-brandOrange-50 text-brandOrange-600 text-xs font-bold uppercase px-3.5 py-1.5 rounded-full border border-brandOrange-500/20">
+                    About eb4u
+                </span>
+
+                <h1 class="font-grotesk text-3xl md:text-5xl font-extrabold text-darkSlate-900 mt-4 mb-4 leading-tight">
+                    Ride More.
+                    <span class="text-brandOrange-500">Spend Less.</span>
+                    Go Further.
+                </h1>
+
+                <p class="text-sm md:text-base text-textSec leading-relaxed max-w-2xl">
+                    Welcome to <strong>eb4u</strong> — your trusted destination for
+                    quality electric bikes, flexible rentals and essential e-bike
+                    accessories across the UK.
                 </p>
 
-                <p>
-                    Whether you're looking to buy your first e-bike, rent one for a short trip,
-                    commute to work or find the right accessories for your ride, eb4u brings
-                    everything together in one convenient platform.
-                </p>
-
-                <p>
-                    We provide carefully selected electric bikes designed for everyday UK riding,
-                    commuting, leisure and practical transportation.
-                </p>
             </div>
 
-            <div class="col-lg-6">
-                <div class="p-4 rounded shadow-sm bg-light">
-                    <h3 class="fw-bold mb-3">Built Around Your Ride</h3>
+        </div>
 
-                    <p>
+
+        <!-- Introduction -->
+        <div class="px-8 md:px-12 py-10">
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+
+                <div class="space-y-4">
+
+                    <span class="text-brandOrange-500 text-xs font-bold uppercase">
+                        Making Electric Mobility Simple
+                    </span>
+
+                    <h2 class="font-grotesk text-2xl md:text-3xl font-extrabold text-darkSlate-900">
+                        Electric mobility made simple.
+                    </h2>
+
+                    <p class="text-xs md:text-sm text-textSec leading-relaxed">
+                        At eb4u, we believe electric bikes should make everyday travel
+                        <strong>simpler, smarter and more affordable.</strong>
+                    </p>
+
+                    <p class="text-xs md:text-sm text-textSec leading-relaxed">
+                        Whether you're looking to buy your first e-bike, rent one for
+                        a short trip, commute to work, explore the city or find the
+                        right accessories for your ride, eb4u brings everything
+                        together in one convenient platform.
+                    </p>
+
+                    <p class="text-xs md:text-sm text-textSec leading-relaxed">
+                        Our focus is to provide customers with quality electric bikes,
+                        flexible rental options and a straightforward online experience.
+                    </p>
+
+                </div>
+
+
+                <!-- Highlight Card -->
+                <div class="bg-[#f5f7fb] rounded-3xl border border-borderLight p-7">
+
+                    <div class="w-12 h-12 rounded-2xl bg-brandOrange-50 text-brandOrange-500 flex items-center justify-center mb-5">
+                        <i class="fa-solid fa-bicycle text-xl"></i>
+                    </div>
+
+                    <h3 class="font-grotesk text-xl font-bold text-darkSlate-900 mb-3">
+                        Built Around Your Ride
+                    </h3>
+
+                    <p class="text-xs md:text-sm text-textSec leading-relaxed mb-4">
+                        We offer carefully selected electric bikes designed for
+                        everyday UK riding, commuting, leisure and practical
+                        transportation.
+                    </p>
+
+                    <p class="text-xs md:text-sm text-textSec leading-relaxed">
                         Our electric bikes are supplied to meet applicable British
-                        <strong>Electrically Assisted Pedal Cycles (EAPC)</strong> requirements,
-                        including motor assistance limits of up to
-                        <strong>15.5 mph / 25 km/h</strong> and a maximum continuous rated
-                        motor power of <strong>250W</strong>.
+                        <strong>Electrically Assisted Pedal Cycles (EAPC)</strong>
+                        requirements, including assistance capped at
+                        <strong>15.5 mph / 25 km/h</strong> and applicable
+                        <strong>250W</strong> continuous rated motor limits.
                     </p>
 
-                    <p class="mb-0">
-                        We also offer flexible rental options, making it easier to enjoy an
-                        electric bike without committing to a full purchase.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Why Choose Us -->
+        <div class="bg-[#f8fafc] border-y border-borderLight px-8 md:px-12 py-10">
+
+            <div class="text-center mb-8">
+
+                <span class="text-brandOrange-500 text-xs font-bold uppercase">
+                    Why Choose Us
+                </span>
+
+                <h2 class="font-grotesk text-2xl md:text-3xl font-extrabold text-darkSlate-900 mt-2">
+                    Why Choose eb4u?
+                </h2>
+
+                <p class="text-xs md:text-sm text-textMuted mt-2 max-w-2xl mx-auto">
+                    We focus on quality products, flexible options and a simple
+                    customer experience from start to finish.
+                </p>
+
+            </div>
+
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                <!-- Card 1 -->
+                <div class="bg-white p-5 rounded-2xl border border-borderLight">
+
+                    <div class="w-10 h-10 rounded-xl bg-brandOrange-50 text-brandOrange-500 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-bicycle"></i>
+                    </div>
+
+                    <h3 class="font-grotesk text-sm font-bold text-darkSlate-900 mb-2">
+                        Quality E-Bikes
+                    </h3>
+
+                    <p class="text-xs text-textSec leading-relaxed">
+                        Reliable electric bikes selected for everyday UK riding,
+                        with a 2-year manufacturer warranty on eligible new bikes.
                     </p>
+
                 </div>
+
+
+                <!-- Card 2 -->
+                <div class="bg-white p-5 rounded-2xl border border-borderLight">
+
+                    <div class="w-10 h-10 rounded-xl bg-brandOrange-50 text-brandOrange-500 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-calendar-days"></i>
+                    </div>
+
+                    <h3 class="font-grotesk text-sm font-bold text-darkSlate-900 mb-2">
+                        Flexible Rentals
+                    </h3>
+
+                    <p class="text-xs text-textSec leading-relaxed">
+                        Choose from short-term and monthly rental options with
+                        convenient booking and online rental extensions,
+                        subject to fleet availability.
+                    </p>
+
+                </div>
+
+
+                <!-- Card 3 -->
+                <div class="bg-white p-5 rounded-2xl border border-borderLight">
+
+                    <div class="w-10 h-10 rounded-xl bg-brandOrange-50 text-brandOrange-500 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+
+                    <h3 class="font-grotesk text-sm font-bold text-darkSlate-900 mb-2">
+                        Transparent Pricing
+                    </h3>
+
+                    <p class="text-xs text-textSec leading-relaxed">
+                        We aim to keep our pricing clear and straightforward,
+                        with UK VAT included in displayed product prices.
+                    </p>
+
+                </div>
+
+
+                <!-- Card 4 -->
+                <div class="bg-white p-5 rounded-2xl border border-borderLight">
+
+                    <div class="w-10 h-10 rounded-xl bg-brandOrange-50 text-brandOrange-500 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+
+                    <h3 class="font-grotesk text-sm font-bold text-darkSlate-900 mb-2">
+                        Safety Checked
+                    </h3>
+
+                    <p class="text-xs text-textSec leading-relaxed">
+                        Bikes supplied through our UK home delivery service are
+                        pre-assembled and safety checked before dispatch.
+                    </p>
+
+                </div>
+
+
+                <!-- Card 5 -->
+                <div class="bg-white p-5 rounded-2xl border border-borderLight">
+
+                    <div class="w-10 h-10 rounded-xl bg-brandOrange-50 text-brandOrange-500 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-toolbox"></i>
+                    </div>
+
+                    <h3 class="font-grotesk text-sm font-bold text-darkSlate-900 mb-2">
+                        Complete E-Bike Solution
+                    </h3>
+
+                    <p class="text-xs text-textSec leading-relaxed">
+                        From electric bikes and rentals to chargers, locks and
+                        accessories, find everything you need in one place.
+                    </p>
+
+                </div>
+
+
+                <!-- Card 6 -->
+                <div class="bg-white p-5 rounded-2xl border border-borderLight">
+
+                    <div class="w-10 h-10 rounded-xl bg-brandOrange-50 text-brandOrange-500 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+
+                    <h3 class="font-grotesk text-sm font-bold text-darkSlate-900 mb-2">
+                        Customer Focused
+                    </h3>
+
+                    <p class="text-xs text-textSec leading-relaxed">
+                        From your first enquiry to your next ride, our goal is
+                        to provide an easy, transparent and hassle-free experience.
+                    </p>
+
+                </div>
+
             </div>
+
         </div>
 
-        <div class="mb-5">
-            <div class="text-center mb-4">
-                <span class="text-uppercase fw-bold text-warning">Why Choose Us</span>
-                <h2 class="fw-bold">Why Choose eb4u?</h2>
-            </div>
 
-            <div class="row g-4">
+        <!-- Our Mission -->
+        <div class="px-8 md:px-12 py-10">
 
-                <div class="col-md-6 col-lg-4">
-                    <div class="h-100 p-4 border rounded">
-                        <h4 class="fw-bold">Quality E-Bikes</h4>
-                        <p class="mb-0">
-                            Reliable electric bikes selected for everyday UK riding,
-                            with a 2-year manufacturer warranty on eligible new bikes.
-                        </p>
-                    </div>
-                </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-                <div class="col-md-6 col-lg-4">
-                    <div class="h-100 p-4 border rounded">
-                        <h4 class="fw-bold">Flexible Rentals</h4>
-                        <p class="mb-0">
-                            Choose from short-term and monthly rental options with
-                            convenient booking and online rental extension options,
-                            subject to fleet availability.
-                        </p>
-                    </div>
-                </div>
+                <!-- Mission -->
+                <div class="bg-darkSlate-900 rounded-3xl p-7 md:p-8 text-white">
 
-                <div class="col-md-6 col-lg-4">
-                    <div class="h-100 p-4 border rounded">
-                        <h4 class="fw-bold">Transparent Pricing</h4>
-                        <p class="mb-0">
-                            We aim to keep our pricing clear and simple, with UK VAT
-                            included in displayed product prices and transparent rental terms.
-                        </p>
-                    </div>
-                </div>
+                    <span class="text-brandOrange-500 text-xs font-bold uppercase">
+                        Our Mission
+                    </span>
 
-                <div class="col-md-6 col-lg-4">
-                    <div class="h-100 p-4 border rounded">
-                        <h4 class="fw-bold">Safety Checked</h4>
-                        <p class="mb-0">
-                            Bikes supplied through our UK home delivery service are
-                            pre-assembled and safety checked before dispatch.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-lg-4">
-                    <div class="h-100 p-4 border rounded">
-                        <h4 class="fw-bold">Complete E-Bike Solution</h4>
-                        <p class="mb-0">
-                            From electric bikes and rentals to chargers, locks and
-                            accessories, find everything you need in one place.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-lg-4">
-                    <div class="h-100 p-4 border rounded">
-                        <h4 class="fw-bold">Customer Focused</h4>
-                        <p class="mb-0">
-                            From your first enquiry to your next ride, our goal is to
-                            provide an easy, transparent and hassle-free experience.
-                        </p>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="row align-items-center mb-5">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <div class="p-4 rounded bg-dark text-white">
-                    <span class="text-warning text-uppercase fw-bold">Our Mission</span>
-
-                    <h2 class="fw-bold mt-2">
+                    <h2 class="font-grotesk text-2xl md:text-3xl font-extrabold mt-3 mb-4">
                         Making Electric Mobility More Accessible
                     </h2>
 
-                    <p>
-                        Our mission is to make electric mobility accessible,
-                        practical and convenient for more people across the UK.
+                    <p class="text-xs md:text-sm text-gray-300 leading-relaxed mb-4">
+                        Our mission is to make electric mobility
+                        <strong class="text-white">
+                            accessible, practical and convenient
+                        </strong>
+                        for more people across the UK.
                     </p>
 
-                    <p class="mb-0">
-                        We want to remove the complexity from buying and renting an
-                        e-bike by providing quality products, flexible rental choices,
-                        clear terms and dependable customer service.
+                    <p class="text-xs md:text-sm text-gray-300 leading-relaxed">
+                        We want to remove the complexity from buying and renting
+                        an e-bike by providing quality products, flexible rental
+                        choices, clear terms and dependable customer service.
                     </p>
+
                 </div>
+
+
+                <!-- More Than Store -->
+                <div class="p-7 md:p-8 border border-borderLight rounded-3xl">
+
+                    <span class="text-brandOrange-500 text-xs font-bold uppercase">
+                        Our Approach
+                    </span>
+
+                    <h2 class="font-grotesk text-2xl font-extrabold text-darkSlate-900 mt-3 mb-4">
+                        More Than Just an E-Bike Store
+                    </h2>
+
+                    <p class="text-xs md:text-sm text-textSec leading-relaxed mb-4">
+                        We don't just sell bikes. We are building a complete
+                        <strong>e-bike experience</strong>.
+                    </p>
+
+                    <p class="text-xs md:text-sm text-textSec leading-relaxed">
+                        Customers can discover the right bike, rent when they
+                        need flexibility, purchase useful accessories and manage
+                        their rentals through our convenient online platform.
+                    </p>
+
+                </div>
+
             </div>
 
-            <div class="col-lg-6">
-                <h2 class="fw-bold">More Than Just an E-Bike Store</h2>
-
-                <p>
-                    We don't just sell bikes. We are building a complete
-                    <strong>e-bike experience</strong>.
-                </p>
-
-                <p>
-                    Customers can discover the right bike, rent when they need flexibility,
-                    purchase useful accessories and manage their rentals through our
-                    convenient online platform.
-                </p>
-
-                <p>
-                    Whether you're commuting to work, exploring the city, running everyday
-                    errands or simply looking for a smarter way to travel, we're here to
-                    help you ride electric.
-                </p>
-            </div>
         </div>
 
-        <div class="text-center p-5 rounded bg-light">
-            <span class="text-uppercase fw-bold text-warning">Ride With Confidence</span>
 
-            <h2 class="fw-bold mt-2">Ready to Ride?</h2>
+        <!-- Ride With Confidence -->
+        <div class="px-8 md:px-12 pb-10">
 
-            <p class="mx-auto mb-4" style="max-width: 750px;">
-                Whether you're buying, renting or simply exploring your options,
-                <strong>eb4u</strong> is here to help you find the right electric bike
-                for your journey.
-            </p>
+            <div class="relative overflow-hidden bg-[#f5f7fb] rounded-3xl border border-borderLight p-8 md:p-10 text-center">
 
-            <h4 class="fw-bold mb-4">
-                Buy an E-Bike. Rent an E-Bike. Ride Your Way.
-            </h4>
+                <div class="relative z-10">
 
-            <a href="/shop" class="btn btn-warning me-2">
-                Shop E-Bikes
-            </a>
+                    <span class="bg-brandOrange-50 text-brandOrange-600 text-xs font-bold uppercase px-3.5 py-1.5 rounded-full border border-brandOrange-500/20">
+                        Ride With Confidence
+                    </span>
 
-            <a href="/rentals" class="btn btn-dark">
-                Rent an E-Bike
-            </a>
+                    <h2 class="font-grotesk text-2xl md:text-3xl font-extrabold text-darkSlate-900 mt-4 mb-3">
+                        Ready to Ride?
+                    </h2>
+
+                    <p class="text-xs md:text-sm text-textSec leading-relaxed max-w-2xl mx-auto mb-6">
+                        Whether you're buying, renting or simply exploring your
+                        options, <strong>eb4u</strong> is here to help you find
+                        the right electric bike for your journey.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row justify-center gap-3">
+
+                        <a href="{{ route('home') }}"
+                           class="px-6 py-3 bg-brandOrange-500 hover:bg-brandOrange-600 text-white font-bold text-xs rounded-xl shadow-sm transition-colors">
+                            Shop E-Bikes
+                        </a>
+
+                        <a href="{{ route('home') }}"
+                           class="px-6 py-3 bg-darkSlate-900 hover:bg-darkSlate-800 text-white font-bold text-xs rounded-xl shadow-sm transition-colors">
+                            Rent an E-Bike
+                        </a>
+
+                    </div>
+
+                    <p class="font-grotesk font-bold text-darkSlate-900 text-sm mt-6">
+                        Buy an E-Bike. Rent an E-Bike. Ride Your Way.
+                    </p>
+
+                </div>
+
+            </div>
+
         </div>
 
     </div>
-</section>
 
-    </div>
 </div>
+
 @endsection
