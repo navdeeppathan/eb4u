@@ -86,18 +86,20 @@ class CheckoutController extends Controller
         ];
 
         if ($hasRental) {
-            $rules['proof_of_id'] = 'required|file|mimes:jpeg,jpg,png,webp,pdf|max:10240';
-            $rules['proof_of_address'] = 'required|file|mimes:jpeg,jpg,png,webp,pdf|max:10240';
+            $rules['proof_of_id'] = 'required|file|mimes:jpeg,jpg,png,webp,pdf|max:2048';
+            $rules['proof_of_address'] = 'required|file|mimes:jpeg,jpg,png,webp,pdf|max:2048';
         } else {
-            $rules['proof_of_id'] = 'nullable|file|mimes:jpeg,jpg,png,webp,pdf|max:10240';
-            $rules['proof_of_address'] = 'nullable|file|mimes:jpeg,jpg,png,webp,pdf|max:10240';
+            $rules['proof_of_id'] = 'nullable|file|mimes:jpeg,jpg,png,webp,pdf|max:2048';
+            $rules['proof_of_address'] = 'nullable|file|mimes:jpeg,jpg,png,webp,pdf|max:2048';
         }
 
         $request->validate($rules, [
             'proof_of_id.required' => 'Proof of ID (Passport, UK BRP/Visa, or Driving License) is required for e-bike rental checkout.',
             'proof_of_id.mimes' => 'Proof of ID must be an image (JPG, PNG, WEBP) or PDF file.',
+            'proof_of_id.max' => 'Proof of ID file size cannot exceed 2MB.',
             'proof_of_address.required' => 'UK Proof of Address (Utility bill, Bank statement, Council tax) is required for e-bike rental checkout.',
             'proof_of_address.mimes' => 'Proof of Address must be an image (JPG, PNG, WEBP) or PDF file.',
+            'proof_of_address.max' => 'Proof of Address file size cannot exceed 2MB.',
         ]);
 
         DB::beginTransaction();

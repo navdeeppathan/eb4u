@@ -123,7 +123,7 @@
 
                     <div class="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-900 space-y-1">
                         <div class="font-bold flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation text-amber-600"></i> Required Documents Notice</div>
-                        <p class="leading-relaxed">Please upload clear photos or PDF documents for your <strong>Proof of ID</strong> (Passport, UK BRP/Visa, or Driving License) and <strong>UK Proof of Address</strong> (Utility bill, Bank Statement, or Council tax). Accepted formats: JPG, PNG, WEBP, PDF (Max 10MB per file).</p>
+                        <p class="leading-relaxed">Please upload clear photos or PDF documents for your <strong>Proof of ID</strong> (Passport, UK BRP/Visa, or Driving License) and <strong>UK Proof of Address</strong> (Utility bill, Bank Statement, or Council tax). Accepted formats: JPG, PNG, WEBP, PDF (Max 2MB per file).</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -305,6 +305,25 @@
             handleFileChange(event, type) {
                 const file = event.target.files[0];
                 if (!file) return;
+
+                const maxBytes = 2 * 1024 * 1024; // 2MB
+                if (file.size > maxBytes) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'File Size Exceeds 2MB Limit',
+                        text: `The selected file "${file.name}" is ${(file.size / (1024 * 1024)).toFixed(2)}MB. Please select a file under 2MB.`,
+                        confirmButtonColor: '#f97316'
+                    });
+                    event.target.value = '';
+                    if (type === 'id') {
+                        this.idFileName = '';
+                        this.idFileType = '';
+                    } else if (type === 'address') {
+                        this.addressFileName = '';
+                        this.addressFileType = '';
+                    }
+                    return;
+                }
 
                 const ext = file.name.split('.').pop().toUpperCase();
                 if (type === 'id') {
