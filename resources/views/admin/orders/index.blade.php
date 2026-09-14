@@ -52,7 +52,16 @@
                         <td class="p-4 font-black font-mono text-darkSlate-900">{{ $ord->order_number }}</td>
                         <td class="p-4">
                             <span class="font-bold text-darkSlate-900 block">{{ $ord->user->name ?? 'Guest Customer' }}</span>
-                            <span class="text-[11px] text-textMuted block">{{ $ord->user->email ?? '' }}</span>
+                            <span class="text-[11px] text-textMuted block mb-1">{{ $ord->user->email ?? '' }}</span>
+                            @if($ord->proof_of_id_path || $ord->proof_of_address_path)
+                                <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200" title="Proof of ID & Address uploaded">
+                                    <i class="fa-solid fa-file-shield text-emerald-600"></i> Docs Uploaded
+                                </span>
+                            @elseif($ord->type === 'rental')
+                                <span class="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                                    <i class="fa-solid fa-circle-exclamation text-amber-600"></i> Pending Docs
+                                </span>
+                            @endif
                         </td>
                         <td class="p-4 font-bold uppercase text-[10px]">
                             <span class="px-2.5 py-1 rounded-full {{ $ord->type === 'rental' ? 'bg-brandOrange-50 text-brandOrange-600 border border-brandOrange-500/20' : 'bg-slate-100 text-slate-800' }}">
