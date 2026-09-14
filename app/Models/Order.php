@@ -37,6 +37,8 @@ class Order extends Model
         'damage_fee_charged',
         'customer_notes',
         'admin_notes',
+        'proof_of_id_path',
+        'proof_of_address_path',
     ];
 
     protected $casts = [

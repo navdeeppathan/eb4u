@@ -12,24 +12,28 @@
 </div>
 
 <div class="max-w-[1100px] mx-auto px-6 py-10" x-data="checkoutApp()">
-    <form @submit.prevent="submitOrder()" id="checkoutForm">
+    <form @submit.prevent="submitOrder()" id="checkoutForm" enctype="multipart/form-data">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
             <!-- Left: Multi-Step Checkout Form -->
             <div class="lg:col-span-8 space-y-6">
                 
                 <!-- Step Indicator Bar -->
-                <div class="bg-white p-4 rounded-2xl border border-borderLight shadow-xs flex justify-between text-xs font-bold">
-                    <div :class="step >= 1 ? 'text-darkSlate-900' : 'text-textMuted'" class="flex items-center space-x-2">
+                <div class="bg-white p-4 rounded-2xl border border-borderLight shadow-xs flex justify-between text-xs font-bold gap-2 overflow-x-auto">
+                    <div :class="step >= 1 ? 'text-darkSlate-900' : 'text-textMuted'" class="flex items-center space-x-1.5 whitespace-nowrap">
                         <span class="w-6 h-6 rounded-full flex items-center justify-center font-grotesk font-extrabold text-xs" :class="step >= 1 ? 'bg-brandOrange-500 text-white' : 'bg-slate-200 text-slate-500'">1</span>
                         <span>Customer Info</span>
                     </div>
-                    <div :class="step >= 2 ? 'text-darkSlate-900' : 'text-textMuted'" class="flex items-center space-x-2">
+                    <div :class="step >= 2 ? 'text-darkSlate-900' : 'text-textMuted'" class="flex items-center space-x-1.5 whitespace-nowrap">
                         <span class="w-6 h-6 rounded-full flex items-center justify-center font-grotesk font-extrabold text-xs" :class="step >= 2 ? 'bg-brandOrange-500 text-white' : 'bg-slate-200 text-slate-500'">2</span>
-                        <span>Fulfillment & Address</span>
+                        <span>Fulfillment</span>
                     </div>
-                    <div :class="step >= 3 ? 'text-darkSlate-900' : 'text-textMuted'" class="flex items-center space-x-2">
+                    <div :class="step >= 3 ? 'text-darkSlate-900' : 'text-textMuted'" class="flex items-center space-x-1.5 whitespace-nowrap">
                         <span class="w-6 h-6 rounded-full flex items-center justify-center font-grotesk font-extrabold text-xs" :class="step >= 3 ? 'bg-brandOrange-500 text-white' : 'bg-slate-200 text-slate-500'">3</span>
+                        <span>Verification Docs</span>
+                    </div>
+                    <div :class="step >= 4 ? 'text-darkSlate-900' : 'text-textMuted'" class="flex items-center space-x-1.5 whitespace-nowrap">
+                        <span class="w-6 h-6 rounded-full flex items-center justify-center font-grotesk font-extrabold text-xs" :class="step >= 4 ? 'bg-brandOrange-500 text-white' : 'bg-slate-200 text-slate-500'">4</span>
                         <span>Payment & Confirm</span>
                     </div>
                 </div>
@@ -55,7 +59,7 @@
 
                     <div class="pt-4 flex justify-end">
                         <button type="button" @click="step = 2" class="py-3 px-6 bg-brandOrange-500 hover:bg-brandOrange-600 text-white text-xs font-bold rounded-xl shadow-md transition-all">
-                            Continue to Shipping &rarr;
+                            Continue to Fulfillment &rarr;
                         </button>
                     </div>
                 </div>
@@ -103,14 +107,79 @@
 
                     <div class="pt-4 flex justify-between items-center">
                         <button type="button" @click="step = 1" class="py-2.5 px-5 bg-[#f5f7fb] text-darkSlate-900 font-semibold text-xs rounded-xl border border-borderLight">Back</button>
-                        <button type="button" @click="step = 3" class="py-3 px-6 bg-brandOrange-500 hover:bg-brandOrange-600 text-white text-xs font-bold rounded-xl shadow-md transition-all">Next: Payment &rarr;</button>
+                        <button type="button" @click="step = 3" class="py-3 px-6 bg-brandOrange-500 hover:bg-brandOrange-600 text-white text-xs font-bold rounded-xl shadow-md transition-all">Next: Upload Verification Docs &rarr;</button>
                     </div>
                 </div>
 
-                <!-- Step 3: Payment & Order Finalization -->
-                <div x-show="step === 3" class="bg-white p-6 rounded-3xl border border-borderLight shadow-xs space-y-6">
+                <!-- Step 3: Verification Documents Upload -->
+                <div x-show="step === 3" class="bg-white p-6 rounded-3xl border border-borderLight shadow-xs space-y-5">
                     <div class="flex justify-between items-center pb-3 border-b border-borderLight">
-                        <h3 class="font-grotesk text-sm font-bold text-darkSlate-900 uppercase tracking-wider">Step 3: Payment & Finalization</h3>
+                        <div>
+                            <h3 class="font-grotesk text-sm font-bold text-darkSlate-900 uppercase tracking-wider">Step 3: Identity & Address Verification Documents</h3>
+                            <p class="text-xs text-textMuted mt-0.5">Mandatory security check before payment authorization under UK rental regulations.</p>
+                        </div>
+                        <span class="text-xs font-bold text-brandOrange-600 bg-brandOrange-50 px-2.5 py-1 rounded-full border border-brandOrange-500/20"><i class="fa-solid fa-shield-halved"></i> Official UK Verification</span>
+                    </div>
+
+                    <div class="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-900 space-y-1">
+                        <div class="font-bold flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation text-amber-600"></i> Required Documents Notice</div>
+                        <p class="leading-relaxed">Please upload clear photos or PDF documents for your <strong>Proof of ID</strong> (Passport, UK BRP/Visa, or Driving License) and <strong>UK Proof of Address</strong> (Utility bill, Bank Statement, or Council tax). Accepted formats: JPG, PNG, WEBP, PDF (Max 10MB per file).</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Upload 1: Proof of ID -->
+                        <div class="p-5 bg-[#f8fafc] rounded-2xl border border-dashed border-slate-300 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="font-grotesk text-xs font-bold text-darkSlate-900 uppercase"><i class="fa-solid fa-id-card text-brandOrange-500 mr-1.5"></i> Proof of Identity (Photo ID)</span>
+                                <span class="text-[10px] font-bold text-brandOrange-600 bg-brandOrange-50 px-2 py-0.5 rounded-md">Passport / BRP / License</span>
+                            </div>
+                            <p class="text-[11px] text-textMuted">Upload Passport, UK Visa/BRP, or UK Driving License.</p>
+
+                            <div class="relative">
+                                <input type="file" name="proof_of_id" id="proof_of_id" accept="image/*,.pdf" @change="handleFileChange($event, 'id')" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brandOrange-500 file:text-white hover:file:bg-brandOrange-600 cursor-pointer">
+                            </div>
+
+                            <template x-if="idFileName">
+                                <div class="p-2.5 bg-emerald-50 rounded-xl border border-emerald-200 flex items-center justify-between text-xs text-emerald-900 font-medium">
+                                    <span class="truncate max-w-[200px]" x-text="idFileName"></span>
+                                    <span class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-md" x-text="idFileType"></span>
+                                </div>
+                            </template>
+                        </div>
+
+                        <!-- Upload 2: Proof of Address -->
+                        <div class="p-5 bg-[#f8fafc] rounded-2xl border border-dashed border-slate-300 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="font-grotesk text-xs font-bold text-darkSlate-900 uppercase"><i class="fa-solid fa-house-user text-brandOrange-500 mr-1.5"></i> UK Proof of Address</span>
+                                <span class="text-[10px] font-bold text-brandOrange-600 bg-brandOrange-50 px-2 py-0.5 rounded-md">Utility / Bank Statement</span>
+                            </div>
+                            <p class="text-[11px] text-textMuted">Utility bill, Bank statement, or Council tax (last 3 months).</p>
+
+                            <div class="relative">
+                                <input type="file" name="proof_of_address" id="proof_of_address" accept="image/*,.pdf" @change="handleFileChange($event, 'address')" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brandOrange-500 file:text-white hover:file:bg-brandOrange-600 cursor-pointer">
+                            </div>
+
+                            <template x-if="addressFileName">
+                                <div class="p-2.5 bg-emerald-50 rounded-xl border border-emerald-200 flex items-center justify-between text-xs text-emerald-900 font-medium">
+                                    <span class="truncate max-w-[200px]" x-text="addressFileName"></span>
+                                    <span class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-md" x-text="addressFileType"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 flex justify-between items-center">
+                        <button type="button" @click="step = 2" class="py-2.5 px-5 bg-[#f5f7fb] text-darkSlate-900 font-semibold text-xs rounded-xl border border-borderLight">Back</button>
+                        <button type="button" @click="goToPaymentStep()" class="py-3 px-6 bg-brandOrange-500 hover:bg-brandOrange-600 text-white text-xs font-bold rounded-xl shadow-md transition-all">
+                            Next: Proceed to Payment &rarr;
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Payment & Order Finalization -->
+                <div x-show="step === 4" class="bg-white p-6 rounded-3xl border border-borderLight shadow-xs space-y-6">
+                    <div class="flex justify-between items-center pb-3 border-b border-borderLight">
+                        <h3 class="font-grotesk text-sm font-bold text-darkSlate-900 uppercase tracking-wider">Step 4: Payment & Finalization</h3>
                         <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full"><i class="fa-solid fa-shield-check"></i> Instant Approval</span>
                     </div>
 
@@ -162,7 +231,7 @@
                     </div>
 
                     <div class="pt-4 flex justify-between items-center">
-                        <button type="button" @click="step = 2" class="py-2.5 px-5 bg-[#f5f7fb] text-darkSlate-900 font-semibold text-xs rounded-xl border border-borderLight">Back</button>
+                        <button type="button" @click="step = 3" class="py-2.5 px-5 bg-[#f5f7fb] text-darkSlate-900 font-semibold text-xs rounded-xl border border-borderLight">Back</button>
                         <button type="submit" :disabled="submitting" class="py-3.5 px-7 bg-brandOrange-500 hover:bg-brandOrange-600 text-white text-xs font-bold rounded-xl shadow-lg transition-all flex items-center justify-center">
                             <span x-show="!submitting"><i class="fa-solid fa-lock mr-2"></i> Confirm & Authorize Payment</span>
                             <span x-show="submitting"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Processing Order...</span>
@@ -227,6 +296,53 @@
             fulfillment: 'delivery',
             paymentType: 'advance',
             submitting: false,
+            hasRental: {{ $hasRental ? 'true' : 'false' }},
+            idFileName: '',
+            idFileType: '',
+            addressFileName: '',
+            addressFileType: '',
+
+            handleFileChange(event, type) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const ext = file.name.split('.').pop().toUpperCase();
+                if (type === 'id') {
+                    this.idFileName = file.name;
+                    this.idFileType = ext === 'PDF' ? 'PDF' : 'IMAGE';
+                } else if (type === 'address') {
+                    this.addressFileName = file.name;
+                    this.addressFileType = ext === 'PDF' ? 'PDF' : 'IMAGE';
+                }
+            },
+
+            goToPaymentStep() {
+                if (this.hasRental) {
+                    const idInput = document.getElementById('proof_of_id');
+                    const addressInput = document.getElementById('proof_of_address');
+
+                    if (!idInput || !idInput.files.length) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Proof of ID Required',
+                            text: 'Please select a valid Proof of ID file (Passport, UK BRP/Visa, or Driving License) before proceeding to payment.',
+                            confirmButtonColor: '#f97316'
+                        });
+                        return;
+                    }
+
+                    if (!addressInput || !addressInput.files.length) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Proof of Address Required',
+                            text: 'Please select a valid UK Proof of Address file (Utility bill, Bank Statement, or Council tax) before proceeding to payment.',
+                            confirmButtonColor: '#f97316'
+                        });
+                        return;
+                    }
+                }
+                this.step = 4;
+            },
 
             async submitOrder() {
                 this.submitting = true;
@@ -234,11 +350,15 @@
                 let formData = new FormData(form);
 
                 try {
-                    let res = await axios.post('{{ route("checkout.process") }}', formData);
+                    let res = await axios.post('{{ route("checkout.process") }}', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
                     if (res.data.success) {
                         Swal.fire({
                             title: 'Order Placed Successfully! 🎉',
-                            html: `<p style="font-size:14px; margin-top:8px;">Order Reference: <strong style="color:#f97316;">${res.data.order_number || ''}</strong></p><p style="font-size:12px; color:#555; margin-top:6px;">Thank you for choosing eb4u! Your order has been placed.</p>`,
+                            html: `<p style="font-size:14px; margin-top:8px;">Order Reference: <strong style="color:#f97316;">${res.data.order_number || ''}</strong></p><p style="font-size:12px; color:#555; margin-top:6px;">Thank you! Your rental documents have been submitted & order confirmed.</p>`,
                             icon: 'success',
                             confirmButtonText: 'Return to Homepage',
                             confirmButtonColor: '#f97316',
@@ -264,7 +384,7 @@
                     }
                 } catch (e) {
                     this.submitting = false;
-                    let msg = e.response?.data?.message || 'Checkout failed. Please try again.';
+                    let msg = e.response?.data?.message || 'Checkout failed. Please check your uploaded document files.';
                     Swal.fire({
                         icon: 'error',
                         title: 'Checkout Error',

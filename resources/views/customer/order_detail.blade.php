@@ -17,6 +17,46 @@
             </span>
         </div>
 
+        <!-- Verification Documents Section -->
+        @if($order->proof_of_id_path || $order->proof_of_address_path)
+            <div class="bg-slate-50 p-6 rounded-3xl border border-slate-200/80 space-y-4">
+                <h3 class="text-xs font-black uppercase text-slate-900 tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-brand-600"></i> Customer Identity & Verification Documents
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    @if($order->proof_of_id_path)
+                        <div class="p-4 bg-white rounded-2xl border border-slate-200 flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <i class="fa-solid fa-id-card text-brand-600 text-lg"></i>
+                                <div>
+                                    <span class="font-bold text-xs text-slate-900 block">Proof of Identity (ID)</span>
+                                    <span class="text-[10px] text-slate-500">Passport / Visa / License</span>
+                                </div>
+                            </div>
+                            <a href="{{ asset('storage/' . $order->proof_of_id_path) }}" target="_blank" class="px-3.5 py-1.5 bg-slate-900 hover:bg-black text-white font-bold text-xs rounded-xl flex items-center gap-1 transition-colors">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> View Doc
+                            </a>
+                        </div>
+                    @endif
+
+                    @if($order->proof_of_address_path)
+                        <div class="p-4 bg-white rounded-2xl border border-slate-200 flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <i class="fa-solid fa-house-user text-brand-600 text-lg"></i>
+                                <div>
+                                    <span class="font-bold text-xs text-slate-900 block">UK Proof of Address</span>
+                                    <span class="text-[10px] text-slate-500">Utility / Bank Statement</span>
+                                </div>
+                            </div>
+                            <a href="{{ asset('storage/' . $order->proof_of_address_path) }}" target="_blank" class="px-3.5 py-1.5 bg-slate-900 hover:bg-black text-white font-bold text-xs rounded-xl flex items-center gap-1 transition-colors">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> View Doc
+                            </a>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        @endif
+
         <!-- Items Table -->
         <div>
             <h3 class="text-xs font-black uppercase text-slate-900 tracking-wider mb-4">Purchased / Rented Items</h3>

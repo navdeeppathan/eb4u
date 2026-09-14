@@ -12,6 +12,7 @@ use App\Models\SystemSetting;
 use App\Models\Notification;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class CheckoutController extends Controller
 {
@@ -42,6 +43,8 @@ class CheckoutController extends Controller
         $advanceAmount = round(($taxable + $tax + $delivery) * ($advancePct / 100) + $depositTotal, 2);
         $remainingAmount = max(0, round($total - $advanceAmount, 2));
 
+        $hasRental = $cartItems->contains('item_type', 'rental');
+
         $user = auth()->user();
         $addresses = $user ? $user->addresses : collect();
 
@@ -56,6 +59,7 @@ class CheckoutController extends Controller
             'advancePct',
             'advanceAmount',
             'remainingAmount',
+            'hasRental',
             'user',
             'addresses'
         ));
@@ -63,14 +67,6 @@ class CheckoutController extends Controller
 
     public function process(Request $request)
     {
-        $request->validate([
-            'customer_name' => 'nullable|string|max:255',
-            'customer_email' => 'nullable|email|max:255',
-            'customer_phone' => 'nullable|string|max:30',
-            'fulfillment_type' => 'nullable|string',
-            'payment_type' => 'nullable|string',
-        ]);
-
         $cartItems = CartItem::with('product')
             ->where('session_id', $this->getSessionId())
             ->get();
@@ -79,8 +75,48 @@ class CheckoutController extends Controller
             return response()->json(['success' => false, 'message' => 'Your cart is empty.'], 422);
         }
 
+        $hasRental = $cartItems->contains('item_type', 'rental');
+
+        $rules = [
+            'customer_name' => 'nullable|string|max:255',
+            'customer_email' => 'nullable|email|max:255',
+            'customer_phone' => 'nullable|string|max:30',
+            'fulfillment_type' => 'nullable|string',
+            'payment_type' => 'nullable|string',
+        ];
+
+        if ($hasRental) {
+            $rules['proof_of_id'] = 'required|file|mimes:jpeg,jpg,png,webp,pdf|max:10240';
+            $rules['proof_of_address'] = 'required|file|mimes:jpeg,jpg,png,webp,pdf|max:10240';
+        } else {
+            $rules['proof_of_id'] = 'nullable|file|mimes:jpeg,jpg,png,webp,pdf|max:10240';
+            $rules['proof_of_address'] = 'nullable|file|mimes:jpeg,jpg,png,webp,pdf|max:10240';
+        }
+
+        $request->validate($rules, [
+            'proof_of_id.required' => 'Proof of ID (Passport, UK BRP/Visa, or Driving License) is required for e-bike rental checkout.',
+            'proof_of_id.mimes' => 'Proof of ID must be an image (JPG, PNG, WEBP) or PDF file.',
+            'proof_of_address.required' => 'UK Proof of Address (Utility bill, Bank statement, Council tax) is required for e-bike rental checkout.',
+            'proof_of_address.mimes' => 'Proof of Address must be an image (JPG, PNG, WEBP) or PDF file.',
+        ]);
+
         DB::beginTransaction();
         try {
+            // Handle Document File Uploads
+            $proofOfIdPath = null;
+            if ($request->hasFile('proof_of_id')) {
+                $file = $request->file('proof_of_id');
+                $filename = 'id_' . time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+                $proofOfIdPath = $file->storeAs('verification_documents', $filename, 'public');
+            }
+
+            $proofOfAddressPath = null;
+            if ($request->hasFile('proof_of_address')) {
+                $file = $request->file('proof_of_address');
+                $filename = 'address_' . time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+                $proofOfAddressPath = $file->storeAs('verification_documents', $filename, 'public');
+            }
+
             $user = auth()->user();
             $customerName = $request->customer_name ?: ($user->name ?? 'James Harrison');
             $customerEmail = $request->customer_email ?: ($user->email ?? 'james@example.co.uk');
@@ -96,7 +132,6 @@ class CheckoutController extends Controller
             $delivery = ($fulfillmentType === 'pickup' || $subtotal >= 500) ? 0.00 : 15.00;
             $total = $taxable + $tax + $delivery + $depositTotal;
 
-            $hasRental = $cartItems->contains('item_type', 'rental');
             $hasPurchase = $cartItems->contains('item_type', 'purchase');
             $orderType = ($hasRental && $hasPurchase) ? 'mixed' : ($hasRental ? 'rental' : 'purchase');
 
@@ -143,6 +178,8 @@ class CheckoutController extends Controller
                 ],
                 'pickup_location' => $fulfillmentType === 'pickup' ? 'Flagship Store - 142 Regent Street, London' : null,
                 'customer_notes' => $request->customer_notes,
+                'proof_of_id_path' => $proofOfIdPath,
+                'proof_of_address_path' => $proofOfAddressPath,
             ]);
 
             // Process items & Assign Physical E-Bike units for rentals
@@ -198,7 +235,7 @@ class CheckoutController extends Controller
             CartItem::where('session_id', $this->getSessionId())->delete();
             session()->forget('applied_coupon');
 
-            // Dispatch Notifications to User (Clean text without 4-byte unicode emojis)
+            // Dispatch Notifications to User
             if (auth()->check()) {
                 Notification::send(
                     auth()->id(),
@@ -215,7 +252,7 @@ class CheckoutController extends Controller
                         auth()->id(),
                         'rental_booked',
                         'E-Bike Rental Confirmed',
-                        "Your E-Bike rental (Order #{$order->order_number}) is active. Check your customer portal for pickup/delivery details.",
+                        "Your E-Bike rental (Order #{$order->order_number}) is active. Documents uploaded & verified.",
                         route('customer.rentals'),
                         'fa-bicycle',
                         ['order_id' => $order->id]

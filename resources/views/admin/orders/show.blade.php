@@ -42,6 +42,58 @@
         </form>
     </div>
 
+    <!-- Verification Documents (Admin Inspection) -->
+    @if($order->proof_of_id_path || $order->proof_of_address_path)
+        <div class="bg-white p-6 rounded-3xl border border-borderLight shadow-xs space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-borderLight">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-xl bg-brandOrange-50 text-brandOrange-500 flex items-center justify-center text-sm font-bold">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-grotesk text-sm font-bold text-darkSlate-900 uppercase">Customer Verification Documents</h3>
+                        <p class="text-xs text-textMuted">Uploaded at checkout for identity and address verification.</p>
+                    </div>
+                </div>
+                <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                    <i class="fa-solid fa-check-double"></i> Verified at Checkout
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @if($order->proof_of_id_path)
+                    <div class="p-4 bg-[#f5f7fb] rounded-2xl border border-borderLight flex items-center justify-between text-xs">
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-solid fa-id-card text-brandOrange-500 text-xl"></i>
+                            <div>
+                                <span class="font-bold text-darkSlate-900 block">Proof of Identity (Photo ID)</span>
+                                <span class="text-[10px] text-textMuted">Passport / Visa / BRP / License</span>
+                            </div>
+                        </div>
+                        <a href="{{ asset('storage/' . $order->proof_of_id_path) }}" target="_blank" class="px-3.5 py-2 bg-brandOrange-500 hover:bg-brandOrange-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 transition-colors">
+                            <i class="fa-solid fa-download"></i> View / Download
+                        </a>
+                    </div>
+                @endif
+
+                @if($order->proof_of_address_path)
+                    <div class="p-4 bg-[#f5f7fb] rounded-2xl border border-borderLight flex items-center justify-between text-xs">
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-solid fa-house-user text-brandOrange-500 text-xl"></i>
+                            <div>
+                                <span class="font-bold text-darkSlate-900 block">UK Proof of Address</span>
+                                <span class="text-[10px] text-textMuted">Utility Bill / Bank Statement</span>
+                            </div>
+                        </div>
+                        <a href="{{ asset('storage/' . $order->proof_of_address_path) }}" target="_blank" class="px-3.5 py-2 bg-brandOrange-500 hover:bg-brandOrange-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 transition-colors">
+                            <i class="fa-solid fa-download"></i> View / Download
+                        </a>
+                    </div>
+                @endif
+            </div>
+        </div>
+    @endif
+
     <!-- Rental Expiration Reminder Admin Action Panel -->
     @if($order->type === 'rental' || $order->type === 'mixed')
         <div class="bg-white p-6 rounded-3xl border border-brandOrange-500/30 shadow-xs space-y-4">
