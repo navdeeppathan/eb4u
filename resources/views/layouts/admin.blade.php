@@ -106,9 +106,13 @@
                         <i class="fa-solid fa-barcode text-sm w-5"></i>
                         <span>Fleet Serial IDs</span>
                     </a>
-                    <a href="{{ route('admin.orders.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-2xl hover:bg-darkBlack-800 transition-colors {{ request()->routeIs('admin.orders.*') ? 'bg-brandOrange-500 text-white font-black' : '' }}">
-                        <i class="fa-solid fa-receipt text-sm w-5"></i>
-                        <span>Orders & Rentals</span>
+                    <a href="{{ route('admin.orders.index', ['type' => 'rental']) }}" class="flex items-center space-x-3 px-4 py-3 rounded-2xl hover:bg-darkBlack-800 transition-colors {{ request()->routeIs('admin.orders.*') && (request('type') == 'rental' || request('type') == '') ? 'bg-brandOrange-500 text-white font-black' : '' }}">
+                        <i class="fa-solid fa-clock-rotate-left text-sm w-5"></i>
+                        <span>Rental Orders</span>
+                    </a>
+                    <a href="{{ route('admin.orders.index', ['type' => 'purchase']) }}" class="flex items-center space-x-3 px-4 py-3 rounded-2xl hover:bg-darkBlack-800 transition-colors {{ request()->routeIs('admin.orders.*') && request('type') == 'purchase' ? 'bg-brandOrange-500 text-white font-black' : '' }}">
+                        <i class="fa-solid fa-cart-shopping text-sm w-5"></i>
+                        <span>Selling Orders</span>
                     </a>
                     <a href="{{ route('admin.promotions.index') }}" class="flex items-center space-x-3 px-4 py-3 rounded-2xl hover:bg-darkBlack-800 transition-colors {{ request()->routeIs('admin.promotions.*') ? 'bg-brandOrange-500 text-white font-black' : '' }}">
                         <i class="fa-solid fa-ticket text-sm w-5"></i>

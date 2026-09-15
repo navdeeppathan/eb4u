@@ -99,20 +99,30 @@ class ApiCustomerController extends Controller
     public function extendRental(Request $request, int $orderId)
     {
         $request->validate([
-            'extension_days' => 'required|integer|min:1|max:30',
+            'extension_weeks' => 'nullable|integer|min:1|max:12',
+            'extension_days' => 'nullable|integer|min:1|max:90',
         ]);
 
         $order = Order::where('user_id', $request->user()->id)->findOrFail($orderId);
-        $days = (int) $request->extension_days;
+
+        $weeks = $request->filled('extension_weeks') 
+            ? (int) $request->extension_weeks 
+            : max(1, (int) ceil(($request->extension_days ?? 7) / 7));
+        $addedDays = $weeks * 7;
 
         $firstItem = $order->items()->where('item_type', 'rental')->first();
         if (!$firstItem) {
             return response()->json(['success' => false, 'message' => 'No rental item found in this order.'], 422);
         }
 
-        $dailyRate = $firstItem->rental_rate ?? 35.00;
-        $additionalAmount = round($dailyRate * $days, 2);
-        $newEndDate = Carbon::parse($order->rental_end_date)->addDays($days);
+        $product = $firstItem->product;
+        $weeklyRate = ($product && $product->rental_price_weekly > 0) 
+            ? (float) $product->rental_price_weekly 
+            : (float) (($firstItem->rental_rate ?? 35.00) * 7);
+
+        $additionalAmount = round($weeklyRate * $weeks, 2);
+        $currentEndDate = $order->rental_end_date ? Carbon::parse($order->rental_end_date) : now();
+        $newEndDate = $currentEndDate->copy()->addWeeks($weeks);
 
         $order->update([
             'rental_end_date' => $newEndDate,
@@ -123,7 +133,7 @@ class ApiCustomerController extends Controller
 
         $firstItem->update([
             'rental_end_date' => $newEndDate,
-            'rental_days' => $firstItem->rental_days + $days,
+            'rental_days' => ($firstItem->rental_days ?? 7) + $addedDays,
             'subtotal' => $firstItem->subtotal + $additionalAmount,
         ]);
 
@@ -131,14 +141,15 @@ class ApiCustomerController extends Controller
             $request->user()->id,
             'rental_extended',
             'Rental Extension Requested',
-            "Your extension of {$days} day(s) for Order #{$order->order_number} has been logged. New end date: " . $newEndDate->format('d M Y') . ".",
+            "Your extension of {$weeks} week(s) for Order #{$order->order_number} has been logged. New end date: " . $newEndDate->format('d M Y') . ".",
             route('customer.rentals'),
             'fa-calendar-plus'
         );
 
         return response()->json([
             'success' => true,
-            'message' => "Rental extension request submitted for {$days} extra day(s)!",
+            'message' => "Rental extension request submitted for {$weeks} week(s)!",
+            'extension_weeks' => $weeks,
             'new_end_date' => $newEndDate->format('Y-m-d'),
             'additional_amount' => $additionalAmount,
         ]);

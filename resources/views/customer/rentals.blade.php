@@ -19,14 +19,31 @@
             <div class="bg-white rounded-3xl border border-slate-200 shadow-md p-6 space-y-4 relative overflow-hidden">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-200 pb-4 gap-2">
                     <div>
-                        <span class="text-xs font-mono font-bold text-slate-500">Order: {{ $rental->order_number }}</span>
+                        <span class="text-xs font-mono font-black text-slate-900">Order #{{ $rental->order_number }}</span>
                         <span class="ml-2 text-xs font-bold uppercase px-3 py-1 rounded-full border {{ $rental->status_badge_class }}">
                             {{ str_replace('_', ' ', $rental->status) }}
                         </span>
+                        @if(in_array($rental->status, ['returned', 'completed']))
+                            <span class="ml-2 text-[11px] font-black uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                <i class="fa-solid fa-circle-check text-emerald-600"></i> Bike Returned
+                            </span>
+                        @elseif($rental->rental_end_date && $rental->rental_end_date->isPast())
+                            <span class="ml-2 text-[11px] font-black uppercase px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 border border-rose-300 animate-pulse">
+                                <i class="fa-solid fa-triangle-exclamation text-rose-600"></i> Overdue - Return Required
+                            </span>
+                        @else
+                            <span class="ml-2 text-[11px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200">
+                                <i class="fa-solid fa-bicycle text-blue-600"></i> Bike Outstanding
+                            </span>
+                        @endif
                     </div>
-                    <span class="text-xs text-slate-900 font-bold bg-brandOrange-50 text-brandOrange-700 px-3 py-1 rounded-full border border-brandOrange-200">
-                        Rental Return Date: {{ $rental->rental_end_date ? $rental->rental_end_date->format('d M Y') : 'N/A' }}
-                    </span>
+                    <div class="text-xs font-bold text-slate-700 space-x-2">
+                        <span>Start: <strong class="text-slate-900">{{ $rental->rental_start_date ? $rental->rental_start_date->format('d M Y') : 'N/A' }}</strong></span>
+                        <span>•</span>
+                        <span class="bg-brandOrange-50 text-brandOrange-700 px-3 py-1 rounded-full border border-brandOrange-200">
+                            Return Expire Date: <strong>{{ $rental->rental_end_date ? $rental->rental_end_date->format('d M Y') : 'N/A' }}</strong>
+                        </span>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -120,30 +137,32 @@
         </div>
     </div>
 
-    <!-- AJAX Extension Modal -->
+    <!-- AJAX Extension Modal (Weeks Only) -->
     <div x-show="showExtendModal" x-cloak class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b border-slate-200 pb-3">
-                <h3 class="text-sm font-black uppercase text-slate-900">Extend Rental Period</h3>
-                <button @click="showExtendModal = false" class="text-slate-400 hover:text-slate-900 font-bold">&times;</button>
+                <h3 class="text-sm font-black uppercase text-slate-900"><i class="fa-solid fa-calendar-plus text-brandOrange-500 mr-1.5"></i> Extend Rental Period</h3>
+                <button @click="showExtendModal = false" class="text-slate-400 hover:text-slate-900 font-bold text-lg">&times;</button>
             </div>
             
-            <p class="text-xs text-slate-600 font-medium">How many extra days would you like to keep your E-Bike for Order <strong x-text="selectedOrderNumber"></strong>?</p>
+            <p class="text-xs text-slate-600 font-medium">How many extra weeks would you like to extend your E-Bike rental for Order <strong x-text="selectedOrderNumber" class="text-slate-900 font-mono"></strong>?</p>
 
             <div>
-                <label class="block text-xs font-bold text-slate-900 mb-1">Extension Duration (Days)</label>
-                <select x-model="extensionDays" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl p-3 font-bold text-slate-900">
-                    <option value="1">1 Extra Day (+£35.00)</option>
-                    <option value="3">3 Extra Days (+£105.00)</option>
-                    <option value="7">1 Extra Week (+£180.00)</option>
-                    <option value="14">2 Extra Weeks (+£320.00)</option>
-                    <option value="30">1 Extra Month (+£550.00)</option>
+                <label class="block text-xs font-bold text-slate-900 mb-1.5">Select Extension Duration (Weeks Only)</label>
+                <select x-model="extensionWeeks" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl p-3 font-bold text-slate-900 focus:ring-2 focus:ring-brandOrange-500">
+                    <option value="1">1 Week (+1 Week Extension)</option>
+                    <option value="2">2 Weeks (+2 Weeks Extension)</option>
+                    <option value="3">3 Weeks (+3 Weeks Extension)</option>
+                    <option value="4">4 Weeks (+4 Weeks / 1 Month Extension)</option>
+                    <option value="8">8 Weeks (+8 Weeks Extension)</option>
+                    <option value="12">12 Weeks (+12 Weeks Extension)</option>
                 </select>
+                <p class="text-[11px] text-slate-500 mt-1 font-medium"><i class="fa-solid fa-circle-info text-brandOrange-500 mr-1"></i> Extension price is automatically calculated based on the weekly rate of your E-Bike.</p>
             </div>
 
             <div class="pt-4 flex justify-end space-x-2">
-                <button type="button" @click="showExtendModal = false" class="px-5 py-2.5 bg-slate-200 text-slate-800 text-xs font-bold rounded-xl">Cancel</button>
-                <button type="button" @click="submitExtension()" class="px-5 py-2.5 bg-brandOrange-500 hover:bg-brandOrange-600 text-white text-xs font-black rounded-xl shadow-md">Confirm Extension</button>
+                <button type="button" @click="showExtendModal = false" class="px-5 py-2.5 bg-slate-200 text-slate-800 text-xs font-bold rounded-xl hover:bg-slate-300">Cancel</button>
+                <button type="button" @click="submitExtension()" class="px-5 py-2.5 bg-brandOrange-500 hover:bg-brandOrange-600 text-white text-xs font-black rounded-xl shadow-md transition-colors">Confirm Extension</button>
             </div>
         </div>
     </div>
@@ -156,7 +175,7 @@
             showExtendModal: false,
             selectedRentalId: null,
             selectedOrderNumber: '',
-            extensionDays: 3,
+            extensionWeeks: 1,
 
             openExtendModal(rentalId, orderNumber) {
                 this.selectedRentalId = rentalId;
@@ -167,7 +186,7 @@
             async submitExtension() {
                 try {
                     let res = await axios.post(`/customer/rentals/${this.selectedRentalId}/extend`, {
-                        extension_days: this.extensionDays
+                        extension_weeks: this.extensionWeeks
                     });
                     if (res.data.success) {
                         this.showExtendModal = false;
@@ -175,7 +194,7 @@
                         setTimeout(() => window.location.reload(), 1500);
                     }
                 } catch (e) {
-                    if (window.showToast) window.showToast('Failed to extend rental.', true);
+                    if (window.showToast) window.showToast('Failed to extend rental period.', true);
                 }
             },
 

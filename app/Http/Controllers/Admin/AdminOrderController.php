@@ -20,8 +20,10 @@ class AdminOrderController extends Controller
     {
         $query = Order::with(['user', 'items.product', 'items.ebikeUnit']);
 
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
+        // Default to rental type if no type provided or if explicitly set to rental
+        $activeTab = $request->get('type', 'rental');
+        if ($activeTab !== 'all') {
+            $query->where('type', $activeTab);
         }
 
         if ($request->filled('status')) {
@@ -36,10 +38,76 @@ class AdminOrderController extends Controller
             $query->where('order_number', 'like', "%{$request->search}%");
         }
 
-        $orders = $query->latest()->paginate(15);
-        $expiringCount = Order::where('type', 'rental')->whereIn('status', ['active', 'ready_for_pickup', 'extension_requested', 'overdue'])->count();
+        if ($activeTab === 'purchase') {
+            $orders = $query->latest()->paginate(15);
+        } else {
+            // Priority ordering for Rental Orders:
+            // 1. Overdue / Expired (rental_end_date < today & not returned/completed/cancelled)
+            // 2. Expiring soon (rental_end_date within 3 days & not returned/completed/cancelled)
+            // 3. Active ongoing rentals
+            // 4. Returned / Completed / Cancelled
+            $orders = $query->orderByRaw("
+                CASE 
+                    WHEN status NOT IN ('returned', 'completed', 'cancelled') AND (rental_end_date IS NOT NULL AND rental_end_date < CURDATE()) THEN 1
+                    WHEN status NOT IN ('returned', 'completed', 'cancelled') AND (rental_end_date IS NOT NULL AND rental_end_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 3 DAY)) THEN 2
+                    WHEN status NOT IN ('returned', 'completed', 'cancelled') THEN 3
+                    ELSE 4
+                END ASC, rental_end_date ASC, id DESC
+            ")->paginate(15);
+        }
 
-        return view('admin.orders.index', compact('orders', 'expiringCount'));
+        $expiringCount = Order::where('type', 'rental')
+            ->whereNotIn('status', ['returned', 'completed', 'cancelled'])
+            ->where(function($q) {
+                $q->where('rental_end_date', '<', now())
+                  ->orWhereBetween('rental_end_date', [now(), now()->addDays(3)]);
+            })->count();
+
+        $expiredCount = Order::where('type', 'rental')
+            ->whereNotIn('status', ['returned', 'completed', 'cancelled'])
+            ->where('rental_end_date', '<', now())
+            ->count();
+
+        $expiringSoonCount = Order::where('type', 'rental')
+            ->whereNotIn('status', ['returned', 'completed', 'cancelled'])
+            ->whereBetween('rental_end_date', [now(), now()->addDays(3)])
+            ->count();
+
+        return view('admin.orders.index', compact('orders', 'expiringCount', 'expiredCount', 'expiringSoonCount', 'activeTab'));
+    }
+
+    public function markReturned(int $id)
+    {
+        $order = Order::with('items')->findOrFail($id);
+
+        $order->update([
+            'status' => 'returned',
+            'actual_return_date' => now(),
+            'admin_notes' => ($order->admin_notes ? $order->admin_notes . "\n" : "") . "Vehicle marked as RETURNED by Admin on " . now()->format('d M Y H:i') . ".",
+        ]);
+
+        foreach ($order->items as $item) {
+            if ($item->ebike_unit_id) {
+                $unit = EBikeUnit::find($item->ebike_unit_id);
+                if ($unit) {
+                    $unit->update(['status' => 'available']);
+                }
+            }
+        }
+
+        if ($order->user_id) {
+            Notification::send(
+                $order->user_id,
+                'vehicle_returned',
+                'E-Bike Returned & Verified',
+                "Your vehicle for Order #{$order->order_number} has been received and verified by our store. Deposit refund is being processed.",
+                route('customer.rentals'),
+                'fa-circle-check',
+                ['order_id' => $order->id]
+            );
+        }
+
+        return back()->with('success', "Order #{$order->order_number} vehicle has been marked as RETURNED. Assigned E-Bike unit status freed to Available.");
     }
 
     public function show(int $id)

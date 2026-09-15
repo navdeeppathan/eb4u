@@ -42,6 +42,60 @@
         </form>
     </div>
 
+    <!-- Rental Lifecycle & Bike Return Management Card -->
+    @if($order->type === 'rental')
+        @php
+            $isReturned = in_array($order->status, ['returned', 'completed', 'cancelled']);
+            $isExpired = !$isReturned && $order->rental_end_date && $order->rental_end_date->isPast();
+            $isExpiringSoon = !$isReturned && $order->rental_end_date && !$isExpired && $order->rental_end_date->diffInDays(now()) <= 3;
+        @endphp
+        <div class="p-6 rounded-3xl border shadow-xs space-y-4 {{ $isExpired ? 'bg-rose-50 border-rose-300' : ($isExpiringSoon ? 'bg-amber-50 border-amber-300' : ($isReturned ? 'bg-emerald-50 border-emerald-300' : 'bg-white border-borderLight')) }}">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 border-b border-black/10 gap-3">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-lg shadow-sm {{ $isExpired ? 'bg-rose-600 text-white' : ($isReturned ? 'bg-emerald-600 text-white' : 'bg-brandOrange-500 text-white') }}">
+                        <i class="fa-solid fa-bicycle"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-grotesk text-sm font-extrabold uppercase text-darkSlate-900">E-Bike Return & Rental Management Status</h3>
+                        <p class="text-xs text-textMuted">Track rental schedule, bike return status, and physical vehicle return verification.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    @if($isReturned)
+                        <span class="px-3 py-1.5 rounded-full text-xs font-black uppercase bg-emerald-100 text-emerald-800 border border-emerald-300">
+                            <i class="fa-solid fa-circle-check text-emerald-600"></i> Bike Returned ({{ $order->actual_return_date ? $order->actual_return_date->format('d M Y') : 'Completed' }})
+                        </span>
+                    @else
+                        <form action="{{ route('admin.orders.mark_returned', $order->id) }}" method="POST" onsubmit="return confirm('Mark bike as RETURNED for Order #{{ $order->order_number }}? This will set physical E-Bike unit to Available.');">
+                            @csrf
+                            <button type="submit" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-md transition-colors flex items-center gap-1.5">
+                                <i class="fa-solid fa-rotate-left"></i> Mark Bike as Returned
+                            </button>
+                        </form>
+                    @endif
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-semibold">
+                <div class="bg-white/80 p-3.5 rounded-2xl border border-slate-200">
+                    <span class="text-[10px] text-textMuted uppercase font-bold block">Rental Start Date</span>
+                    <span class="text-sm font-extrabold text-darkSlate-900">{{ $order->rental_start_date ? $order->rental_start_date->format('d M Y') : 'N/A' }}</span>
+                </div>
+                <div class="bg-white/80 p-3.5 rounded-2xl border border-slate-200">
+                    <span class="text-[10px] text-textMuted uppercase font-bold block">Rental Expiration Date</span>
+                    <span class="text-sm font-extrabold {{ $isExpired ? 'text-rose-700 underline' : 'text-darkSlate-900' }}">
+                        {{ $order->rental_end_date ? $order->rental_end_date->format('d M Y') : 'N/A' }}
+                    </span>
+                </div>
+                <div class="bg-white/80 p-3.5 rounded-2xl border border-slate-200">
+                    <span class="text-[10px] text-textMuted uppercase font-bold block">Security Deposit Held</span>
+                    <span class="text-sm font-extrabold text-emerald-700">£{{ number_format($order->security_deposit_total, 2) }}</span>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <!-- Verification Documents (Admin Inspection) -->
     @if($order->proof_of_id_path || $order->proof_of_address_path)
         <div class="bg-white p-6 rounded-3xl border border-borderLight shadow-xs space-y-4">
