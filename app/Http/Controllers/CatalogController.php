@@ -5,13 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\Brand;
 
 class CatalogController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with(['category', 'brand', 'images'])->where('is_active', true);
+        $query = Product::with(['category', 'images'])->where('is_active', true);
 
         // Filter by Tag (sell vs rent)
         if ($request->filled('tag')) {
@@ -47,20 +46,11 @@ class CatalogController extends Controller
             }
         }
 
-        // Filter by Brand
-        if ($request->filled('brand')) {
-            $brand = Brand::where('slug', $request->brand)->first();
-            if ($brand) {
-                $query->where('brand_id', $brand->id);
-            }
-        }
-
         // Search query
         if ($request->filled('q')) {
             $search = $request->q;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('sku', 'like', "%{$search}%")
                   ->orWhere('description', 'like', "%{$search}%")
                   ->orWhere('motor_specs', 'like', "%{$search}%");
             });
@@ -92,7 +82,6 @@ class CatalogController extends Controller
                 $query->orderBy('price', 'desc');
                 break;
             case 'rating':
-                // Subquery or fallback
                 $query->latest();
                 break;
             case 'name_asc':
@@ -106,7 +95,6 @@ class CatalogController extends Controller
 
         $products = $query->paginate(12)->withQueryString();
         $categories = Category::where('is_active', true)->orderBy('sort_order')->get();
-        $brands = Brand::where('is_active', true)->get();
 
         if ($request->ajax()) {
             return response()->json([
@@ -117,6 +105,6 @@ class CatalogController extends Controller
             ]);
         }
 
-        return view('catalog.index', compact('products', 'categories', 'brands'));
+        return view('catalog.index', compact('products', 'categories'));
     }
 }

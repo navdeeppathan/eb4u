@@ -21,8 +21,8 @@ return new class extends Migration
             $table->date('rental_start_date')->nullable();
             $table->date('rental_end_date')->nullable();
             $table->integer('rental_days')->nullable();
-            $table->enum('rental_plan', ['daily', 'weekly', 'monthly'])->nullable();
-            $table->decimal('daily_rate', 10, 2)->nullable();
+            $table->enum('rental_plan', ['weekly'])->default('weekly')->nullable();
+            $table->decimal('weekly_rate', 10, 2)->nullable();
             $table->decimal('security_deposit', 10, 2)->nullable();
             $table->json('options')->nullable();
             

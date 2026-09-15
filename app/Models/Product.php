@@ -12,18 +12,14 @@ class Product extends Model
     protected $fillable = [
         'name',
         'slug',
-        'sku',
         'type',
         'product_tag', // 'sell' or 'rent'
         'category_id',
-        'brand_id',
         'price',
         'discount_price',
         'stock_quantity',
         'is_rental_eligible',
-        'rental_price_daily',
         'rental_price_weekly',
-        'rental_price_monthly',
         'rental_security_deposit',
         'motor_specs',
         'battery_specs',
@@ -55,11 +51,6 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
-    }
-
-    public function brand()
-    {
-        return $this->belongsTo(Brand::class);
     }
 
     public function variants()

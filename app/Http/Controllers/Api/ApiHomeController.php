@@ -16,7 +16,7 @@ class ApiHomeController extends Controller
         $banners = CmsBanner::where('is_active', true)->orderBy('sort_order')->get();
         $categories = Category::where('is_active', true)->orderBy('name')->get();
         
-        $featuredEBikes = Product::with(['brand', 'images'])
+        $featuredEBikes = Product::with(['images'])
             ->where('is_active', true)
             ->where('type', 'ebike')
             ->where('is_featured', true)
@@ -24,7 +24,7 @@ class ApiHomeController extends Controller
             ->get()
             ->map(fn($p) => $this->formatProduct($p));
 
-        $popularAccessories = Product::with(['brand', 'images'])
+        $popularAccessories = Product::with(['images'])
             ->where('is_active', true)
             ->where('type', 'accessory')
             ->take(6)
@@ -71,12 +71,11 @@ class ApiHomeController extends Controller
             'name' => $p->name,
             'slug' => $p->slug,
             'type' => $p->type,
-            'brand_name' => $p->brand->name ?? 'Premium',
             'price' => (float) $p->price,
             'discount_price' => $p->discount_price ? (float) $p->discount_price : null,
             'effective_price' => (float) $p->effective_price,
             'discount_percentage' => $p->discount_percentage,
-            'rental_price_daily' => (float) $p->rental_price_daily,
+            'rental_price_weekly' => (float) $p->rental_price_weekly,
             'is_rental_eligible' => (bool) $p->is_rental_eligible,
             'primary_image' => $p->primary_image_url,
             'motor_specs' => $p->motor_specs ?? '250W',

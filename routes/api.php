@@ -30,7 +30,6 @@ Route::get('/products', [ApiProductController::class, 'index']);
 Route::get('/products/{slug}', [ApiProductController::class, 'show']);
 Route::post('/products/{id}/check-rental', [ApiProductController::class, 'checkRentalAvailability']);
 Route::get('/categories', [ApiProductController::class, 'categories']);
-Route::get('/brands', [ApiProductController::class, 'brands']);
 
 /* 3. Public / Guest Cart Routes (X-Session-ID supported) */
 Route::prefix('cart')->group(function () {

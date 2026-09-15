@@ -75,44 +75,10 @@ class DatabaseSeeder extends Seeder
             'is_default' => true,
         ]);
 
-        // 3. Create Brands
-        $brands = [
-            'Haibike' => 'Premium German engineered electric mountain & trekking bikes.',
-            'Specialized' => 'World-leading innovator in performance cycling & Turbo E-Bikes.',
-            'Trek' => 'American icon in high-end electric road & commuter bicycles.',
-            'Gazelle' => 'Royal Dutch manufacturer of luxury city & step-through E-Bikes.',
-            'Raleigh' => 'Britain\'s classic heritage bike brand with modern electric tech.',
-            'Cube' => 'High performance electric bikes with Bosch motor technology.',
-            'Giro' => 'Industry leader in protective helmets & cycling footwear.',
-            'Lezyne' => 'Precision engineered bike lights, pumps & cycling accessories.',
-            'Endura' => 'High performance UK weather-proof cycling jackets & apparel.',
-            'Abus' => 'Unrivalled German security locks & anti-theft systems.',
-            'Muc-Off' => 'British care products, lubricants & maintenance essentials.',
-        ];
+        // 3. Default System Settings
+        SystemSetting::set('default_security_deposit', 250.00);
 
-        $brandModels = [];
-        foreach ($brands as $name => $desc) {
-            $brandModels[$name] = Brand::create([
-                'name' => $name,
-                'slug' => Str::slug($name),
-                'description' => $desc,
-                'logo' => null,
-                'is_active' => true,
-            ]);
-        }
-
-        // 4. Create Categories (E-Bike vs Accessories)
-        $ebikeCategories = [
-            'City E-Bikes' => 'Smooth, comfortable electric bikes built for urban streets & casual rides.',
-            'Mountain E-Bikes' => 'Full suspension & hardtail eMTBs built to conquer off-road trails.',
-            'Folding E-Bikes' => 'Compact, lightweight folding E-Bikes ideal for train commuters.',
-            'Commuter E-Bikes' => 'Efficient, high-speed E-Bikes designed for daily work travel.',
-            'Road E-Bikes' => 'Lightweight electric road bikes for endurance & fast road cycling.',
-            'Fat Tire E-Bikes' => 'All-terrain E-Bikes with extra wide tires for sand, snow & mud.',
-            'Step-Through E-Bikes' => 'Easy-mount frames providing maximum comfort and accessibility.',
-            'Long Range E-Bikes' => 'High capacity dual-battery E-Bikes with 100+ miles range.',
-        ];
-
+        // 4. Create Categories (Accessories only)
         $accessoryCategories = [
             'Helmets' => 'Certified high-protection cycling helmets with MIPS safety technology.',
             'Bike Lights' => 'Ultra-bright rechargeable LED front & rear lights for night safety.',
@@ -132,17 +98,6 @@ class DatabaseSeeder extends Seeder
 
         $categoryModels = [];
         $sort = 1;
-        foreach ($ebikeCategories as $name => $desc) {
-            $categoryModels[$name] = Category::create([
-                'name' => $name,
-                'slug' => Str::slug($name),
-                'type' => 'ebike',
-                'description' => $desc,
-                'sort_order' => $sort++,
-                'is_active' => true,
-            ]);
-        }
-
         foreach ($accessoryCategories as $name => $desc) {
             $categoryModels[$name] = Category::create([
                 'name' => $name,
@@ -154,19 +109,15 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // 5. Create E-Bike Products
+        // 5. Create E-Bike Products (Category is null, only Weekly Rate & Deposit 250)
         $ebikes = [
             [
                 'name' => 'Gazelle Ultimate C380 HMB Step-Through',
-                'category' => 'Step-Through E-Bikes',
-                'brand' => 'Gazelle',
                 'price' => 3499.00,
                 'discount_price' => 3299.00,
                 'stock' => 12,
-                'rental_daily' => 35.00,
                 'rental_weekly' => 180.00,
-                'rental_monthly' => 550.00,
-                'deposit' => 150.00,
+                'deposit' => 250.00,
                 'motor' => 'Bosch Performance Line 3.0 (75 Nm)',
                 'battery' => 'Bosch PowerTube 625Wh',
                 'range' => '75 Miles / 120 km',
@@ -179,14 +130,10 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'name' => 'Haibike AllMtn 4 Full Suspension eMTB',
-                'category' => 'Mountain E-Bikes',
-                'brand' => 'Haibike',
                 'price' => 4899.00,
                 'discount_price' => 4599.00,
                 'stock' => 8,
-                'rental_daily' => 55.00,
                 'rental_weekly' => 290.00,
-                'rental_monthly' => 890.00,
                 'deposit' => 250.00,
                 'motor' => 'Yamaha PW-X3 (85 Nm)',
                 'battery' => 'InTube 720Wh',
@@ -200,15 +147,11 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'name' => 'Specialized Turbo Vado 4.0 Commuter',
-                'category' => 'Commuter E-Bikes',
-                'brand' => 'Specialized',
                 'price' => 3600.00,
                 'discount_price' => null,
                 'stock' => 15,
-                'rental_daily' => 40.00,
                 'rental_weekly' => 210.00,
-                'rental_monthly' => 640.00,
-                'deposit' => 180.00,
+                'deposit' => 250.00,
                 'motor' => 'Specialized 2.0 (70 Nm)',
                 'battery' => 'Specialized U2-710Wh',
                 'range' => '80 Miles / 130 km',
@@ -221,15 +164,11 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'name' => 'Trek Allant+ 9.9 Stagger Long Range',
-                'category' => 'Long Range E-Bikes',
-                'brand' => 'Trek',
                 'price' => 5400.00,
                 'discount_price' => 4999.00,
                 'stock' => 6,
-                'rental_daily' => 60.00,
                 'rental_weekly' => 320.00,
-                'rental_monthly' => 950.00,
-                'deposit' => 300.00,
+                'deposit' => 250.00,
                 'motor' => 'Bosch Performance CX (85 Nm)',
                 'battery' => 'DualBattery Ready 1125Wh total',
                 'range' => '110 Miles / 175 km',
@@ -242,15 +181,11 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'name' => 'Raleigh Stow-E-Way Compact Folding E-Bike',
-                'category' => 'Folding E-Bikes',
-                'brand' => 'Raleigh',
                 'price' => 1450.00,
                 'discount_price' => 1299.00,
                 'stock' => 20,
-                'rental_daily' => 25.00,
                 'rental_weekly' => 120.00,
-                'rental_monthly' => 390.00,
-                'deposit' => 100.00,
+                'deposit' => 250.00,
                 'motor' => 'TranzX Rear Hub Motor (45 Nm)',
                 'battery' => '36V 250Wh TranzX Rack Battery',
                 'range' => '30 Miles / 50 km',
@@ -263,15 +198,11 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'name' => 'Cube Creo SL Expert Carbon Road E-Bike',
-                'category' => 'Road E-Bikes',
-                'brand' => 'Cube',
                 'price' => 6200.00,
                 'discount_price' => 5800.00,
                 'stock' => 5,
-                'rental_daily' => 65.00,
                 'rental_weekly' => 350.00,
-                'rental_monthly' => 1100.00,
-                'deposit' => 350.00,
+                'deposit' => 250.00,
                 'motor' => 'SL 1.1 Lightweight Motor (240W)',
                 'battery' => 'SL1-320Wh Internal Battery',
                 'range' => '80 Miles / 130 km',
@@ -284,15 +215,11 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'name' => 'Haibike FatCurve 9.0 All-Terrain Fat Tire',
-                'category' => 'Fat Tire E-Bikes',
-                'brand' => 'Haibike',
                 'price' => 3899.00,
                 'discount_price' => null,
                 'stock' => 7,
-                'rental_daily' => 45.00,
                 'rental_weekly' => 240.00,
-                'rental_monthly' => 720.00,
-                'deposit' => 200.00,
+                'deposit' => 250.00,
                 'motor' => 'Bosch CX Performance (85 Nm)',
                 'battery' => 'Bosch PowerPack 500Wh',
                 'range' => '55 Miles / 90 km',
@@ -305,15 +232,11 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'name' => 'Gazelle Medeo T9 City E-Bike',
-                'category' => 'City E-Bikes',
-                'brand' => 'Gazelle',
                 'price' => 2499.00,
                 'discount_price' => 2299.00,
                 'stock' => 18,
-                'rental_daily' => 30.00,
                 'rental_weekly' => 150.00,
-                'rental_monthly' => 450.00,
-                'deposit' => 120.00,
+                'deposit' => 250.00,
                 'motor' => 'Bosch Active Line Plus (50 Nm)',
                 'battery' => 'Bosch PowerPack 400Wh',
                 'range' => '50 Miles / 80 km',
@@ -330,17 +253,14 @@ class DatabaseSeeder extends Seeder
             $p = Product::create([
                 'name' => $item['name'],
                 'slug' => Str::slug($item['name']),
-                'sku' => 'EB-' . strtoupper(Str::random(6)),
                 'type' => 'ebike',
-                'category_id' => $categoryModels[$item['category']]->id,
-                'brand_id' => $brandModels[$item['brand']]->id,
+                'product_tag' => 'rent',
+                'category_id' => null, // E-Bikes do NOT have category
                 'price' => $item['price'],
                 'discount_price' => $item['discount_price'],
                 'stock_quantity' => $item['stock'],
                 'is_rental_eligible' => true,
-                'rental_price_daily' => $item['rental_daily'],
                 'rental_price_weekly' => $item['rental_weekly'],
-                'rental_price_monthly' => $item['rental_monthly'],
                 'rental_security_deposit' => $item['deposit'],
                 'motor_specs' => $item['motor'],
                 'battery_specs' => $item['battery'],
@@ -383,7 +303,6 @@ class DatabaseSeeder extends Seeder
                 ProductVariant::create([
                     'product_id' => $p->id,
                     'name' => 'Frame Size: ' . $sz,
-                    'sku' => $p->sku . '-' . strtoupper(substr($sz, 0, 1)),
                     'price_modifier' => 0.00,
                     'stock_quantity' => 4,
                     'attributes' => ['size' => $sz, 'colour' => 'Matte Black'],
@@ -421,12 +340,11 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // 6. Create Accessory Products
+        // 6. Create Accessory Products (Always Sell, Never Rent)
         $accessories = [
             [
                 'name' => 'Giro Manifest Spherical MIPS Bike Helmet',
                 'category' => 'Helmets',
-                'brand' => 'Giro',
                 'price' => 199.00,
                 'discount_price' => 169.00,
                 'stock' => 30,
@@ -435,7 +353,6 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Lezyne Strip Drive Pro 300+ Rear LED Light',
                 'category' => 'Bike Lights',
-                'brand' => 'Lezyne',
                 'price' => 55.00,
                 'discount_price' => 48.00,
                 'stock' => 50,
@@ -444,7 +361,6 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Endura Luminite Waterproof UK Cycling Jacket',
                 'category' => 'Bike Jackets',
-                'brand' => 'Endura',
                 'price' => 135.00,
                 'discount_price' => 115.00,
                 'stock' => 25,
@@ -453,7 +369,6 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Abus Granit XPlus 540 Gold Sold Secure D-Lock',
                 'category' => 'Bike Locks',
-                'brand' => 'Abus',
                 'price' => 110.00,
                 'discount_price' => 95.00,
                 'stock' => 40,
@@ -462,7 +377,6 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Ortlieb Waterproof City Pannier Bag Pair 40L',
                 'category' => 'Bags',
-                'brand' => 'Endura',
                 'price' => 140.00,
                 'discount_price' => 125.00,
                 'stock' => 20,
@@ -471,7 +385,6 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Bosch Fast Charger 6A for PowerTube & PowerPack',
                 'category' => 'Chargers',
-                'brand' => 'Cube',
                 'price' => 165.00,
                 'discount_price' => null,
                 'stock' => 15,
@@ -480,7 +393,6 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Muc-Off E-Bike Clean & Lube Care Kit',
                 'category' => 'Other Cycling Accessories',
-                'brand' => 'Muc-Off',
                 'price' => 32.00,
                 'discount_price' => 28.00,
                 'stock' => 60,
@@ -492,10 +404,9 @@ class DatabaseSeeder extends Seeder
             $p = Product::create([
                 'name' => $acc['name'],
                 'slug' => Str::slug($acc['name']),
-                'sku' => 'ACC-' . strtoupper(Str::random(6)),
                 'type' => 'accessory',
+                'product_tag' => 'sell', // Accessories are ALWAYS selling, NEVER rent
                 'category_id' => $categoryModels[$acc['category']]->id,
-                'brand_id' => $brandModels[$acc['brand']]->id,
                 'price' => $acc['price'],
                 'discount_price' => $acc['discount_price'],
                 'stock_quantity' => $acc['stock'],

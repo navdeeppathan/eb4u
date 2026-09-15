@@ -12,10 +12,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->string('sku')->unique();
             $table->enum('type', ['ebike', 'accessory'])->default('ebike');
             $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
-            $table->foreignId('brand_id')->nullable()->constrained('brands')->onDelete('set null');
             
             // Purchase Pricing & Stock
             $table->decimal('price', 10, 2);
@@ -24,10 +22,8 @@ return new class extends Migration
             
             // Rental Config
             $table->boolean('is_rental_eligible')->default(false);
-            $table->decimal('rental_price_daily', 10, 2)->nullable();
             $table->decimal('rental_price_weekly', 10, 2)->nullable();
-            $table->decimal('rental_price_monthly', 10, 2)->nullable();
-            $table->decimal('rental_security_deposit', 10, 2)->nullable();
+            $table->decimal('rental_security_deposit', 10, 2)->default(250.00);
             
             // E-Bike Specs
             $table->string('motor_specs')->nullable();

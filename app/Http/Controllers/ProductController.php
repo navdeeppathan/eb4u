@@ -11,14 +11,13 @@ class ProductController extends Controller
 {
     public function show(string $slug)
     {
-        $product = Product::with(['category', 'brand', 'images', 'variants', 'reviews.user'])
+        $product = Product::with(['category', 'images', 'variants', 'reviews.user'])
             ->where('slug', $slug)
             ->where('is_active', true)
             ->firstOrFail();
 
-        $relatedProducts = Product::where('category_id', $product->category_id)
+        $relatedProducts = Product::where('is_active', true)
             ->where('id', '!=', $product->id)
-            ->where('is_active', true)
             ->take(4)
             ->get();
 
@@ -44,23 +43,14 @@ class ProductController extends Controller
         $startDate = Carbon::parse($request->start_date);
         $endDate = Carbon::parse($request->end_date);
         $days = (int) ceil($startDate->diffInDays($endDate));
+        if ($days <= 0) $days = 1;
 
-        if ($days <= 0) {
-            $days = 1;
-        }
+        $weeks = (int) ceil($days / 7);
+        if ($weeks <= 0) $weeks = 1;
 
-        // Calculate Pricing Plan (Daily, Weekly, Monthly)
-        $dailyRate = (float) $product->rental_price_daily;
-        if ($days >= 30 && $product->rental_price_monthly) {
-            $monthlyRate = (float) $product->rental_price_monthly / 30;
-            $dailyRate = min($dailyRate, $monthlyRate);
-        } elseif ($days >= 7 && $product->rental_price_weekly) {
-            $weeklyRate = (float) $product->rental_price_weekly / 7;
-            $dailyRate = min($dailyRate, $weeklyRate);
-        }
-
-        $rentalSubtotal = round($dailyRate * $days, 2);
-        $deposit = (float) ($product->rental_security_deposit ?? 150.00);
+        $weeklyRate = (float) ($product->rental_price_weekly ?? 180.00);
+        $rentalSubtotal = round($weeklyRate * $weeks, 2);
+        $deposit = (float) ($product->rental_security_deposit ?? 250.00);
 
         // Check Available physical units
         $availableUnitsCount = $product->getAvailableRentalUnitsCount($startDate->toDateString(), $endDate->toDateString());
@@ -71,7 +61,8 @@ class ProductController extends Controller
             'is_available' => $isAvailable,
             'available_units_count' => $availableUnitsCount,
             'rental_days' => $days,
-            'daily_rate' => number_format($dailyRate, 2),
+            'rental_weeks' => $weeks,
+            'weekly_rate' => number_format($weeklyRate, 2),
             'subtotal' => number_format($rentalSubtotal, 2),
             'security_deposit' => number_format($deposit, 2),
             'advance_30_percent' => number_format($rentalSubtotal * 0.3, 2),

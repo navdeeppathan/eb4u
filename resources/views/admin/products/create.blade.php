@@ -26,7 +26,8 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 text-xs">
+    <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" 
+          x-data="productCreateForm()" @submit="handleSubmit($event)" class="space-y-6 text-xs">
         @csrf
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -36,20 +37,26 @@
             </div>
 
             <div>
-                <label class="block font-bold text-slate-700 mb-1">SKU <span class="text-rose-500">*</span></label>
-                <input type="text" name="sku" value="{{ old('sku') }}" required placeholder="EB-UK-101" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-mono font-bold uppercase text-slate-900 focus:ring-2 focus:ring-brandOrange-500">
-            </div>
-
-            <div>
                 <label class="block font-bold text-slate-700 mb-1">Product Type <span class="text-rose-500">*</span></label>
-                <select name="type" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-bold text-slate-900 focus:ring-2 focus:ring-brandOrange-500">
-                    <option value="ebike" {{ old('type') == 'ebike' ? 'selected' : '' }}>E-Bike</option>
-                    <option value="accessory" {{ old('type') == 'accessory' ? 'selected' : '' }}>Accessory</option>
+                <select name="type" x-model="type" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-bold text-slate-900 focus:ring-2 focus:ring-brandOrange-500">
+                    <option value="ebike">E-Bike</option>
+                    <option value="accessory">Accessory</option>
                 </select>
             </div>
 
-            <!-- Product Tag: Sell (Buy Only) vs Rent (Rent Only) -->
-            <div class="sm:col-span-2 bg-amber-50/60 border border-amber-200/80 p-4 rounded-2xl">
+            <!-- Category (Shown ONLY for Accessories, E-Bikes have no category) -->
+            <div x-show="type === 'accessory'" x-cloak>
+                <label class="block font-bold text-slate-700 mb-1">Category <span class="text-rose-500">*</span></label>
+                <select name="category_id" :required="type === 'accessory'" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-bold text-slate-900 focus:ring-2 focus:ring-brandOrange-500">
+                    <option value="">-- Select Accessory Category --</option>
+                    @foreach($categories->where('type', 'accessory') as $c)
+                        <option value="{{ $c->id }}" {{ old('category_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Product Tag: Sell (Buy Only) vs Rent (Rent Only) (Shown ONLY for E-Bikes) -->
+            <div x-show="type === 'ebike'" x-cloak class="sm:col-span-2 bg-amber-50/60 border border-amber-200/80 p-4 rounded-2xl">
                 <label class="block font-extrabold text-slate-800 text-xs mb-2">
                     <i class="fa-solid fa-tags text-brandOrange-500 mr-1"></i> Product Tag / Purpose <span class="text-rose-500">*</span>
                 </label>
@@ -72,33 +79,17 @@
                 </div>
             </div>
 
-            <div>
-                <label class="block font-bold text-slate-700 mb-1">Category <span class="text-rose-500">*</span></label>
-                <select name="category_id" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-bold text-slate-900 focus:ring-2 focus:ring-brandOrange-500">
-                    @foreach($categories as $c)
-                        <option value="{{ $c->id }}" {{ old('category_id') == $c->id ? 'selected' : '' }}>{{ $c->name }} ({{ strtoupper($c->type) }})</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div>
-                <label class="block font-bold text-slate-700 mb-1">Brand</label>
-                <select name="brand_id" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-bold text-slate-900 focus:ring-2 focus:ring-brandOrange-500">
-                    <option value="">-- Select Brand --</option>
-                    @foreach($brands as $b)
-                        <option value="{{ $b->id }}" {{ old('brand_id') == $b->id ? 'selected' : '' }}>{{ $b->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
+            <!-- Retail Price -->
             <div>
                 <label class="block font-bold text-slate-700 mb-1">Retail Price (£) <span class="text-rose-500">*</span></label>
-                <input type="number" step="0.01" name="price" value="{{ old('price') }}" required placeholder="3299.00" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-black text-slate-900 focus:ring-2 focus:ring-brandOrange-500">
+                <input type="number" step="0.01" name="price" x-model="price" @input="validatePrices()" required placeholder="3299.00" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-black text-slate-900 focus:ring-2 focus:ring-brandOrange-500">
             </div>
 
+            <!-- Discount Price with Frontend Validation -->
             <div>
                 <label class="block font-bold text-slate-700 mb-1">Discount Price (£) (Optional)</label>
-                <input type="number" step="0.01" name="discount_price" value="{{ old('discount_price') }}" placeholder="2999.00" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-bold text-slate-900 focus:ring-2 focus:ring-brandOrange-500">
+                <input type="number" step="0.01" name="discount_price" x-model="discountPrice" @input="validatePrices()" placeholder="2999.00" class="w-full bg-slate-50 border rounded-xl p-3 font-bold text-slate-900 focus:ring-2 focus:ring-brandOrange-500" :class="priceError ? 'border-rose-500 bg-rose-50/50' : 'border-slate-200 bg-slate-50'">
+                <p x-show="priceError" class="text-rose-600 text-[11px] font-bold mt-1" x-text="priceError"></p>
             </div>
 
             <div>
@@ -137,35 +128,27 @@
             </div>
         </div>
 
-        <!-- Rental Pricing Options -->
-        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4">
+        <!-- Rental Pricing Options (Only Weekly Rate & Default 250 Deposit) -->
+        <div x-show="type === 'ebike'" x-cloak class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4">
             <label class="flex items-center space-x-2 font-bold text-slate-900 uppercase">
                 <input type="checkbox" name="is_rental_eligible" value="1" {{ old('is_rental_eligible', 1) ? 'checked' : '' }} class="text-brandOrange-500 rounded focus:ring-brandOrange-500">
                 <span>Enable E-Bike Rental Option for this Product</span>
             </label>
 
-            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-700 mb-1">Daily Rate (£)</label>
-                    <input type="number" step="0.01" name="rental_price_daily" value="{{ old('rental_price_daily', '35.00') }}" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 font-bold text-slate-900">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Weekly Rate (£)</label>
+                    <input type="number" step="0.01" name="rental_price_weekly" value="{{ old('rental_price_weekly', '180.00') }}" placeholder="180.00" class="w-full bg-white border border-slate-200 rounded-xl p-3 font-bold text-slate-900">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-700 mb-1">Weekly Rate (£)</label>
-                    <input type="number" step="0.01" name="rental_price_weekly" value="{{ old('rental_price_weekly', '180.00') }}" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 font-bold text-slate-900">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-700 mb-1">Monthly Rate (£)</label>
-                    <input type="number" step="0.01" name="rental_price_monthly" value="{{ old('rental_price_monthly', '550.00') }}" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 font-bold text-slate-900">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-700 mb-1">Security Deposit (£)</label>
-                    <input type="number" step="0.01" name="rental_security_deposit" value="{{ old('rental_security_deposit', '150.00') }}" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 font-bold text-slate-900">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Security Deposit (£) (Default: £250.00)</label>
+                    <input type="number" step="0.01" name="rental_security_deposit" value="{{ old('rental_security_deposit', '250.00') }}" placeholder="250.00" class="w-full bg-white border border-slate-200 rounded-xl p-3 font-bold text-slate-900">
                 </div>
             </div>
         </div>
 
-        <!-- E-Bike Technical Specs -->
-        <div class="space-y-4">
+        <!-- E-Bike Technical Specs (Shown ONLY for E-Bikes) -->
+        <div x-show="type === 'ebike'" x-cloak class="space-y-4">
             <h4 class="font-bold text-slate-900 uppercase">E-Bike Specifications (Optional)</h4>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <input type="text" name="motor_specs" value="{{ old('motor_specs') }}" placeholder="Motor (e.g. Bosch Performance Line 75Nm)" class="bg-slate-50 border border-slate-200 rounded-xl p-3 font-medium">
@@ -182,8 +165,40 @@
 
         <div class="flex justify-end space-x-3 pt-4 border-t border-slate-100">
             <a href="{{ route('admin.products.index') }}" class="py-3 px-5 bg-slate-100 text-slate-700 font-bold rounded-xl">Cancel</a>
-            <button type="submit" class="py-3.5 px-7 bg-brandOrange-500 hover:bg-brandOrange-600 text-white font-black rounded-xl shadow-md uppercase">Save & Publish Product</button>
+            <button type="submit" :disabled="priceError !== ''" class="py-3.5 px-7 bg-brandOrange-500 hover:bg-brandOrange-600 disabled:bg-slate-300 text-white font-black rounded-xl shadow-md uppercase">Save & Publish Product</button>
         </div>
     </form>
+
+<script>
+    function productCreateForm() {
+        return {
+            type: '{{ old("type", "ebike") }}',
+            price: '{{ old("price", "") }}',
+            discountPrice: '{{ old("discount_price", "") }}',
+            priceError: '',
+
+            init() {
+                this.validatePrices();
+            },
+            validatePrices() {
+                let p = parseFloat(this.price) || 0;
+                let dp = parseFloat(this.discountPrice) || 0;
+
+                if (this.discountPrice !== '' && dp > p) {
+                    this.priceError = 'Discount Price (£' + dp.toFixed(2) + ') cannot be greater than Retail Price (£' + p.toFixed(2) + ').';
+                } else {
+                    this.priceError = '';
+                }
+            },
+            handleSubmit(e) {
+                this.validatePrices();
+                if (this.priceError !== '') {
+                    e.preventDefault();
+                    alert(this.priceError);
+                }
+            }
+        }
+    }
+</script>
 </div>
 @endsection

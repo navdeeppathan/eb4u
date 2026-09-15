@@ -40,10 +40,6 @@
         <!-- Right: Details & Purchase/Rental Form -->
         <div class="lg:col-span-6 space-y-6">
             <div>
-                <div class="flex items-center gap-2 mb-2">
-                    <span class="text-xs font-bold text-brandOrange-600 uppercase tracking-wider bg-brandOrange-50 px-2.5 py-1 rounded-md">{{ $product->brand->name ?? 'Premium' }}</span>
-                    <span class="text-xs font-semibold text-textMuted">• SKU: {{ $product->sku }}</span>
-                </div>
                 <h1 class="font-grotesk text-2xl sm:text-3xl font-extrabold text-darkSlate-900 leading-tight mb-3">{{ $product->name }}</h1>
 
                 <!-- Rating -->
@@ -105,7 +101,7 @@
                     <!-- Rent Only Header -->
                     <div class="border-b border-borderLight pb-3 flex items-center justify-between">
                         <span class="font-grotesk text-sm font-extrabold text-brandOrange-500 flex items-center">
-                            <i class="fa-solid fa-calendar-check mr-2"></i> ⚡ Rent E-Bike (from £{{ number_format($product->rental_price_daily, 0) }}/day)
+                            <i class="fa-solid fa-calendar-check mr-2"></i> ⚡ Rent E-Bike (from £{{ number_format($product->rental_price_weekly ?? 180, 0) }}/week)
                         </span>
                         <span class="bg-brandOrange-50 text-brandOrange-600 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider border border-brandOrange-200">
                             Rental Only
@@ -132,7 +128,7 @@
                                 <div class="bg-white p-3.5 rounded-xl border border-borderLight text-xs space-y-2">
                                     <div class="flex justify-between">
                                         <span class="text-textSec">Duration & Rate:</span>
-                                        <span class="font-bold text-darkSlate-900" x-text="rentalResult.rental_days + ' Days @ £' + rentalResult.daily_rate + '/day'"></span>
+                                        <span class="font-bold text-darkSlate-900" x-text="rentalResult.rental_weeks + ' Week(s) (' + rentalResult.rental_days + ' Days) @ £' + rentalResult.weekly_rate + '/week'"></span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="text-textSec">Rental Fee:</span>

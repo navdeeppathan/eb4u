@@ -197,7 +197,6 @@
 
                     <div class="p-5 flex-grow flex flex-col justify-between">
                         <div>
-                            <div class="text-[10px] font-bold text-brandOrange-600 uppercase tracking-wider mb-1">{{ $product->brand->name ?? 'Premium' }}</div>
                             <a href="{{ route('products.show', $product->slug) }}" class="text-sm font-black text-slate-900 hover:text-brandOrange-500 line-clamp-1 mb-2">
                                 {{ $product->name }}
                             </a>
@@ -249,7 +248,7 @@
         <div class="flex justify-between items-end mb-10">
             <div>
                 <span class="text-xs font-black text-brandOrange-500 uppercase tracking-widest flex items-center gap-1.5">
-                    <i class="fa-solid fa-calendar-check"></i> Flexible Daily, Weekly & Monthly Rentals
+                    <i class="fa-solid fa-calendar-check"></i> Flexible Weekly & Extended Rentals
                 </span>
                 <h2 class="text-2xl md:text-3xl font-black text-slate-900 mt-1">⚡ Certified E-Bike Rental Fleet</h2>
             </div>
@@ -271,7 +270,6 @@
 
                     <div class="p-5 flex-grow flex flex-col justify-between">
                         <div>
-                            <div class="text-[10px] font-bold text-brandOrange-600 uppercase tracking-wider mb-1">{{ $product->brand->name ?? 'Premium' }}</div>
                             <a href="{{ route('products.show', $product->slug) }}" class="text-sm font-black text-slate-900 hover:text-brandOrange-500 line-clamp-1 mb-2">
                                 {{ $product->name }}
                             </a>
@@ -292,8 +290,8 @@
                             <div class="flex items-baseline justify-between mb-3">
                                 <div class="flex items-baseline space-x-1">
                                     <span class="text-xs text-slate-400 font-medium">From</span>
-                                    <span class="text-lg font-black text-brandOrange-500">£{{ number_format($product->rental_price_daily, 0) }}</span>
-                                    <span class="text-xs text-slate-400 font-bold">/day</span>
+                                    <span class="text-lg font-black text-brandOrange-500">£{{ number_format($product->rental_price_weekly ?? 180, 0) }}</span>
+                                    <span class="text-xs text-slate-400 font-bold">/week</span>
                                 </div>
                             </div>
 
@@ -338,7 +336,7 @@
                     2
                 </div>
                 <h3 class="text-base font-bold text-white mb-2">Pick Rental Dates</h3>
-                <p class="text-xs text-slate-400 leading-relaxed">Select daily, weekly, or monthly dates. Our live system checks physical bike availability.</p>
+                <p class="text-xs text-slate-400 leading-relaxed">Select your rental dates. Our live system checks physical bike availability.</p>
             </div>
 
             <div class="bg-darkBlack-950 border border-white/10 p-6 rounded-3xl text-center relative group hover:border-brandOrange-500 transition-all">
@@ -381,7 +379,6 @@
                             <img src="{{ $acc->primary_image_url }}" class="w-full h-full object-cover">
                         </div>
                         <h4 class="text-xs font-black text-slate-900 line-clamp-2 mb-1">{{ $acc->name }}</h4>
-                        <p class="text-[10px] text-slate-400 font-semibold">{{ $acc->brand->name ?? 'Accessory' }}</p>
                     </div>
                     <div class="mt-3 pt-2 border-t border-slate-100 flex justify-between items-center">
                         <span class="text-xs font-black text-slate-900">£{{ number_format($acc->effective_price, 2) }}</span>

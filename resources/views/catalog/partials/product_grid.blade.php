@@ -21,7 +21,6 @@
 
             <div class="p-4 flex-grow flex flex-col justify-between">
                 <div>
-                    <div class="text-[10px] font-bold text-brandOrange-600 uppercase tracking-wider mb-1">{{ $product->brand->name ?? 'Premium' }}</div>
                     <a href="{{ route('products.show', $product->slug) }}" class="font-grotesk text-sm font-bold text-slate-900 hover:text-brandOrange-500 line-clamp-1 mb-2">
                         {{ $product->name }}
                     </a>
@@ -47,8 +46,8 @@
                         @if($product->product_tag === 'rent' || $product->is_rental_eligible)
                             <div class="flex items-baseline gap-1">
                                 <span class="text-xs text-textMuted font-medium">From</span>
-                                <span class="font-grotesk text-lg font-extrabold text-brandOrange-500">£{{ number_format($product->rental_price_daily, 0) }}</span>
-                                <span class="text-xs text-textMuted font-bold">/day</span>
+                                <span class="font-grotesk text-lg font-extrabold text-brandOrange-500">£{{ number_format($product->rental_price_weekly ?? 180, 0) }}</span>
+                                <span class="text-xs text-textMuted font-bold">/week</span>
                             </div>
                         @else
                             <div class="flex items-baseline gap-1.5">

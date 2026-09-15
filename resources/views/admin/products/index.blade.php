@@ -15,7 +15,7 @@
 
         <div class="flex items-center space-x-3 w-full sm:w-auto">
             <form action="{{ route('admin.products.index') }}" method="GET" class="w-full sm:w-60">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search Name or SKU..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search Product Name..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900">
             </form>
 
             <a href="{{ route('admin.products.create') }}" class="py-2.5 px-5 bg-brandOrange-500 hover:bg-brandOrange-600 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center gap-1.5 whitespace-nowrap">
@@ -32,7 +32,7 @@
                     <th class="p-4">Product</th>
                     <th class="p-4">Type</th>
                     <th class="p-4">Retail Price</th>
-                    <th class="p-4">Rental Rates</th>
+                    <th class="p-4">Rental Rate</th>
                     <th class="p-4">Stock</th>
                     <th class="p-4">Status</th>
                     <th class="p-4 text-right">Actions</th>
@@ -45,7 +45,6 @@
                             <img src="{{ $p->primary_image_url }}" class="w-12 h-12 object-cover rounded-xl border border-slate-200 flex-shrink-0">
                             <div>
                                 <span class="font-bold text-slate-900 block leading-snug">{{ $p->name }}</span>
-                                <span class="text-[10px] text-slate-400 font-mono">SKU: {{ $p->sku }}</span>
                             </div>
                         </td>
                         <td class="p-4 font-bold uppercase text-[10px]">
@@ -62,7 +61,7 @@
                         <td class="p-4">
                             @if($p->is_rental_eligible)
                                 <span class="text-[11px] font-bold text-brandOrange-600 bg-brandOrange-50 px-2.5 py-1 rounded-xl border border-brandOrange-500/20">
-                                    £{{ number_format($p->rental_price_daily, 0) }}/day (£{{ number_format($p->rental_price_weekly, 0) }}/wk)
+                                    £{{ number_format($p->rental_price_weekly, 0) }}/week
                                 </span>
                             @else
                                 <span class="text-slate-400 text-[10px]">N/A</span>

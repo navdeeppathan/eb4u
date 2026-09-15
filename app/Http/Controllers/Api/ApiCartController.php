@@ -44,7 +44,7 @@ class ApiCartController extends Controller
                 'name' => $c->product->name ?? 'E-Bike Item',
                 'type' => $c->item_type,
                 'quantity' => (int) $c->quantity,
-                'daily_rate' => (float) $c->daily_rate,
+                'weekly_rate' => (float) $c->weekly_rate,
                 'subtotal' => (float) $c->subtotal,
                 'security_deposit' => (float) $c->security_deposit,
                 'rental_start_date' => $c->rental_start_date ? $c->rental_start_date->format('Y-m-d') : null,
@@ -86,7 +86,7 @@ class ApiCartController extends Controller
         $itemType = $request->item_type;
         $qty = (int) ($request->quantity ?: 1);
 
-        $dailyRate = 0.00;
+        $weeklyRate = 0.00;
         $rentalDays = 0;
         $subtotal = 0.00;
         $startDate = null;
@@ -101,16 +101,11 @@ class ApiCartController extends Controller
             $startDate = Carbon::parse($request->rental_start_date);
             $endDate = Carbon::parse($request->rental_end_date);
             $rentalDays = (int) max(1, $startDate->diffInDays($endDate));
-            $dailyRate = (float) $product->rental_price_daily;
+            $weeks = (int) max(1, ceil($rentalDays / 7));
+            $weeklyRate = (float) ($product->rental_price_weekly ?? 180.00);
 
-            if ($rentalDays >= 30) {
-                $dailyRate = round($dailyRate * 0.70, 2);
-            } elseif ($rentalDays >= 7) {
-                $dailyRate = round($dailyRate * 0.85, 2);
-            }
-
-            $subtotal = round($dailyRate * $rentalDays * $qty, 2);
-            $deposit = (float) ($product->rental_security_deposit ?? 150.00);
+            $subtotal = round($weeklyRate * $weeks * $qty, 2);
+            $deposit = (float) ($product->rental_security_deposit ?? 250.00);
         } else {
             $subtotal = round($product->effective_price * $qty, 2);
         }
@@ -121,7 +116,7 @@ class ApiCartController extends Controller
             'variant_id' => $request->variant_id,
             'item_type' => $itemType,
             'quantity' => $qty,
-            'daily_rate' => $dailyRate,
+            'weekly_rate' => $weeklyRate,
             'rental_start_date' => $startDate,
             'rental_end_date' => $endDate,
             'rental_days' => $rentalDays,

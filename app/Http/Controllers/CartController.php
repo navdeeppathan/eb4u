@@ -78,6 +78,7 @@ class CartController extends Controller
             $startDate = Carbon::parse($request->rental_start_date);
             $endDate = Carbon::parse($request->rental_end_date);
             $days = max(1, (int) ceil($startDate->diffInDays($endDate)));
+            $weeks = max(1, (int) ceil($days / 7));
 
             // Check availability
             $availableUnits = $product->getAvailableRentalUnitsCount($startDate->toDateString(), $endDate->toDateString());
@@ -85,12 +86,7 @@ class CartController extends Controller
                 return response()->json(['success' => false, 'message' => 'Selected rental dates are no longer available for this E-Bike.'], 422);
             }
 
-            $dailyRate = (float) $product->rental_price_daily;
-            if ($days >= 30 && $product->rental_price_monthly) {
-                $dailyRate = min($dailyRate, (float) $product->rental_price_monthly / 30);
-            } elseif ($days >= 7 && $product->rental_price_weekly) {
-                $dailyRate = min($dailyRate, (float) $product->rental_price_weekly / 7);
-            }
+            $weeklyRate = (float) ($product->rental_price_weekly ?? 180.00);
 
             CartItem::create([
                 'session_id' => $sessionId,
@@ -102,11 +98,12 @@ class CartController extends Controller
                 'rental_start_date' => $startDate,
                 'rental_end_date' => $endDate,
                 'rental_days' => $days,
-                'daily_rate' => $dailyRate,
-                'security_deposit' => $product->rental_security_deposit ?? 150.00,
+                'rental_plan' => 'weekly',
+                'weekly_rate' => $weeklyRate,
+                'security_deposit' => $product->rental_security_deposit ?? 250.00,
             ]);
 
-            $msg = "{$product->name} rental added to cart for {$days} day(s)!";
+            $msg = "{$product->name} rental added to cart for {$weeks} week(s) ({$days} day(s))!";
         } else {
             // Purchase item
             $existing = CartItem::where('session_id', $sessionId)

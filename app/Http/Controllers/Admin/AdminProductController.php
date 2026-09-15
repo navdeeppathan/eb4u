@@ -16,17 +16,14 @@ class AdminProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with(['category', 'brand', 'ebikeUnits']);
+        $query = Product::with(['category', 'ebikeUnits']);
 
         if ($request->filled('type')) {
             $query->where('type', $request->type);
         }
 
         if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('sku', 'like', '%' . $request->search . '%');
-            });
+            $query->where('name', 'like', '%' . $request->search . '%');
         }
 
         $products = $query->latest()->paginate(15);
@@ -36,61 +33,62 @@ class AdminProductController extends Controller
     public function create()
     {
         $categories = Category::where('is_active', true)->get();
-        $brands = Brand::where('is_active', true)->get();
-        return view('admin.products.create', compact('categories', 'brands'));
+        return view('admin.products.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
-        // Strict Validation: Images must be max 2048 KB (2MB)
+        // Category rule depends on type: required for accessory, nullable for ebike
+        $categoryRule = $request->type === 'accessory' ? 'required|exists:categories,id' : 'nullable';
+
         $request->validate([
             'name' => 'required|string|max:255',
-            'sku' => 'required|string|unique:products,sku',
             'type' => 'required|in:ebike,accessory',
-            'product_tag' => 'required|in:sell,rent',
-            'category_id' => 'required|exists:categories,id',
-            'brand_id' => 'nullable|exists:brands,id',
+            'product_tag' => 'nullable|in:sell,rent',
+            'category_id' => $categoryRule,
             'price' => 'required|numeric|min:0',
-            'discount_price' => 'nullable|numeric|min:0',
+            'discount_price' => 'nullable|numeric|min:0|lte:price',
             'stock_quantity' => 'required|integer|min:0',
-            'rental_price_daily' => 'nullable|numeric|min:0',
             'rental_price_weekly' => 'nullable|numeric|min:0',
-            'rental_price_monthly' => 'nullable|numeric|min:0',
             'rental_security_deposit' => 'nullable|numeric|min:0',
             'primary_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'image_url' => 'nullable|url',
         ], [
+            'discount_price.lte' => 'Discount price cannot be greater than Retail Price.',
             'primary_image.max' => 'Primary image file size must not exceed 2MB.',
             'gallery_images.*.max' => 'Each gallery image file size must not exceed 2MB.',
             'primary_image.mimes' => 'Primary image must be a valid file of type: jpeg, png, jpg, webp.',
             'gallery_images.*.mimes' => 'Gallery images must be valid files of type: jpeg, png, jpg, webp.',
         ]);
 
-        $productTag = $request->input('product_tag', 'sell');
-        $isRental = ($productTag === 'rent');
+        if ($request->type === 'ebike') {
+            $categoryId = null; // E-Bikes do NOT have category (always null)
+            $productTag = $request->input('product_tag', 'sell');
+            $isRental = ($productTag === 'rent' || $request->boolean('is_rental_eligible'));
+        } else {
+            $categoryId = $request->category_id; // Category for Accessory
+            $productTag = 'sell'; // Accessory always comes in selling, never rent
+            $isRental = false;
+        }
 
         $product = Product::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name) . '-' . Str::random(5),
-            'sku' => strtoupper($request->sku),
             'type' => $request->type,
             'product_tag' => $productTag,
-            'category_id' => $request->category_id,
-            'brand_id' => $request->brand_id,
+            'category_id' => $categoryId,
             'price' => $request->price,
             'discount_price' => $request->discount_price,
             'stock_quantity' => $request->stock_quantity,
             'is_rental_eligible' => $isRental,
-            'rental_price_daily' => $request->rental_price_daily,
             'rental_price_weekly' => $request->rental_price_weekly,
-            'rental_price_monthly' => $request->rental_price_monthly,
-            'rental_security_deposit' => $request->rental_security_deposit ?? 150.00,
-            'motor_specs' => $request->motor_specs,
-            'battery_specs' => $request->battery_specs,
-            'range_specs' => $request->range_specs,
-            'charging_time' => $request->charging_time,
-            'warranty_specs' => $request->warranty_specs,
+            'rental_security_deposit' => $request->rental_security_deposit ?? 250.00,
+            'motor_specs' => $request->type === 'ebike' ? $request->motor_specs : null,
+            'battery_specs' => $request->type === 'ebike' ? $request->battery_specs : null,
+            'range_specs' => $request->type === 'ebike' ? $request->range_specs : null,
+            'charging_time' => $request->type === 'ebike' ? $request->charging_time : null,
+            'warranty_specs' => $request->type === 'ebike' ? $request->warranty_specs : null,
             'short_description' => $request->short_description,
             'description' => $request->description,
             'is_featured' => $request->boolean('is_featured'),
@@ -153,47 +151,58 @@ class AdminProductController extends Controller
     {
         $product = Product::with(['images', 'variants', 'ebikeUnits'])->findOrFail($id);
         $categories = Category::where('is_active', true)->get();
-        $brands = Brand::where('is_active', true)->get();
-        return view('admin.products.edit', compact('product', 'categories', 'brands'));
+        return view('admin.products.edit', compact('product', 'categories'));
     }
 
     public function update(Request $request, int $id)
     {
         $product = Product::findOrFail($id);
-        
+        $categoryRule = $request->type === 'accessory' ? 'required|exists:categories,id' : 'nullable';
+
         $request->validate([
             'name' => 'required|string|max:255',
-            'sku' => 'required|string|unique:products,sku,' . $product->id,
-            'product_tag' => 'required|in:sell,rent',
+            'type' => 'required|in:ebike,accessory',
+            'product_tag' => 'nullable|in:sell,rent',
+            'category_id' => $categoryRule,
             'price' => 'required|numeric|min:0',
+            'discount_price' => 'nullable|numeric|min:0|lte:price',
             'stock_quantity' => 'required|integer|min:0',
+            'rental_price_weekly' => 'nullable|numeric|min:0',
+            'rental_security_deposit' => 'nullable|numeric|min:0',
             'primary_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ], [
+            'discount_price.lte' => 'Discount price cannot be greater than Retail Price.',
             'primary_image.max' => 'Primary image file size must not exceed 2MB.',
             'gallery_images.*.max' => 'Each gallery image file size must not exceed 2MB.',
         ]);
 
-        $productTag = $request->input('product_tag', 'sell');
-        $isRental = ($productTag === 'rent');
+        if ($request->type === 'ebike') {
+            $categoryId = null; // E-Bikes do NOT have category (always null)
+            $productTag = $request->input('product_tag', 'sell');
+            $isRental = ($productTag === 'rent' || $request->boolean('is_rental_eligible'));
+        } else {
+            $categoryId = $request->category_id; // Category for Accessory
+            $productTag = 'sell'; // Accessory always comes in selling, never rent
+            $isRental = false;
+        }
 
         $product->update([
             'name' => $request->name,
-            'sku' => strtoupper($request->sku),
+            'type' => $request->type,
             'product_tag' => $productTag,
+            'category_id' => $categoryId,
             'price' => $request->price,
             'discount_price' => $request->discount_price,
             'stock_quantity' => $request->stock_quantity,
             'is_rental_eligible' => $isRental,
-            'rental_price_daily' => $request->rental_price_daily,
             'rental_price_weekly' => $request->rental_price_weekly,
-            'rental_price_monthly' => $request->rental_price_monthly,
-            'rental_security_deposit' => $request->rental_security_deposit,
-            'motor_specs' => $request->motor_specs,
-            'battery_specs' => $request->battery_specs,
-            'range_specs' => $request->range_specs,
-            'charging_time' => $request->charging_time,
-            'warranty_specs' => $request->warranty_specs,
+            'rental_security_deposit' => $request->rental_security_deposit ?? 250.00,
+            'motor_specs' => $request->type === 'ebike' ? $request->motor_specs : null,
+            'battery_specs' => $request->type === 'ebike' ? $request->battery_specs : null,
+            'range_specs' => $request->type === 'ebike' ? $request->range_specs : null,
+            'charging_time' => $request->type === 'ebike' ? $request->charging_time : null,
+            'warranty_specs' => $request->type === 'ebike' ? $request->warranty_specs : null,
             'short_description' => $request->short_description,
             'description' => $request->description,
             'is_featured' => $request->boolean('is_featured'),

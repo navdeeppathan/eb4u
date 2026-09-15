@@ -14,7 +14,7 @@ class ApiProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with(['brand', 'category', 'images'])->where('is_active', true);
+        $query = Product::with(['category', 'images'])->where('is_active', true);
 
         if ($request->filled('tag')) {
             if ($request->tag === 'rent') {
@@ -43,12 +43,6 @@ class ApiProductController extends Controller
         if ($request->filled('category')) {
             $query->whereHas('category', function ($q) use ($request) {
                 $q->where('slug', $request->category);
-            });
-        }
-
-        if ($request->filled('brand')) {
-            $query->whereHas('brand', function ($q) use ($request) {
-                $q->where('slug', $request->brand);
             });
         }
 
@@ -85,7 +79,6 @@ class ApiProductController extends Controller
         }
 
         $products = $query->paginate($request->get('per_page', 12));
-
         $formattedData = collect($products->items())->map(fn($p) => $this->formatProduct($p));
 
         return response()->json([
@@ -100,7 +93,7 @@ class ApiProductController extends Controller
 
     public function show(string $slug)
     {
-        $product = Product::with(['brand', 'category', 'images', 'variants', 'reviews.user'])
+        $product = Product::with(['category', 'images', 'variants', 'reviews.user'])
             ->where('is_active', true)
             ->where('slug', $slug)
             ->first();
@@ -115,12 +108,7 @@ class ApiProductController extends Controller
                 'id' => $product->id,
                 'name' => $product->name,
                 'slug' => $product->slug,
-                'sku' => $product->sku,
                 'type' => $product->type,
-                'brand' => [
-                    'id' => $product->brand->id ?? null,
-                    'name' => $product->brand->name ?? 'Premium',
-                ],
                 'category' => [
                     'id' => $product->category->id ?? null,
                     'name' => $product->category->name ?? 'General',
@@ -131,7 +119,8 @@ class ApiProductController extends Controller
                 'discount_price' => $product->discount_price ? (float) $product->discount_price : null,
                 'effective_price' => (float) $product->effective_price,
                 'discount_percentage' => $product->discount_percentage,
-                'rental_price_daily' => (float) $product->rental_price_daily,
+                'rental_price_weekly' => (float) $product->rental_price_weekly,
+                'rental_security_deposit' => (float) ($product->rental_security_deposit ?? 250.00),
                 'is_rental_eligible' => (bool) $product->is_rental_eligible,
                 'stock_quantity' => (int) $product->stock_quantity,
                 'motor_specs' => $product->motor_specs,
@@ -145,7 +134,6 @@ class ApiProductController extends Controller
                 'variants' => $product->variants->map(fn($v) => [
                     'id' => $v->id,
                     'name' => $v->name,
-                    'sku' => $v->sku,
                     'price_modifier' => (float) $v->price_modifier,
                     'stock_quantity' => (int) $v->stock_quantity,
                 ]),
@@ -177,6 +165,7 @@ class ApiProductController extends Controller
         $startDate = Carbon::parse($request->start_date);
         $endDate = Carbon::parse($request->end_date);
         $days = (int) max(1, $startDate->diffInDays($endDate));
+        $weeks = (int) max(1, ceil($days / 7));
 
         $overlapBookings = OrderItem::where('product_id', $product->id)
             ->where('item_type', 'rental')
@@ -191,15 +180,9 @@ class ApiProductController extends Controller
 
         $isAvailable = $overlapBookings < max(1, $product->stock_quantity);
 
-        $dailyRate = (float) $product->rental_price_daily;
-        if ($days >= 30) {
-            $dailyRate = round($dailyRate * 0.70, 2);
-        } elseif ($days >= 7) {
-            $dailyRate = round($dailyRate * 0.85, 2);
-        }
-
-        $subtotal = round($dailyRate * $days, 2);
-        $deposit = (float) ($product->rental_security_deposit ?? 150.00);
+        $weeklyRate = (float) ($product->rental_price_weekly ?? 180.00);
+        $subtotal = round($weeklyRate * $weeks, 2);
+        $deposit = (float) ($product->rental_security_deposit ?? 250.00);
         $advancePct = 30;
         $advance30 = round($subtotal * ($advancePct / 100) + $deposit, 2);
 
@@ -207,7 +190,8 @@ class ApiProductController extends Controller
             'success' => true,
             'is_available' => $isAvailable,
             'rental_days' => $days,
-            'daily_rate' => $dailyRate,
+            'rental_weeks' => $weeks,
+            'weekly_rate' => $weeklyRate,
             'subtotal' => $subtotal,
             'security_deposit' => $deposit,
             'advance_percentage' => $advancePct,
@@ -224,14 +208,6 @@ class ApiProductController extends Controller
         ]);
     }
 
-    public function brands()
-    {
-        return response()->json([
-            'success' => true,
-            'brands' => Brand::where('is_active', true)->orderBy('name')->get()
-        ]);
-    }
-
     private function formatProduct($p)
     {
         return [
@@ -240,12 +216,11 @@ class ApiProductController extends Controller
             'slug' => $p->slug,
             'type' => $p->type,
             'product_tag' => $p->product_tag,
-            'brand_name' => $p->brand->name ?? 'Premium',
             'price' => (float) $p->price,
             'discount_price' => $p->discount_price ? (float) $p->discount_price : null,
             'effective_price' => (float) $p->effective_price,
             'discount_percentage' => $p->discount_percentage,
-            'rental_price_daily' => (float) $p->rental_price_daily,
+            'rental_price_weekly' => (float) $p->rental_price_weekly,
             'is_rental_eligible' => (bool) $p->is_rental_eligible,
             'primary_image' => $p->primary_image_url,
             'motor_specs' => $p->motor_specs ?? '250W',
