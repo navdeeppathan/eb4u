@@ -9,7 +9,11 @@
     </div>
 </div>
 
-<div class="container mx-auto px-4 py-10">
+<div class="container mx-auto px-4 py-10 space-y-3">
+    <div class="md:hidden flex items-center justify-between text-[10px] text-brandOrange-700 bg-brandOrange-50 px-3.5 py-2 rounded-2xl border border-brandOrange-200 font-bold shadow-xs">
+        <span class="flex items-center gap-1.5"><i class="fa-solid fa-arrows-left-right text-brandOrange-500"></i> Scroll table horizontally to view full details</span>
+        <i class="fa-solid fa-hand-pointer text-brandOrange-500 animate-pulse"></i>
+    </div>
     <div class="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-sm">
         <div class="overflow-x-auto">
             <table class="w-full min-w-[650px] text-left text-xs">

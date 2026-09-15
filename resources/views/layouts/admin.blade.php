@@ -74,6 +74,22 @@
         [x-cloak] { display: none !important; }
         body { font-family: 'Poppins', sans-serif; }
         .swal2-popup { font-family: 'Poppins', sans-serif !important; border-radius: 1.5rem !important; }
+        
+        /* Responsive Table Custom Horizontal Scrollbar */
+        .overflow-x-auto::-webkit-scrollbar {
+            height: 6px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-thumb {
+            background: #f24e00;
+            border-radius: 8px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+            background: #d94100;
+        }
     </style>
 </head>
 <body class="h-full bg-slate-100 text-slate-800 antialiased" x-data="{ sidebarOpen: false }">

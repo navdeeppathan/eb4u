@@ -75,6 +75,22 @@
         [x-cloak] { display: none !important; }
         body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; color: #0f172a; }
         .swal2-popup { font-family: 'Poppins', sans-serif !important; border-radius: 1.5rem !important; }
+        
+        /* Responsive Table Custom Horizontal Scrollbar */
+        .overflow-x-auto::-webkit-scrollbar {
+            height: 6px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 8px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-thumb {
+            background: #f24e00;
+            border-radius: 8px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+            background: #d94100;
+        }
     </style>
 </head>
 <body class="flex flex-col min-h-full font-sans antialiased" x-data="cartApp()">
