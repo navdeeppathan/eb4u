@@ -39,7 +39,7 @@ class AdminOrderController extends Controller
         }
 
         if ($activeTab === 'purchase') {
-            $orders = $query->latest()->paginate(15);
+            $orders = $query->latest()->paginate(10);
         } else {
             // Priority ordering for Rental Orders:
             // 1. Overdue / Expired (rental_end_date < today & not returned/completed/cancelled)
@@ -53,7 +53,7 @@ class AdminOrderController extends Controller
                     WHEN status NOT IN ('returned', 'completed', 'cancelled') THEN 3
                     ELSE 4
                 END ASC, rental_end_date ASC, id DESC
-            ")->paginate(15);
+            ")->paginate(10);
         }
 
         $expiringCount = Order::where('type', 'rental')

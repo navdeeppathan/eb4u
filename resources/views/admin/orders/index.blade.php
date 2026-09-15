@@ -89,30 +89,32 @@
         </div>
     @endif
 
-    <!-- Orders Table -->
-    <div class="md:hidden flex items-center justify-between text-[10px] text-brandOrange-700 bg-brandOrange-50 px-3.5 py-2 rounded-2xl border border-brandOrange-200 font-bold shadow-xs">
-        <span class="flex items-center gap-1.5"><i class="fa-solid fa-arrows-left-right text-brandOrange-500"></i> Scroll table horizontally to view full details</span>
+    <!-- Mobile Swipe Scroll Hint Badge -->
+    <div class="xl:hidden flex items-center justify-between text-[11px] text-brandOrange-700 bg-brandOrange-50 px-4 py-2.5 rounded-2xl border border-brandOrange-200 font-bold shadow-xs">
+        <span class="flex items-center gap-2"><i class="fa-solid fa-arrows-left-right text-brandOrange-500 text-sm"></i> Swipe table horizontally to view all columns & return actions</span>
         <i class="fa-solid fa-hand-pointer text-brandOrange-500 animate-pulse"></i>
     </div>
+
+    <!-- Orders Table Container -->
     <div class="bg-white rounded-3xl border border-borderLight shadow-xs overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full min-w-[850px] text-left text-xs">
+        <div class="overflow-x-auto w-full">
+            <table class="w-full text-left text-xs whitespace-nowrap min-w-[1150px]">
                 <thead class="bg-[#f5f7fb] border-b border-borderLight text-textMuted font-bold uppercase text-[10px]">
                     <tr>
-                        <th class="p-4">Order #</th>
-                        <th class="p-4">Customer</th>
+                        <th class="p-4 whitespace-nowrap">Order #</th>
+                        <th class="p-4 whitespace-nowrap">Customer</th>
                         @if($activeTab === 'rental')
-                            <th class="p-4">Assigned Unit</th>
-                            <th class="p-4">Start Date</th>
-                            <th class="p-4">Expire Date</th>
-                            <th class="p-4">Bike Return Status</th>
+                            <th class="p-4 whitespace-nowrap">Assigned Unit</th>
+                            <th class="p-4 whitespace-nowrap">Start Date</th>
+                            <th class="p-4 whitespace-nowrap">Expire Date</th>
+                            <th class="p-4 whitespace-nowrap">Bike Return Status</th>
                         @else
-                            <th class="p-4">Type</th>
-                            <th class="p-4">Fulfillment</th>
+                            <th class="p-4 whitespace-nowrap">Type</th>
+                            <th class="p-4 whitespace-nowrap">Fulfillment</th>
                         @endif
-                        <th class="p-4">Total & Balance</th>
-                        <th class="p-4">Order Status</th>
-                        <th class="p-4 text-right">Return & Order Actions</th>
+                        <th class="p-4 whitespace-nowrap">Total & Balance</th>
+                        <th class="p-4 whitespace-nowrap">Order Status</th>
+                        <th class="p-4 text-right whitespace-nowrap">Return & Order Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -135,14 +137,14 @@
                         @endphp
                         <tr class="{{ $rowClass }} transition-colors">
                             <!-- Order Number -->
-                            <td class="p-4 font-black font-mono text-darkSlate-900">
-                                <span class="block">{{ $ord->order_number }}</span>
-                                <span class="text-[10px] text-textMuted font-normal block">{{ $ord->created_at ? $ord->created_at->format('d M Y, H:i') : '' }}</span>
+                            <td class="p-4 font-black font-mono text-darkSlate-900 whitespace-nowrap">
+                                <span class="block text-sm font-bold">{{ $ord->order_number }}</span>
+                                <span class="text-[10px] text-textMuted font-normal block mt-0.5">{{ $ord->created_at ? $ord->created_at->format('d M Y, H:i') : '' }}</span>
                             </td>
 
                             <!-- Customer Info -->
-                            <td class="p-4">
-                                <span class="font-bold text-darkSlate-900 block">{{ $ord->user->name ?? 'Guest Customer' }}</span>
+                            <td class="p-4 whitespace-nowrap">
+                                <span class="font-bold text-darkSlate-900 block text-xs">{{ $ord->user->name ?? 'Guest Customer' }}</span>
                                 <span class="text-[11px] text-textMuted block mb-1">{{ $ord->user->email ?? 'N/A' }}</span>
                                 @if($ord->proof_of_id_path || $ord->proof_of_address_path)
                                     <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-200" title="Proof of ID & Address verified">
@@ -157,7 +159,7 @@
 
                             @if($activeTab === 'rental')
                                 <!-- Assigned Unit -->
-                                <td class="p-4">
+                                <td class="p-4 whitespace-nowrap">
                                     @php $rentalItem = $ord->items->where('item_type', 'rental')->first(); @endphp
                                     @if($rentalItem && $rentalItem->ebikeUnit)
                                         <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 text-[11px] font-bold px-2.5 py-1 rounded-xl border border-emerald-200">
@@ -171,12 +173,12 @@
                                 </td>
 
                                 <!-- Start Date -->
-                                <td class="p-4 font-bold text-darkSlate-900">
+                                <td class="p-4 font-bold text-darkSlate-900 whitespace-nowrap">
                                     {{ $ord->rental_start_date ? $ord->rental_start_date->format('d M Y') : 'N/A' }}
                                 </td>
 
                                 <!-- Expire Date -->
-                                <td class="p-4 font-bold">
+                                <td class="p-4 font-bold whitespace-nowrap">
                                     @if($ord->rental_end_date)
                                         <span class="{{ $isExpired ? 'text-rose-700 font-black underline' : ($isExpiringSoon ? 'text-amber-700 font-black' : 'text-darkSlate-900') }}">
                                             {{ $ord->rental_end_date->format('d M Y') }}
@@ -187,7 +189,7 @@
                                 </td>
 
                                 <!-- Bike Return Status -->
-                                <td class="p-4">
+                                <td class="p-4 whitespace-nowrap">
                                     @if($isReturned)
                                         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase text-emerald-800 bg-emerald-100 border border-emerald-300">
                                             <i class="fa-solid fa-circle-check text-emerald-600"></i> Bike Returned
@@ -207,18 +209,18 @@
                                     @endif
                                 </td>
                             @else
-                                <td class="p-4 font-bold uppercase text-[10px]">
+                                <td class="p-4 font-bold uppercase text-[10px] whitespace-nowrap">
                                     <span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-800 border border-slate-300">
                                         {{ $ord->type }}
                                     </span>
                                 </td>
-                                <td class="p-4 font-semibold text-slate-600 uppercase text-[10px]">
+                                <td class="p-4 font-semibold text-slate-600 uppercase text-[10px] whitespace-nowrap">
                                     {{ str_replace('_', ' ', $ord->fulfillment_type ?? 'delivery') }}
                                 </td>
                             @endif
 
                             <!-- Total & Balance -->
-                            <td class="p-4">
+                            <td class="p-4 whitespace-nowrap">
                                 <span class="font-black text-darkSlate-900 block text-xs">£{{ number_format($ord->total_amount, 2) }}</span>
                                 <span class="text-[10px] text-emerald-700 font-bold block">Paid: £{{ number_format($ord->advance_amount, 2) }}</span>
                                 @if($ord->remaining_amount > 0)
@@ -227,14 +229,14 @@
                             </td>
 
                             <!-- Order Status Badge -->
-                            <td class="p-4">
+                            <td class="p-4 whitespace-nowrap">
                                 <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase border {{ $ord->status_badge_class }}">
                                     {{ str_replace('_', ' ', $ord->status) }}
                                 </span>
                             </td>
 
                             <!-- Actions -->
-                            <td class="p-4 text-right">
+                            <td class="p-4 text-right whitespace-nowrap">
                                 <div class="flex items-center justify-end space-x-1.5">
                                     <!-- Mark Bike Returned Quick Action Button -->
                                     @if($ord->type === 'rental' && !$isReturned)
@@ -265,7 +267,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="p-8 text-center text-slate-400 font-medium text-xs">
+                            <td colspan="9" class="p-8 text-center text-slate-400 font-medium text-xs">
                                 No orders found matching the selected filter criteria.
                             </td>
                         </tr>
@@ -274,8 +276,24 @@
             </table>
         </div>
 
-        <div class="p-4 border-t border-borderLight">
-            {{ $orders->links() }}
+        <!-- Enhanced Responsive Pagination Footer -->
+        <div class="p-4 bg-[#fafbfc] border-t border-borderLight flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-xs text-slate-600 font-medium">
+                Showing <strong class="text-slate-900 font-black">{{ $orders->firstItem() ?? 0 }}</strong> to <strong class="text-slate-900 font-black">{{ $orders->lastItem() ?? 0 }}</strong> of <strong class="text-slate-900 font-black">{{ $orders->total() }}</strong> total orders
+                @if($orders->lastPage() > 1)
+                    <span class="ml-1 text-[11px] text-brandOrange-600 font-bold">(Page {{ $orders->currentPage() }} of {{ $orders->lastPage() }})</span>
+                @endif
+            </div>
+
+            <div>
+                @if($orders->hasPages())
+                    {{ $orders->appends(request()->query())->links() }}
+                @else
+                    <span class="inline-flex items-center px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-slate-100 text-slate-600 border border-slate-200">
+                        Page 1 of 1
+                    </span>
+                @endif
+            </div>
         </div>
     </div>
 </div>

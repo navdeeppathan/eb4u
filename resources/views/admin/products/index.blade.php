@@ -24,83 +24,99 @@
         </div>
     </div>
 
-    <!-- Products Table -->
-    <div class="md:hidden flex items-center justify-between text-[10px] text-brandOrange-700 bg-brandOrange-50 px-3.5 py-2 rounded-2xl border border-brandOrange-200 font-bold shadow-xs">
+    <!-- Products Table Container -->
+    <div class="xl:hidden flex items-center justify-between text-[10px] text-brandOrange-700 bg-brandOrange-50 px-3.5 py-2 rounded-2xl border border-brandOrange-200 font-bold shadow-xs">
         <span class="flex items-center gap-1.5"><i class="fa-solid fa-arrows-left-right text-brandOrange-500"></i> Scroll table horizontally to view full details</span>
         <i class="fa-solid fa-hand-pointer text-brandOrange-500 animate-pulse"></i>
     </div>
     <div class="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full min-w-[700px] text-left text-xs">
-            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px]">
-                <tr>
-                    <th class="p-4">Product</th>
-                    <th class="p-4">Type</th>
-                    <th class="p-4">Retail Price</th>
-                    <th class="p-4">Rental Rate</th>
-                    <th class="p-4">Stock</th>
-                    <th class="p-4">Status</th>
-                    <th class="p-4 text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100">
-                @foreach($products as $p)
-                    <tr class="hover:bg-slate-50/50">
-                        <td class="p-4 flex items-center space-x-3">
-                            <img src="{{ $p->primary_image_url }}" class="w-12 h-12 object-cover rounded-xl border border-slate-200 flex-shrink-0">
-                            <div>
-                                <span class="font-bold text-slate-900 block leading-snug">{{ $p->name }}</span>
-                            </div>
-                        </td>
-                        <td class="p-4 font-bold uppercase text-[10px]">
-                            <span class="px-2.5 py-1 rounded-full {{ $p->type === 'ebike' ? 'bg-brandOrange-50 text-brandOrange-600 border border-brandOrange-500/20' : 'bg-slate-100 text-slate-800' }}">
-                                {{ $p->type }}
-                            </span>
-                        </td>
-                        <td class="p-4 font-black text-slate-900">
-                            £{{ number_format($p->effective_price, 2) }}
-                            @if($p->discount_price)
-                                <span class="text-[10px] text-slate-400 line-through block">£{{ number_format($p->price, 2) }}</span>
-                            @endif
-                        </td>
-                        <td class="p-4">
-                            @if($p->is_rental_eligible)
-                                <span class="text-[11px] font-bold text-brandOrange-600 bg-brandOrange-50 px-2.5 py-1 rounded-xl border border-brandOrange-500/20">
-                                    £{{ number_format($p->rental_price_weekly, 0) }}/week
-                                </span>
-                            @else
-                                <span class="text-slate-400 text-[10px]">N/A</span>
-                            @endif
-                        </td>
-                        <td class="p-4 font-bold text-slate-800">{{ $p->stock_quantity }} units</td>
-                        <td class="p-4">
-                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase {{ $p->is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700' }}">
-                                {{ $p->is_active ? 'Active' : 'Inactive' }}
-                            </span>
-                        </td>
-                        <td class="p-4 text-right space-x-2">
-                            <!-- Edit Button -->
-                            <a href="{{ route('admin.products.edit', $p->id) }}" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-[11px] font-bold transition-colors">
-                                <i class="fa-solid fa-pen-to-square mr-1"></i> Edit
-                            </a>
-
-                            <!-- Delete Form Button -->
-                            <form action="{{ route('admin.products.destroy', $p->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to permanently delete {{ addslashes($p->name) }}?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl text-[11px] font-bold transition-colors">
-                                    <i class="fa-solid fa-trash mr-1"></i> Delete
-                                </button>
-                            </form>
-                        </td>
+        <div class="overflow-x-auto w-full">
+            <table class="w-full text-left text-xs whitespace-nowrap min-w-[850px]">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px]">
+                    <tr>
+                        <th class="p-4 whitespace-nowrap">Product</th>
+                        <th class="p-4 whitespace-nowrap">Type</th>
+                        <th class="p-4 whitespace-nowrap">Retail Price</th>
+                        <th class="p-4 whitespace-nowrap">Rental Rate</th>
+                        <th class="p-4 whitespace-nowrap">Stock</th>
+                        <th class="p-4 whitespace-nowrap">Status</th>
+                        <th class="p-4 text-right whitespace-nowrap">Actions</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @foreach($products as $p)
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="p-4 flex items-center space-x-3 whitespace-nowrap">
+                                <img src="{{ $p->primary_image_url }}" class="w-12 h-12 object-cover rounded-xl border border-slate-200 flex-shrink-0">
+                                <div>
+                                    <span class="font-bold text-slate-900 block leading-snug text-xs">{{ $p->name }}</span>
+                                </div>
+                            </td>
+                            <td class="p-4 font-bold uppercase text-[10px] whitespace-nowrap">
+                                <span class="px-2.5 py-1 rounded-full {{ $p->type === 'ebike' ? 'bg-brandOrange-50 text-brandOrange-600 border border-brandOrange-500/20' : 'bg-slate-100 text-slate-800' }}">
+                                    {{ $p->type }}
+                                </span>
+                            </td>
+                            <td class="p-4 font-black text-slate-900 whitespace-nowrap">
+                                £{{ number_format($p->effective_price, 2) }}
+                                @if($p->discount_price)
+                                    <span class="text-[10px] text-slate-400 line-through block">£{{ number_format($p->price, 2) }}</span>
+                                @endif
+                            </td>
+                            <td class="p-4 whitespace-nowrap">
+                                @if($p->is_rental_eligible)
+                                    <span class="text-[11px] font-bold text-brandOrange-600 bg-brandOrange-50 px-2.5 py-1 rounded-xl border border-brandOrange-500/20">
+                                        £{{ number_format($p->rental_price_weekly, 0) }}/week
+                                    </span>
+                                @else
+                                    <span class="text-slate-400 text-[10px]">N/A</span>
+                                @endif
+                            </td>
+                            <td class="p-4 font-bold text-slate-800 whitespace-nowrap">{{ $p->stock_quantity }} units</td>
+                            <td class="p-4 whitespace-nowrap">
+                                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase {{ $p->is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700' }}">
+                                    {{ $p->is_active ? 'Active' : 'Inactive' }}
+                                </span>
+                            </td>
+                            <td class="p-4 text-right space-x-2 whitespace-nowrap">
+                                <!-- Edit Button -->
+                                <a href="{{ route('admin.products.edit', $p->id) }}" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-[11px] font-bold transition-colors">
+                                    <i class="fa-solid fa-pen-to-square mr-1"></i> Edit
+                                </a>
+
+                                <!-- Delete Form Button -->
+                                <form action="{{ route('admin.products.destroy', $p->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to permanently delete {{ addslashes($p->name) }}?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl text-[11px] font-bold transition-colors">
+                                        <i class="fa-solid fa-trash mr-1"></i> Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
 
-        <div class="p-4 border-t border-slate-100">
-            {{ $products->links() }}
+        <!-- Pagination Footer -->
+        <div class="p-4 bg-[#fafbfc] border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-xs text-slate-600 font-medium">
+                Showing <strong class="text-slate-900 font-black">{{ $products->firstItem() ?? 0 }}</strong> to <strong class="text-slate-900 font-black">{{ $products->lastItem() ?? 0 }}</strong> of <strong class="text-slate-900 font-black">{{ $products->total() }}</strong> total products
+                @if($products->lastPage() > 1)
+                    <span class="ml-1 text-[11px] text-brandOrange-600 font-bold">(Page {{ $products->currentPage() }} of {{ $products->lastPage() }})</span>
+                @endif
+            </div>
+
+            <div>
+                @if($products->hasPages())
+                    {{ $products->appends(request()->query())->links() }}
+                @else
+                    <span class="inline-flex items-center px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-slate-100 text-slate-600 border border-slate-200">
+                        Page 1 of 1
+                    </span>
+                @endif
+            </div>
         </div>
     </div>
 </div>

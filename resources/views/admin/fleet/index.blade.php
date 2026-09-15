@@ -99,108 +99,124 @@
         </div>
     </div>
 
-    <!-- Fleet Units Table -->
-    <div class="md:hidden flex items-center justify-between text-[10px] text-brandOrange-700 bg-brandOrange-50 px-3.5 py-2 rounded-2xl border border-brandOrange-200 font-bold shadow-xs">
+    <!-- Fleet Units Table Container -->
+    <div class="xl:hidden flex items-center justify-between text-[10px] text-brandOrange-700 bg-brandOrange-50 px-3.5 py-2 rounded-2xl border border-brandOrange-200 font-bold shadow-xs">
         <span class="flex items-center gap-1.5"><i class="fa-solid fa-arrows-left-right text-brandOrange-500"></i> Scroll table horizontally to view full details</span>
         <i class="fa-solid fa-hand-pointer text-brandOrange-500 animate-pulse"></i>
     </div>
     <div class="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full min-w-[700px] text-left text-xs">
-            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px]">
-                <tr>
-                    <th class="p-4">Unit Code</th>
-                    <th class="p-4">E-Bike Model</th>
-                    <th class="p-4">Serial / Frame</th>
-                    <th class="p-4">GPS Telemetry & Battery</th>
-                    <th class="p-4">QR Link</th>
-                    <th class="p-4">Status</th>
-                    <th class="p-4 text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100">
-                @foreach($units as $u)
-                    <tr class="hover:bg-slate-50/50">
-                        <td class="p-4 font-black font-mono text-slate-900">
-                            {{ $u->ebike_code }}
-                            @if($u->gps_unit_id)
-                                <span class="block text-[9px] text-emerald-600 font-mono" title="GPS-Trace Unit ID: {{ $u->gps_unit_id }}">
-                                    <i class="fa-solid fa-satellite-dish"></i> Live GPS
-                                </span>
-                            @endif
-                        </td>
-                        <td class="p-4 font-bold text-slate-800">{{ $u->product->name ?? 'Deleted' }}</td>
-                        <td class="p-4 font-mono text-slate-600">
-                            {{ $u->serial_number }}
-                            <span class="block text-[10px] text-slate-400 font-sans font-bold">{{ $u->frame_size }}</span>
-                        </td>
-                        <td class="p-4">
-                            @if($u->hasGpsTracker())
-                                <div class="space-y-1">
-                                    <div class="flex items-center space-x-2">
-                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-black {{ ($u->battery_level ?? 80) > 30 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800' }}">
-                                            <i class="fa-solid fa-battery-three-quarters mr-1"></i> {{ $u->battery_level ?? '--' }}%
-                                        </span>
-                                        @if($u->map_location_url)
-                                            <a href="{{ $u->map_location_url }}" target="_blank" class="text-brand-600 hover:underline text-[10px] font-bold">
-                                                <i class="fa-solid fa-location-dot"></i> View Location
-                                            </a>
+        <div class="overflow-x-auto w-full">
+            <table class="w-full text-left text-xs whitespace-nowrap min-w-[850px]">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px]">
+                    <tr>
+                        <th class="p-4 whitespace-nowrap">Unit Code</th>
+                        <th class="p-4 whitespace-nowrap">E-Bike Model</th>
+                        <th class="p-4 whitespace-nowrap">Serial / Frame</th>
+                        <th class="p-4 whitespace-nowrap">GPS Telemetry & Battery</th>
+                        <th class="p-4 whitespace-nowrap">QR Link</th>
+                        <th class="p-4 whitespace-nowrap">Status</th>
+                        <th class="p-4 text-right whitespace-nowrap">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @foreach($units as $u)
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="p-4 font-black font-mono text-slate-900 whitespace-nowrap">
+                                {{ $u->ebike_code }}
+                                @if($u->gps_unit_id)
+                                    <span class="block text-[9px] text-emerald-600 font-mono" title="GPS-Trace Unit ID: {{ $u->gps_unit_id }}">
+                                        <i class="fa-solid fa-satellite-dish"></i> Live GPS
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="p-4 font-bold text-slate-800 whitespace-nowrap">{{ $u->product->name ?? 'Deleted' }}</td>
+                            <td class="p-4 font-mono text-slate-600 whitespace-nowrap">
+                                {{ $u->serial_number }}
+                                <span class="block text-[10px] text-slate-400 font-sans font-bold">{{ $u->frame_size }}</span>
+                            </td>
+                            <td class="p-4 whitespace-nowrap">
+                                @if($u->hasGpsTracker())
+                                    <div class="space-y-1">
+                                        <div class="flex items-center space-x-2">
+                                            <span class="px-2 py-0.5 rounded-full text-[10px] font-black {{ ($u->battery_level ?? 80) > 30 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800' }}">
+                                                <i class="fa-solid fa-battery-three-quarters mr-1"></i> {{ $u->battery_level ?? '--' }}%
+                                            </span>
+                                            @if($u->map_location_url)
+                                                <a href="{{ $u->map_location_url }}" target="_blank" class="text-brand-600 hover:underline text-[10px] font-bold">
+                                                    <i class="fa-solid fa-location-dot"></i> View Location
+                                                </a>
+                                            @endif
+                                        </div>
+                                        @if($u->last_gps_sync)
+                                            <span class="block text-[9px] text-slate-400 font-mono">
+                                                Synced: {{ $u->last_gps_sync->diffForHumans() }}
+                                            </span>
                                         @endif
                                     </div>
-                                    @if($u->last_gps_sync)
-                                        <span class="block text-[9px] text-slate-400 font-mono">
-                                            Synced: {{ $u->last_gps_sync->diffForHumans() }}
-                                        </span>
-                                    @endif
-                                </div>
-                            @else
-                                <span class="text-slate-400 italic text-[10px]">No GPS Tracker</span>
-                            @endif
-                        </td>
-                        <td class="p-4">
-                            <span class="text-[10px] text-brand-700 bg-brand-50 px-2 py-1 rounded font-mono border border-brand-100">
-                                <i class="fa-solid fa-qrcode mr-1"></i> {{ $u->qr_code_data }}
-                            </span>
-                        </td>
-                        <td class="p-4">
-                            <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase
-                                {{ $u->status === 'available' ? 'bg-emerald-100 text-emerald-800' : '' }}
-                                {{ $u->status === 'rented' ? 'bg-purple-100 text-purple-800' : '' }}
-                                {{ $u->status === 'maintenance' ? 'bg-rose-100 text-rose-800' : '' }}
-                                {{ $u->status === 'retired' ? 'bg-slate-100 text-slate-600' : '' }}">
-                                {{ $u->status }}
-                            </span>
-                        </td>
-                        <td class="p-4 text-right">
-                            <div class="inline-flex items-center space-x-2">
-                                @if($u->gps_unit_id)
-                                    <form action="{{ route('admin.fleet.sync_gps', $u->id) }}" method="POST" class="inline">
-                                        @csrf
-                                        <button type="submit" class="py-1 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px] rounded-lg border border-slate-200" title="Sync live telemetry from GPS-Trace">
-                                            <i class="fa-solid fa-arrows-rotate"></i> Sync GPS
-                                        </button>
-                                    </form>
+                                @else
+                                    <span class="text-slate-400 italic text-[10px]">No GPS Tracker</span>
                                 @endif
+                            </td>
+                            <td class="p-4 whitespace-nowrap">
+                                <span class="text-[10px] text-brand-700 bg-brand-50 px-2 py-1 rounded font-mono border border-brand-100">
+                                    <i class="fa-solid fa-qrcode mr-1"></i> {{ $u->qr_code_data }}
+                                </span>
+                            </td>
+                            <td class="p-4 whitespace-nowrap">
+                                <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase
+                                    {{ $u->status === 'available' ? 'bg-emerald-100 text-emerald-800' : '' }}
+                                    {{ $u->status === 'rented' ? 'bg-purple-100 text-purple-800' : '' }}
+                                    {{ $u->status === 'maintenance' ? 'bg-rose-100 text-rose-800' : '' }}
+                                    {{ $u->status === 'retired' ? 'bg-slate-100 text-slate-600' : '' }}">
+                                    {{ $u->status }}
+                                </span>
+                            </td>
+                            <td class="p-4 text-right whitespace-nowrap">
+                                <div class="inline-flex items-center space-x-2">
+                                    @if($u->gps_unit_id)
+                                        <form action="{{ route('admin.fleet.sync_gps', $u->id) }}" method="POST" class="inline">
+                                            @csrf
+                                            <button type="submit" class="py-1 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px] rounded-lg border border-slate-200" title="Sync live telemetry from GPS-Trace">
+                                                <i class="fa-solid fa-arrows-rotate"></i> Sync GPS
+                                            </button>
+                                        </form>
+                                    @endif
 
-                                <form action="{{ route('admin.fleet.status', $u->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    <select name="status" onchange="this.form.submit()" class="bg-slate-50 border border-slate-200 rounded-lg text-[11px] p-1 font-bold">
-                                        <option value="available" {{ $u->status == 'available' ? 'selected' : '' }}>Available</option>
-                                        <option value="rented" {{ $u->status == 'rented' ? 'selected' : '' }}>Rented</option>
-                                        <option value="maintenance" {{ $u->status == 'maintenance' ? 'selected' : '' }}>Maintenance</option>
-                                        <option value="retired" {{ $u->status == 'retired' ? 'selected' : '' }}>Retired</option>
-                                    </select>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+                                    <form action="{{ route('admin.fleet.status', $u->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        <select name="status" onchange="this.form.submit()" class="bg-slate-50 border border-slate-200 rounded-lg text-[11px] p-1 font-bold">
+                                            <option value="available" {{ $u->status == 'available' ? 'selected' : '' }}>Available</option>
+                                            <option value="rented" {{ $u->status == 'rented' ? 'selected' : '' }}>Rented</option>
+                                            <option value="maintenance" {{ $u->status == 'maintenance' ? 'selected' : '' }}>Maintenance</option>
+                                            <option value="retired" {{ $u->status == 'retired' ? 'selected' : '' }}>Retired</option>
+                                        </select>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
 
-        <div class="p-4 border-t border-slate-100">
-            {{ $units->links() }}
+        <!-- Pagination Footer -->
+        <div class="p-4 bg-[#fafbfc] border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-xs text-slate-600 font-medium">
+                Showing <strong class="text-slate-900 font-black">{{ $units->firstItem() ?? 0 }}</strong> to <strong class="text-slate-900 font-black">{{ $units->lastItem() ?? 0 }}</strong> of <strong class="text-slate-900 font-black">{{ $units->total() }}</strong> total fleet units
+                @if($units->lastPage() > 1)
+                    <span class="ml-1 text-[11px] text-brandOrange-600 font-bold">(Page {{ $units->currentPage() }} of {{ $units->lastPage() }})</span>
+                @endif
+            </div>
+
+            <div>
+                @if($units->hasPages())
+                    {{ $units->appends(request()->query())->links() }}
+                @else
+                    <span class="inline-flex items-center px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-slate-100 text-slate-600 border border-slate-200">
+                        Page 1 of 1
+                    </span>
+                @endif
+            </div>
         </div>
     </div>
 </div>
