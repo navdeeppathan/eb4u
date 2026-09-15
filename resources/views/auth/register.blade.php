@@ -35,13 +35,25 @@
 
             <div>
                 <label class="block font-bold text-slate-700 mb-1">Password</label>
-                <input type="password" name="password" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 font-bold text-slate-900 focus:ring-2 focus:ring-brandOrange-500">
+                <div x-data="{ showPassword: false }" class="relative">
+                    <input :type="showPassword ? 'text' : 'password'" name="password" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 pr-11 font-bold text-slate-900 focus:ring-2 focus:ring-brandOrange-500">
+                    <button type="button" @click="showPassword = !showPassword" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 focus:outline-none p-1" aria-label="Toggle password visibility">
+                        <i x-show="!showPassword" class="fa-solid fa-eye text-sm"></i>
+                        <i x-show="showPassword" class="fa-solid fa-eye-slash text-sm" x-cloak></i>
+                    </button>
+                </div>
                 @error('password') <span class="text-rose-600 text-[11px] mt-1 block font-bold">{{ $message }}</span> @enderror
             </div>
 
             <div>
                 <label class="block font-bold text-slate-700 mb-1">Confirm Password</label>
-                <input type="password" name="password_confirmation" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 font-bold text-slate-900 focus:ring-2 focus:ring-brandOrange-500">
+                <div x-data="{ showPassword: false }" class="relative">
+                    <input :type="showPassword ? 'text' : 'password'" name="password_confirmation" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 pr-11 font-bold text-slate-900 focus:ring-2 focus:ring-brandOrange-500">
+                    <button type="button" @click="showPassword = !showPassword" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 focus:outline-none p-1" aria-label="Toggle password visibility">
+                        <i x-show="!showPassword" class="fa-solid fa-eye text-sm"></i>
+                        <i x-show="showPassword" class="fa-solid fa-eye-slash text-sm" x-cloak></i>
+                    </button>
+                </div>
             </div>
 
             <button type="submit" class="w-full py-4 bg-brandOrange-500 hover:bg-brandOrange-600 text-white font-black rounded-2xl shadow-lg transition-all uppercase tracking-wider text-xs cursor-pointer">

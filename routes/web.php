@@ -112,6 +112,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->as('admin.')->group(funct
     Route::get('/fleet', [AdminFleetController::class, 'index'])->name('fleet.index');
     Route::post('/fleet', [AdminFleetController::class, 'store'])->name('fleet.store');
     Route::post('/fleet/{id}/status', [AdminFleetController::class, 'updateStatus'])->name('fleet.status');
+    Route::post('/fleet/{id}/sync-gps', [AdminFleetController::class, 'syncGps'])->name('fleet.sync_gps');
 
     Route::get('/maintenance', [AdminMaintenanceController::class, 'index'])->name('maintenance.index');
     Route::post('/maintenance', [AdminMaintenanceController::class, 'store'])->name('maintenance.store');

@@ -40,6 +40,20 @@
                                         <i class="fa-solid fa-qrcode mr-1"></i> Physical E-Bike Code: <strong>{{ $item->ebikeUnit->ebike_code }}</strong>
                                     </p>
                                     <p class="text-[10px] text-slate-400 font-mono">Serial No: {{ $item->ebikeUnit->serial_number }}</p>
+
+                                    @if($item->ebikeUnit->hasGpsTracker())
+                                        <div class="mt-2 flex items-center space-x-2 bg-emerald-50 text-emerald-800 px-2.5 py-1 rounded-xl border border-emerald-200 text-[10px]">
+                                            <span><i class="fa-solid fa-satellite-dish"></i> Live GPS Active</span>
+                                            <span>•</span>
+                                            <span><i class="fa-solid fa-battery-three-quarters"></i> {{ $item->ebikeUnit->battery_level ?? 85 }}%</span>
+                                            @if($item->ebikeUnit->map_location_url)
+                                                <span>•</span>
+                                                <a href="{{ $item->ebikeUnit->map_location_url }}" target="_blank" class="font-bold underline text-brandOrange-600">
+                                                    <i class="fa-solid fa-location-dot"></i> Live Map
+                                                </a>
+                                            @endif
+                                        </div>
+                                    @endif
                                 @endif
                             </div>
                         </div>

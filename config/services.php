@@ -31,4 +31,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'gpstrace' => [
+        'base_url' => env('GPS_TRACE_BASE_URL', 'https://api.gps-trace.com'),
+        'access_token' => env('GPS_TRACE_ACCESS_TOKEN'),
+        'default_app_id' => env('GPS_TRACE_DEFAULT_APP_ID', 'b901da51-ce00-4af2-b978-8d0fca8ae1ea'),
+    ],
+
 ];

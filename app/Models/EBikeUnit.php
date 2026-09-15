@@ -19,7 +19,34 @@ class EBikeUnit extends Model
         'qr_code_data',
         'status',
         'condition_notes',
+        'gps_unit_id',
+        'gps_ident',
+        'gps_hw_id',
+        'battery_level',
+        'last_latitude',
+        'last_longitude',
+        'last_gps_sync',
     ];
+
+    protected $casts = [
+        'last_gps_sync' => 'datetime',
+        'last_latitude' => 'float',
+        'last_longitude' => 'float',
+        'battery_level' => 'integer',
+    ];
+
+    public function hasGpsTracker(): bool
+    {
+        return !empty($this->gps_unit_id) || !empty($this->gps_ident);
+    }
+
+    public function getMapLocationUrlAttribute(): ?string
+    {
+        if ($this->last_latitude && $this->last_longitude) {
+            return "https://www.google.com/maps?q={$this->last_latitude},{$this->last_longitude}";
+        }
+        return null;
+    }
 
     public function product()
     {
