@@ -5,7 +5,8 @@
 @section('content')
 <div class="space-y-6 max-w-5xl mx-auto">
     <div class="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
-        <table class="w-full text-left text-xs">
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-[640px] text-left text-xs">
             <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px]">
                 <tr>
                     <th class="p-4">Customer</th>
@@ -47,6 +48,7 @@
                 @endforeach
             </tbody>
         </table>
+        </div>
 
         <div class="p-4 border-t border-slate-100">
             {{ $reviews->links() }}

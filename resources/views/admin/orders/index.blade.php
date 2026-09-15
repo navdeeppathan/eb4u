@@ -92,7 +92,7 @@
     <!-- Orders Table -->
     <div class="bg-white rounded-3xl border border-borderLight shadow-xs overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs">
+            <table class="w-full min-w-[850px] text-left text-xs">
                 <thead class="bg-[#f5f7fb] border-b border-borderLight text-textMuted font-bold uppercase text-[10px]">
                     <tr>
                         <th class="p-4">Order #</th>

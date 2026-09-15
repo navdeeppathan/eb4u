@@ -88,7 +88,8 @@
 
     <!-- Maintenance Records Table -->
     <div class="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
-        <table class="w-full text-left text-xs">
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-[700px] text-left text-xs">
             <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px]">
                 <tr>
                     <th class="p-4">Unit Code</th>
@@ -130,6 +131,7 @@
                 @endforeach
             </tbody>
         </table>
+        </div>
     </div>
 </div>
 @endsection

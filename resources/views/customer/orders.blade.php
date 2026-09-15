@@ -12,7 +12,7 @@
 <div class="container mx-auto px-4 py-10">
     <div class="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-sm">
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs">
+            <table class="w-full min-w-[650px] text-left text-xs">
                 <thead>
                     <tr class="text-slate-400 uppercase text-[10px] border-b border-slate-100">
                         <th class="pb-3">Order Number</th>
