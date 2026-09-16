@@ -18,7 +18,7 @@ class HomeController extends Controller
         $accessoryCategories = Category::where('type', 'accessory')->where('is_active', true)->orderBy('sort_order')->take(8)->get();
         
         // Buy Products (Retail Sales)
-        $buyProducts = Product::with(['brand', 'category', 'images'])
+        $buyProducts = Product::with([ 'category', 'images'])
             ->where('is_active', true)
             ->where(function($q) {
                 $q->where('product_tag', 'sell')->orWhere('is_rental_eligible', false);
@@ -28,7 +28,7 @@ class HomeController extends Controller
             ->get();
 
         // Rent Products (Rental Fleet)
-        $rentalProducts = Product::with(['brand', 'category', 'images'])
+        $rentalProducts = Product::with(['category', 'images'])
             ->where('is_active', true)
             ->where(function($q) {
                 $q->where('product_tag', 'rent')->orWhere('is_rental_eligible', true);
@@ -38,13 +38,13 @@ class HomeController extends Controller
             ->get();
 
         // Fallback All Featured Products
-        $featuredEBikes = Product::with(['brand', 'category', 'images'])
+        $featuredEBikes = Product::with(['category', 'images'])
             ->where('is_active', true)
             ->latest()
             ->take(8)
             ->get();
 
-        $popularAccessories = Product::with(['brand', 'category', 'images'])
+        $popularAccessories = Product::with(['category', 'images'])
             ->where('type', 'accessory')
             ->where('is_active', true)
             ->take(6)
