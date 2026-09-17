@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\Brand;
+
 use App\Models\OrderItem;
 use Carbon\Carbon;
 

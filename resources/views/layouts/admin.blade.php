@@ -76,19 +76,29 @@
         .swal2-popup { font-family: 'Poppins', sans-serif !important; border-radius: 1.5rem !important; }
         
         /* Responsive Table Custom Horizontal Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar,
         .overflow-x-auto::-webkit-scrollbar {
-            height: 6px;
+            height: 8px;
+            width: 8px;
         }
+        .custom-scrollbar::-webkit-scrollbar-track,
         .overflow-x-auto::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: #e2e8f0;
             border-radius: 8px;
         }
+        .custom-scrollbar::-webkit-scrollbar-thumb,
         .overflow-x-auto::-webkit-scrollbar-thumb {
             background: #f24e00;
             border-radius: 8px;
         }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover,
         .overflow-x-auto::-webkit-scrollbar-thumb:hover {
             background: #d94100;
+        }
+        .custom-scrollbar,
+        .overflow-x-auto {
+            scrollbar-width: thin;
+            scrollbar-color: #f24e00 #e2e8f0;
         }
     </style>
 </head>

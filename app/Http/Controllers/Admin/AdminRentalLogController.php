@@ -79,37 +79,42 @@ class AdminRentalLogController extends Controller
         $product = Product::with(['ebikeUnits.maintenanceRecords', 'damageLogs.user', 'damageLogs.ebikeUnit', 'damageLogs.order', 'images'])
             ->findOrFail($id);
 
-        // Rental History Log Items
+        // Rental History Log Items (Paginated)
         $rentalOrders = OrderItem::with(['order.user', 'ebikeUnit'])
             ->where('product_id', $product->id)
             ->where('item_type', 'rental')
             ->latest()
-            ->get();
+            ->paginate(10, ['*'], 'rentals_page');
 
-        // Damage Logs for this product
+        // Damage Logs for this product (Paginated)
         $damageLogs = ProductDamageLog::with(['user', 'ebikeUnit', 'order'])
             ->where('product_id', $product->id)
             ->latest('incident_date')
-            ->get();
+            ->paginate(10, ['*'], 'damage_page');
 
-        // Maintenance Records for units of this product
+        // Maintenance Records for units of this product (Paginated)
         $unitIds = $product->ebikeUnits->pluck('id')->toArray();
         $maintenanceRecords = MaintenanceRecord::with('ebikeUnit')
             ->whereIn('ebike_unit_id', $unitIds)
             ->latest('service_date')
-            ->get();
+            ->paginate(10, ['*'], 'maint_page');
 
-        // Summary Calculations
-        $totalEarnings = (float) $rentalOrders->sum('subtotal');
-        $totalRentalsCount = $rentalOrders->count();
-        $activeRentalsCount = $rentalOrders->filter(function ($item) {
-            return $item->order && in_array($item->order->status, ['active', 'picked_up']);
-        })->count();
+        // Summary Calculations (Unpaginated totals across all records)
+        $totalEarnings = (float) OrderItem::where('product_id', $product->id)->where('item_type', 'rental')->sum('subtotal');
+        $totalRentalsCount = OrderItem::where('product_id', $product->id)->where('item_type', 'rental')->count();
+        $activeRentalsCount = OrderItem::where('product_id', $product->id)
+            ->where('item_type', 'rental')
+            ->whereHas('order', function ($q) {
+                $q->whereIn('status', ['active', 'picked_up']);
+            })->count();
 
-        $totalShopRepairCost = (float) $damageLogs->sum('repair_cost') + (float) $maintenanceRecords->sum('cost');
-        $userChargesTotal = (float) $damageLogs->sum('user_charge_amount');
-        $userChargesPaid = (float) $damageLogs->where('user_payment_status', 'paid')->sum('user_charge_amount');
-        $userChargesPending = (float) $damageLogs->where('user_payment_status', 'pending')->sum('user_charge_amount');
+        $maintTotalCost = (float) MaintenanceRecord::whereIn('ebike_unit_id', $unitIds)->sum('cost');
+        $damageTotalCost = (float) ProductDamageLog::where('product_id', $product->id)->sum('repair_cost');
+        $totalShopRepairCost = $maintTotalCost + $damageTotalCost;
+
+        $userChargesTotal = (float) ProductDamageLog::where('product_id', $product->id)->sum('user_charge_amount');
+        $userChargesPaid = (float) ProductDamageLog::where('product_id', $product->id)->where('user_payment_status', 'paid')->sum('user_charge_amount');
+        $userChargesPending = (float) ProductDamageLog::where('product_id', $product->id)->where('user_payment_status', 'pending')->sum('user_charge_amount');
 
         // Customers for dropdown
         $customers = User::where('role', 'customer')->orderBy('name')->get();

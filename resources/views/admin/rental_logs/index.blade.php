@@ -109,8 +109,16 @@
             <span class="text-xs font-semibold text-slate-400">Showing {{ $products->total() }} Rental Models</span>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
+        <!-- Mobile Scroll Hint Banner -->
+        <div class="px-6 py-2 bg-orange-50 border-b border-orange-100 flex items-center justify-between md:hidden">
+            <span class="text-[11px] font-bold text-brandOrange-600 flex items-center">
+                <i class="fa-solid fa-arrows-left-right mr-1.5 animate-pulse"></i> Scroll table horizontally to view full data
+            </span>
+            <span class="text-[10px] text-slate-400 font-semibold">Swipe &rarr;</span>
+        </div>
+
+        <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left text-xs border-collapse min-w-[1050px]">
                 <thead>
                     <tr class="bg-slate-50 text-slate-500 font-bold uppercase text-[10px] tracking-wider border-b border-slate-100">
                         <th class="p-4">Product Info</th>
@@ -197,8 +205,8 @@
         </div>
 
         @if($products->hasPages())
-            <div class="p-4 border-t border-slate-100">
-                {{ $products->links() }}
+            <div class="p-4 border-t border-slate-100 flex items-center justify-between">
+                {{ $products->withQueryString()->links() }}
             </div>
         @endif
     </div>

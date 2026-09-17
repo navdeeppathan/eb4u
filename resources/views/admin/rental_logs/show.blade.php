@@ -101,15 +101,15 @@
     <div class="bg-white rounded-3xl border border-slate-200 shadow-xs p-2 flex flex-wrap gap-2">
         <button @click="activeTab = 'rentals'" :class="activeTab === 'rentals' ? 'bg-brandOrange-500 text-white font-black' : 'text-slate-600 font-bold hover:bg-slate-100'" class="px-5 py-3 rounded-2xl text-xs transition-colors flex items-center space-x-2">
             <i class="fa-solid fa-clock-rotate-left"></i>
-            <span>Rental Orders History ({{ $rentalOrders->count() }})</span>
+            <span>Rental Orders History ({{ $rentalOrders->total() }})</span>
         </button>
         <button @click="activeTab = 'damage'" :class="activeTab === 'damage' ? 'bg-brandOrange-500 text-white font-black' : 'text-slate-600 font-bold hover:bg-slate-100'" class="px-5 py-3 rounded-2xl text-xs transition-colors flex items-center space-x-2">
             <i class="fa-solid fa-triangle-exclamation"></i>
-            <span>Damage & User Liabilities ({{ $damageLogs->count() }})</span>
+            <span>Damage & User Liabilities ({{ $damageLogs->total() }})</span>
         </button>
         <button @click="activeTab = 'maintenance'" :class="activeTab === 'maintenance' ? 'bg-brandOrange-500 text-white font-black' : 'text-slate-600 font-bold hover:bg-slate-100'" class="px-5 py-3 rounded-2xl text-xs transition-colors flex items-center space-x-2">
             <i class="fa-solid fa-wrench"></i>
-            <span>Maintenance & Services ({{ $maintenanceRecords->count() }})</span>
+            <span>Maintenance & Services ({{ $maintenanceRecords->total() }})</span>
         </button>
         <button @click="activeTab = 'timeline'" :class="activeTab === 'timeline' ? 'bg-brandOrange-500 text-white font-black' : 'text-slate-600 font-bold hover:bg-slate-100'" class="px-5 py-3 rounded-2xl text-xs transition-colors flex items-center space-x-2">
             <i class="fa-solid fa-timeline"></i>
@@ -129,8 +129,16 @@
             </span>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
+        <!-- Mobile Scroll Hint Banner -->
+        <div class="px-6 py-2 bg-orange-50 border-b border-orange-100 flex items-center justify-between md:hidden">
+            <span class="text-[11px] font-bold text-brandOrange-600 flex items-center">
+                <i class="fa-solid fa-arrows-left-right mr-1.5 animate-pulse"></i> Scroll table horizontally to view full details
+            </span>
+            <span class="text-[10px] text-slate-400 font-semibold">Swipe &rarr;</span>
+        </div>
+
+        <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left text-xs border-collapse min-w-[950px]">
                 <thead>
                     <tr class="bg-slate-50 text-slate-500 font-bold uppercase text-[10px] tracking-wider border-b border-slate-100">
                         <th class="p-4">Order #</th>
@@ -220,6 +228,12 @@
                 </tbody>
             </table>
         </div>
+
+        @if($rentalOrders->hasPages())
+            <div class="p-4 border-t border-slate-100 flex items-center justify-between">
+                {{ $rentalOrders->withQueryString()->links() }}
+            </div>
+        @endif
     </div>
 
     <!-- TAB 2: DAMAGE & USER LIABILITY LOGS -->
@@ -234,8 +248,16 @@
             </button>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
+        <!-- Mobile Scroll Hint Banner -->
+        <div class="px-6 py-2 bg-orange-50 border-b border-orange-100 flex items-center justify-between md:hidden">
+            <span class="text-[11px] font-bold text-brandOrange-600 flex items-center">
+                <i class="fa-solid fa-arrows-left-right mr-1.5 animate-pulse"></i> Scroll table horizontally to view full damage log
+            </span>
+            <span class="text-[10px] text-slate-400 font-semibold">Swipe &rarr;</span>
+        </div>
+
+        <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left text-xs border-collapse min-w-[1100px]">
                 <thead>
                     <tr class="bg-slate-50 text-slate-500 font-bold uppercase text-[10px] tracking-wider border-b border-slate-100">
                         <th class="p-4">Incident Date</th>
@@ -345,6 +367,12 @@
                 </tbody>
             </table>
         </div>
+
+        @if($damageLogs->hasPages())
+            <div class="p-4 border-t border-slate-100 flex items-center justify-between">
+                {{ $damageLogs->withQueryString()->links() }}
+            </div>
+        @endif
     </div>
 
     <!-- TAB 3: MAINTENANCE HISTORY LOG -->
@@ -359,8 +387,16 @@
             </button>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
+        <!-- Mobile Scroll Hint Banner -->
+        <div class="px-6 py-2 bg-orange-50 border-b border-orange-100 flex items-center justify-between md:hidden">
+            <span class="text-[11px] font-bold text-brandOrange-600 flex items-center">
+                <i class="fa-solid fa-arrows-left-right mr-1.5 animate-pulse"></i> Scroll table horizontally to view full maintenance records
+            </span>
+            <span class="text-[10px] text-slate-400 font-semibold">Swipe &rarr;</span>
+        </div>
+
+        <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left text-xs border-collapse min-w-[900px]">
                 <thead>
                     <tr class="bg-slate-50 text-slate-500 font-bold uppercase text-[10px] tracking-wider border-b border-slate-100">
                         <th class="p-4">Service Date</th>
@@ -421,6 +457,12 @@
                 </tbody>
             </table>
         </div>
+
+        @if($maintenanceRecords->hasPages())
+            <div class="p-4 border-t border-slate-100 flex items-center justify-between">
+                {{ $maintenanceRecords->withQueryString()->links() }}
+            </div>
+        @endif
     </div>
 
     <!-- TAB 4: CHRONOLOGICAL AUDIT TIMELINE -->
