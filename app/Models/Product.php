@@ -68,6 +68,11 @@ class Product extends Model
         return $this->hasMany(EBikeUnit::class);
     }
 
+    public function damageLogs()
+    {
+        return $this->hasMany(ProductDamageLog::class);
+    }
+
     public function reviews()
     {
         return $this->hasMany(Review::class)->where('status', 'approved');

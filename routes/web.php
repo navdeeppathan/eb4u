@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminCmsController;
 use App\Http\Controllers\Admin\AdminPromotionController;
 use App\Http\Controllers\Admin\AdminReviewController;
+use App\Http\Controllers\Admin\AdminRentalLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,6 +114,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->as('admin.')->group(funct
     Route::post('/fleet', [AdminFleetController::class, 'store'])->name('fleet.store');
     Route::post('/fleet/{id}/status', [AdminFleetController::class, 'updateStatus'])->name('fleet.status');
     Route::post('/fleet/{id}/sync-gps', [AdminFleetController::class, 'syncGps'])->name('fleet.sync_gps');
+
+    /* Rental Products Logs & Damage/Maintenance Reports */
+    Route::get('/rental-logs', [AdminRentalLogController::class, 'index'])->name('rental_logs.index');
+    Route::get('/rental-logs/{id}', [AdminRentalLogController::class, 'show'])->name('rental_logs.show');
+    Route::post('/rental-logs/{id}/status', [AdminRentalLogController::class, 'updateProductStatus'])->name('rental_logs.update_status');
+    Route::post('/rental-logs/damage-log', [AdminRentalLogController::class, 'storeDamageLog'])->name('rental_logs.store_damage');
+    Route::put('/rental-logs/damage-log/{id}', [AdminRentalLogController::class, 'updateDamageLog'])->name('rental_logs.update_damage');
+    Route::delete('/rental-logs/damage-log/{id}', [AdminRentalLogController::class, 'destroyDamageLog'])->name('rental_logs.destroy_damage');
+    Route::post('/rental-logs/maintenance-log', [AdminRentalLogController::class, 'storeMaintenanceLog'])->name('rental_logs.store_maintenance');
 
     Route::get('/maintenance', [AdminMaintenanceController::class, 'index'])->name('maintenance.index');
     Route::post('/maintenance', [AdminMaintenanceController::class, 'store'])->name('maintenance.store');

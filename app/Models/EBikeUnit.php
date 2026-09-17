@@ -62,4 +62,9 @@ class EBikeUnit extends Model
     {
         return $this->hasMany(OrderItem::class, 'ebike_unit_id');
     }
+
+    public function damageLogs()
+    {
+        return $this->hasMany(ProductDamageLog::class, 'ebike_unit_id');
+    }
 }

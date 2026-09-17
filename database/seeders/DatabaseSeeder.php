@@ -19,6 +19,7 @@ use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\Coupon;
 use App\Models\Review;
+use App\Models\ProductDamageLog;
 use App\Models\CmsBanner;
 use App\Models\CmsPage;
 use App\Models\Faq;
@@ -527,6 +528,46 @@ class DatabaseSeeder extends Seeder
             'status' => 'completed',
             'notes' => '30% Advance paid online.',
         ]);
+
+        // Sample Product Damage & Customer Liability Logs
+        $haibike = Product::where('name', 'Haibike AllMtn 4 Full Suspension eMTB')->first();
+        $haibikeUnit = EBikeUnit::where('product_id', $haibike->id)->first();
+
+        ProductDamageLog::create([
+            'product_id' => $gazelleBike->id,
+            'ebike_unit_id' => $rentalUnit ? $rentalUnit->id : null,
+            'user_id' => $customer->id,
+            'order_id' => $rentalOrder->id,
+            'damage_type' => 'Brake Damage',
+            'incident_date' => now()->subDays(1),
+            'damage_description' => 'Rear hydraulic brake lever bent and fluid leak observed after off-road fall.',
+            'repair_cost' => 65.00,
+            'user_charge_amount' => 80.00,
+            'user_payment_status' => 'pending',
+            'repair_status' => 'under_repair',
+            'repair_start_date' => now()->subDays(1),
+            'repair_completion_date' => now()->addDays(3),
+            'admin_notes' => 'Awaiting replacement lever assembly from UK supplier.',
+        ]);
+
+        if ($haibike && $haibikeUnit) {
+            ProductDamageLog::create([
+                'product_id' => $haibike->id,
+                'ebike_unit_id' => $haibikeUnit->id,
+                'user_id' => $customer->id,
+                'order_id' => null,
+                'damage_type' => 'Cosmetic Scratch',
+                'incident_date' => now()->subDays(10),
+                'damage_description' => 'Frame paint scuffed and chainstay protector torn during trail riding.',
+                'repair_cost' => 45.00,
+                'user_charge_amount' => 45.00,
+                'user_payment_status' => 'paid',
+                'repair_status' => 'repaired',
+                'repair_start_date' => now()->subDays(10),
+                'repair_completion_date' => now()->subDays(7),
+                'admin_notes' => 'Customer paid via card at counter. Frame touched up.',
+            ]);
+        }
 
         // Sales Order
         $salesOrder = Order::create([
