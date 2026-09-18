@@ -49,7 +49,7 @@
                 </div>
 
                 <!-- Category Selector -->
-                <!-- <div class="p-4 border-b border-borderLight">
+                <div class="p-4 border-b border-borderLight">
                     <div class="font-grotesk text-[11px] font-bold text-textSec uppercase tracking-wider mb-2">Category</div>
                     <select name="category" class="w-full text-xs bg-[#f5f7fb] border border-borderLight rounded-xl p-2.5 font-semibold text-darkSlate-900 focus:ring-2 focus:ring-brandOrange-500">
                         <option value="">All Categories</option>
@@ -57,27 +57,16 @@
                             <option value="{{ $cat->slug }}" {{ request('category') == $cat->slug ? 'selected' : '' }}>{{ $cat->name }}</option>
                         @endforeach
                     </select>
-                </div> -->
-
-                <!-- Brand Selector -->
-                <!-- <div class="p-4 border-b border-borderLight">
-                    <div class="font-grotesk text-[11px] font-bold text-textSec uppercase tracking-wider mb-2">Brand</div>
-                    <select name="brand" class="w-full text-xs bg-[#f5f7fb] border border-borderLight rounded-xl p-2.5 font-semibold text-darkSlate-900 focus:ring-2 focus:ring-brandOrange-500">
-                        <option value="">All Brands</option>
-                        @foreach($brands as $b)
-                            <option value="{{ $b->slug }}" {{ request('brand') == $b->slug ? 'selected' : '' }}>{{ $b->name }}</option>
-                        @endforeach
-                    </select>
-                </div> -->
+                </div>
 
                 <!-- Price Range -->
-                <!-- <div class="p-4">
+                <div class="p-4">
                     <div class="font-grotesk text-[11px] font-bold text-textSec uppercase tracking-wider mb-2">Price Range (£)</div>
                     <div class="grid grid-cols-2 gap-2">
                         <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="Min £" class="text-xs bg-[#f5f7fb] border border-borderLight rounded-xl p-2 font-bold text-darkSlate-900">
                         <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="Max £" class="text-xs bg-[#f5f7fb] border border-borderLight rounded-xl p-2 font-bold text-darkSlate-900">
                     </div>
-                </div> -->
+                </div>
             </form>
         </aside>
 
