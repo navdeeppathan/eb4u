@@ -165,6 +165,15 @@ class ApiProductController extends Controller
         $startDate = Carbon::parse($request->start_date);
         $endDate = Carbon::parse($request->end_date);
         $days = (int) max(1, $startDate->diffInDays($endDate));
+
+        if ($days < 14) {
+            return response()->json([
+                'success' => false,
+                'available' => false,
+                'message' => 'Minimum rental booking period is 2 weeks (14 days). Please select a duration of at least 14 days.'
+            ], 422);
+        }
+
         $weeks = (int) max(1, ceil($days / 7));
 
         $overlapBookings = OrderItem::where('product_id', $product->id)

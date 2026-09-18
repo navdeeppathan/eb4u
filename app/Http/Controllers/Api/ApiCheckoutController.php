@@ -63,6 +63,15 @@ class ApiCheckoutController extends Controller
             $hasPurchase = $cartItems->contains('item_type', 'purchase');
             $orderType = ($hasRental && $hasPurchase) ? 'mixed' : ($hasRental ? 'rental' : 'purchase');
 
+            foreach ($cartItems->where('item_type', 'rental') as $rItem) {
+                if ($rItem->rental_days < 14) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "The rental product '{$rItem->product->name}' has a duration of less than 2 weeks (14 days). Minimum rental booking duration is 14 days."
+                    ], 422);
+                }
+            }
+
             $advancePct = SystemSetting::get('rental_advance_percentage', 30);
             
             if ($paymentType === 'advance' && $hasRental) {

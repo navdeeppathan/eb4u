@@ -216,6 +216,19 @@
                     }
                 },
                 async addToCart(productId, type = 'purchase', qty = 1, startDate = null, endDate = null) {
+                    if (type === 'rental') {
+                        if (!startDate || !endDate) {
+                            this.showToast('Please select rental start and end dates.', true);
+                            return;
+                        }
+                        let start = new Date(startDate);
+                        let end = new Date(endDate);
+                        let days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+                        if (days < 14) {
+                            this.showToast('Minimum rental booking period is 2 weeks (14 days). Please select at least 14 days.', true);
+                            return;
+                        }
+                    }
                     try {
                         let res = await axios.post('{{ route("cart.add") }}', {
                             product_id: productId,

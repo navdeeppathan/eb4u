@@ -111,8 +111,11 @@
                     <!-- Rental Booking Widget -->
                     <div class="space-y-4">
                         <div class="bg-[#f5f7fb] p-4 rounded-2xl border border-borderLight space-y-3">
-                            <h4 class="font-grotesk text-xs font-bold uppercase text-darkSlate-900 tracking-wider"><i class="fa-solid fa-calendar-days text-brandOrange-500 mr-1.5"></i> Select Rental Dates</h4>
-                            
+                            <div class="flex items-center justify-between">
+                                <h4 class="font-grotesk text-xs font-bold uppercase text-darkSlate-900 tracking-wider"><i class="fa-solid fa-calendar-days text-brandOrange-500 mr-1.5"></i> Select Rental Dates</h4>
+                                <span class="text-[10px] font-black uppercase text-brandOrange-600 bg-brandOrange-50 px-2.5 py-1 rounded-full border border-brandOrange-200">Min 2 Weeks (14 Days)</span>
+                            </div>
+
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-[10px] font-bold text-textSec uppercase mb-1">Start Date</label>
@@ -124,7 +127,14 @@
                                 </div>
                             </div>
 
-                            <template x-if="rentalResult">
+                            <template x-if="rentalError">
+                                <div class="bg-rose-50 text-rose-700 p-3 rounded-xl border border-rose-200 text-xs font-bold flex items-center">
+                                    <i class="fa-solid fa-circle-exclamation text-rose-500 mr-2 text-sm"></i>
+                                    <span x-text="rentalError"></span>
+                                </div>
+                            </template>
+
+                            <template x-if="rentalResult && !rentalError">
                                 <div class="bg-white p-3.5 rounded-xl border border-borderLight text-xs space-y-2">
                                     <div class="flex justify-between">
                                         <span class="text-textSec">Duration & Rate:</span>
@@ -145,9 +155,9 @@
                                 </div>
                             </template>
 
-                            <button @click="reserveRental()" :disabled="!rentalResult || !rentalResult.is_available"
+                            <button @click="reserveRental()" :disabled="!rentalResult || !rentalResult.is_available || rentalError"
                                     class="w-full py-3.5 bg-brandOrange-500 hover:bg-brandOrange-600 disabled:bg-slate-300 text-white text-xs font-bold rounded-xl shadow-lg transition-all flex items-center justify-center">
-                                <i class="fa-solid fa-calendar-check mr-2"></i> Reserve & Rent Now
+                                <i class="fa-solid fa-calendar-check mr-2"></i> Reserve & Rent Now (Min 2 Weeks)
                             </button>
                         </div>
                     </div>
@@ -202,8 +212,9 @@
             selectedVariant: {{ $product->variants->first()->id ?? 'null' }},
             activeTab: '{{ ($product->product_tag === "rent" || $product->is_rental_eligible) ? "rent" : "buy" }}',
             startDate: '{{ now()->addDay()->format("Y-m-d") }}',
-            endDate: '{{ now()->addDays(8)->format("Y-m-d") }}',
+            endDate: '{{ now()->addDays(15)->format("Y-m-d") }}',
             rentalResult: null,
+            rentalError: null,
 
             init() {
                 if ({{ ($product->product_tag === 'rent' || $product->is_rental_eligible) ? 'true' : 'false' }}) {
@@ -212,6 +223,18 @@
             },
             async checkAvailability() {
                 if (!this.startDate || !this.endDate) return;
+                
+                let start = new Date(this.startDate);
+                let end = new Date(this.endDate);
+                let days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+
+                if (days < 14) {
+                    this.rentalError = 'Minimum rental booking period is 2 weeks (14 days). Please select at least 14 days.';
+                    this.rentalResult = null;
+                    return;
+                }
+                this.rentalError = null;
+
                 try {
                     let res = await axios.post('/product/{{ $product->id }}/check-rental', {
                         start_date: this.startDate,
@@ -221,7 +244,9 @@
                         this.rentalResult = res.data;
                     }
                 } catch (e) {
-                    console.error('Availability check failed:', e);
+                    let msg = e.response?.data?.message || 'Availability check failed.';
+                    this.rentalError = msg;
+                    this.rentalResult = null;
                 }
             },
             async reserveRental() {

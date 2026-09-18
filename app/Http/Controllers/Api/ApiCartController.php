@@ -101,6 +101,11 @@ class ApiCartController extends Controller
             $startDate = Carbon::parse($request->rental_start_date);
             $endDate = Carbon::parse($request->rental_end_date);
             $rentalDays = (int) max(1, $startDate->diffInDays($endDate));
+
+            if ($rentalDays < 14) {
+                return response()->json(['success' => false, 'message' => 'Minimum rental booking period is 2 weeks (14 days). Please select at least 14 days.'], 422);
+            }
+
             $weeks = (int) max(1, ceil($rentalDays / 7));
             $weeklyRate = (float) ($product->rental_price_weekly ?? 180.00);
 

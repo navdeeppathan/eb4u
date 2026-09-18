@@ -102,6 +102,15 @@ class CheckoutController extends Controller
             'proof_of_address.max' => 'Proof of Address file size cannot exceed 2MB.',
         ]);
 
+        foreach ($cartItems->where('item_type', 'rental') as $rItem) {
+            if ($rItem->rental_days < 14) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "The rental product '{$rItem->product->name}' has a duration of less than 2 weeks (14 days). Minimum rental booking duration is 14 days."
+                ], 422);
+            }
+        }
+
         DB::beginTransaction();
         try {
             // Handle Document File Uploads

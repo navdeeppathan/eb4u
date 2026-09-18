@@ -78,6 +78,11 @@ class CartController extends Controller
             $startDate = Carbon::parse($request->rental_start_date);
             $endDate = Carbon::parse($request->rental_end_date);
             $days = max(1, (int) ceil($startDate->diffInDays($endDate)));
+
+            if ($days < 14) {
+                return response()->json(['success' => false, 'message' => 'Minimum rental booking period is 2 weeks (14 days). Please select at least 14 days.'], 422);
+            }
+
             $weeks = max(1, (int) ceil($days / 7));
 
             // Check availability

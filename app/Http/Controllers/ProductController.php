@@ -45,6 +45,14 @@ class ProductController extends Controller
         $days = (int) ceil($startDate->diffInDays($endDate));
         if ($days <= 0) $days = 1;
 
+        if ($days < 14) {
+            return response()->json([
+                'success' => false,
+                'is_available' => false,
+                'message' => 'Minimum rental booking period is 2 weeks (14 days). Please select a duration of at least 14 days.'
+            ], 422);
+        }
+
         $weeks = (int) ceil($days / 7);
         if ($weeks <= 0) $weeks = 1;
 
