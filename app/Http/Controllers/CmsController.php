@@ -10,35 +10,31 @@ class CmsController extends Controller
 {
     public function showPage(string $slug)
     {
-        // Map common static legal & informational pages to static Blade views
         switch ($slug) {
             case 'privacy-policy':
             case 'privacy':
-                return view('pages.privacy_policy');
+                return $this->privacyPolicy();
             
             case 'terms-and-conditions':
             case 'terms':
             case 'terms-of-service':
-                return view('pages.terms_and_conditions');
+                return $this->termsAndConditions();
 
             case 'rental-policy':
-                return view('pages.rental_policy');
+                $page = CmsPage::where('slug', 'rental-policy')->first();
+                return view('cms.page', compact('page'));
 
-            case 'refund-policy':
-            case 'shipping-policy':
             case 'about-us':
             case 'about':
-                // Fallback to static legal view
-                return view('pages.terms_and_conditions');
+                return view('cms.about');
         }
 
-        // Database lookup fallback for dynamic pages
         $page = CmsPage::where('slug', $slug)->where('is_active', true)->first();
         if ($page) {
             return view('cms.page', compact('page'));
         }
 
-        return view('pages.terms_and_conditions');
+        return $this->termsAndConditions();
     }
 
     public function about()
@@ -48,12 +44,14 @@ class CmsController extends Controller
 
     public function privacyPolicy()
     {
-        return view('pages.privacy_policy');
+        $page = CmsPage::where('slug', 'privacy-policy')->first();
+        return view('pages.privacy_policy', compact('page'));
     }
 
     public function termsAndConditions()
     {
-        return view('pages.terms_and_conditions');
+        $page = CmsPage::where('slug', 'terms-and-conditions')->first();
+        return view('pages.terms_and_conditions', compact('page'));
     }
 
     public function faqs()

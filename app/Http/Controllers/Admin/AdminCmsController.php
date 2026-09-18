@@ -149,10 +149,16 @@ class AdminCmsController extends Controller
     public function updatePage(Request $request, int $id)
     {
         $page = CmsPage::findOrFail($id);
-        $request->validate(['content' => 'required|string']);
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
 
-        $page->update(['content' => $request->content]);
-        return redirect()->route('admin.cms.pages')->with('success', 'Page content updated.');
+        $page->update([
+            'title' => $request->title,
+            'content' => $request->content,
+        ]);
+        return redirect()->route('admin.cms.pages')->with('success', "Page '{$page->title}' updated successfully!");
     }
 
     public function faqs()

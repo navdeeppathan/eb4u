@@ -152,9 +152,13 @@
                         <i class="fa-solid fa-star text-sm w-5"></i>
                         <span>Review Moderation</span>
                     </a>
-                    <a href="{{ route('admin.cms.banners') }}" class="flex items-center space-x-3 px-4 py-3 rounded-2xl hover:bg-darkBlack-800 transition-colors {{ request()->routeIs('admin.cms.*') ? 'bg-brandOrange-500 text-white font-black' : '' }}">
+                    <a href="{{ route('admin.cms.banners') }}" class="flex items-center space-x-3 px-4 py-3 rounded-2xl hover:bg-darkBlack-800 transition-colors {{ request()->routeIs('admin.cms.banners*') ? 'bg-brandOrange-500 text-white font-black' : '' }}">
                         <i class="fa-solid fa-sliders text-sm w-5"></i>
-                        <span>CMS Content</span>
+                        <span>CMS Banners</span>
+                    </a>
+                    <a href="{{ route('admin.cms.pages') }}" class="flex items-center space-x-3 px-4 py-3 rounded-2xl hover:bg-darkBlack-800 transition-colors {{ request()->routeIs('admin.cms.pages*') ? 'bg-brandOrange-500 text-white font-black' : '' }}">
+                        <i class="fa-solid fa-scale-balanced text-sm w-5"></i>
+                        <span>Terms & Store Policies</span>
                     </a>
                 </nav>
             </div>

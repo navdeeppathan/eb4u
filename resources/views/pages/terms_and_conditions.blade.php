@@ -1,8 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Terms & Conditions | eb4u E-Bike Rental & Sales UK')
+@section('title', ($page->title ?? 'Terms & Conditions') . ' | eb4u E-Bike Rental & Sales UK')
 
 @section('content')
+@if(isset($page) && !empty($page->content))
+    {!! $page->content !!}
+@else
 <!-- Breadcrumb -->
 <div class="border-b border-borderLight bg-[#edf1f8] text-xs">
     <div class="max-w-[1320px] mx-auto px-6 py-3 flex items-center gap-2 text-textMuted font-medium">
@@ -378,4 +381,5 @@
 
     </div>
 </div>
+@endif
 @endsection
