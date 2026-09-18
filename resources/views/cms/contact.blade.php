@@ -22,7 +22,7 @@
                     <i class="fa-solid fa-location-dot text-brand-600 text-lg mt-0.5"></i>
                     <div>
                         <strong class="block text-slate-900 font-bold">Flagship Store Location</strong>
-                        <span>142 Regent Street, London, W1B 5SE, United Kingdom</span>
+                        <span>{{ \App\Models\SystemSetting::get('store_address', 'Near, 103 Inwood Rd, Hounslow TW3 1XA') }}</span>
                     </div>
                 </div>
                 <div class="flex items-start space-x-3">

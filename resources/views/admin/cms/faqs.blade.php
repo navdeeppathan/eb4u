@@ -13,7 +13,7 @@
                 <select name="category" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-bold">
                     <option value="Rental">Rental</option>
                     <option value="Purchases">Purchases</option>
-                    <option value="Shipping & Delivery">Shipping & Delivery</option>
+                    <option value="Store Pickup">Store Pickup</option>
                 </select>
             </div>
             <div>

@@ -10,7 +10,7 @@
                 Britain's premier destination for electric bike sales, flexible short-term and monthly e-bike rentals, and certified cycling accessories. Engineered for UK city commuting and countryside adventures.
             </p>
             <div class="space-y-2 text-xs text-slate-300 pt-2 font-medium">
-                <p><i class="fa-solid fa-location-dot text-brandOrange-500 w-5"></i> 142 Regent Street, London, W1B 5SE, UK</p>
+                <p><i class="fa-solid fa-location-dot text-brandOrange-500 w-5"></i> {{ \App\Models\SystemSetting::get('store_address', 'Near, 103 Inwood Rd, Hounslow TW3 1XA') }}</p>
                 <p><i class="fa-solid fa-phone text-brandOrange-500 w-5"></i> +44 (0) 20 7946 0912</p>
                 <p><i class="fa-solid fa-envelope text-brandOrange-500 w-5"></i> support@eb4u.co.uk</p>
             </div>
@@ -45,9 +45,6 @@
             <ul class="space-y-2 text-xs font-semibold text-slate-400">
                 <li><a href="{{ route('cms.page', 'privacy-policy') }}" class="hover:text-brandOrange-500 transition-colors">Privacy Policy</a></li>
                 <li><a href="{{ route('cms.page', 'terms-and-conditions') }}" class="hover:text-brandOrange-500 transition-colors">Terms & Conditions</a></li>
-                <li><a href="{{ route('cms.page', 'rental-policy') }}" class="hover:text-brandOrange-500 transition-colors">E-Bike Rental Policy</a></li>
-                <li><a href="{{ route('cms.page', 'refund-policy') }}" class="hover:text-brandOrange-500 transition-colors">Refund & Deposit Policy</a></li>
-                <li><a href="{{ route('cms.page', 'shipping-policy') }}" class="hover:text-brandOrange-500 transition-colors">UK Shipping & Delivery</a></li>
             </ul>
         </div>
 

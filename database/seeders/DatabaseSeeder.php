@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
         SystemSetting::set('store_name', 'E-Bike 4 U (UK)');
         SystemSetting::set('store_phone', '+44 (0) 20 7946 0912');
         SystemSetting::set('store_email', 'support@eb4u.co.uk');
-        SystemSetting::set('store_address', '142 Regent Street, London, W1B 5SE, United Kingdom');
+        SystemSetting::set('store_address', 'Near, 103 Inwood Rd, Hounslow TW3 1XA');
 
         // 2. Create Users (Admin & Customers)
         $admin = User::create([
@@ -487,7 +487,7 @@ class DatabaseSeeder extends Seeder
             'discount_amount' => 0.00,
             'total_amount' => 245.00,
             'fulfillment_type' => 'pickup',
-            'pickup_location' => 'Flagship Store - 142 Regent Street, London',
+            'pickup_location' => 'Store Pickup - Near, 103 Inwood Rd, Hounslow TW3 1XA',
             'shipping_address' => [
                 'name' => 'James Harrison',
                 'address_line_1' => '24 Kensington High Street',
@@ -579,7 +579,7 @@ class DatabaseSeeder extends Seeder
             'delivery_fee' => 0.00,
             'total_amount' => 169.00,
             'fulfillment_type' => 'pickup',
-            'pickup_location' => 'Flagship Store - 142 Regent Street, London',
+            'pickup_location' => 'Store Pickup - Near, 103 Inwood Rd, Hounslow TW3 1XA',
             'shipping_address' => [
                 'name' => 'James Harrison',
                 'address_line_1' => '24 Kensington High Street',
@@ -615,7 +615,7 @@ class DatabaseSeeder extends Seeder
             'product_id' => $gazelleBike->id,
             'rating' => 5,
             'title' => 'Unbelievable smooth electric boost for London hills!',
-            'comment' => 'Rented the Gazelle C380 for a week in London. The Bosch motor makes commuting effortless and the step-through frame is super comfortable. Smooth pickup process at the Regent Street store!',
+            'comment' => 'Rented the Gazelle C380 for a week in London. The Bosch motor makes commuting effortless and the step-through frame is super comfortable. Smooth pickup process at the store!',
             'status' => 'approved',
             'is_featured' => true,
         ]);
@@ -1043,18 +1043,6 @@ HTML;
             'terms-and-conditions' => [
                 'title' => 'Terms & Conditions',
                 'content' => $termsHtml,
-            ],
-            'rental-policy' => [
-                'title' => 'E-Bike Rental Policy',
-                'content' => 'Renter must be at least 18 years of age. All rental bikes must be locked with Gold Sold Secure locks provided. Overdue returns incur a standard daily late fee.'
-            ],
-            'refund-policy' => [
-                'title' => 'Refund & Cancellation Policy',
-                'content' => 'Rental cancellations made at least 48 hours prior to start date receive a full refund of online payments.'
-            ],
-            'shipping-policy' => [
-                'title' => 'Store Pickup Policy',
-                'content' => 'All orders (sales & rentals) are collected directly at our London flagship store (142 Regent Street, London). Please bring valid photo ID and proof of address when picking up.'
             ],
         ];
 

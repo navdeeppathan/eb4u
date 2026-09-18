@@ -20,10 +20,6 @@ class CmsController extends Controller
             case 'terms-of-service':
                 return $this->termsAndConditions();
 
-            case 'rental-policy':
-                $page = CmsPage::where('slug', 'rental-policy')->first();
-                return view('cms.page', compact('page'));
-
             case 'about-us':
             case 'about':
                 return view('cms.about');

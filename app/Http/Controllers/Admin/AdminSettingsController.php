@@ -17,7 +17,7 @@ class AdminSettingsController extends Controller
             'store_name' => SystemSetting::get('store_name', 'E-Bike 4 U (UK)'),
             'store_phone' => SystemSetting::get('store_phone', '+44 (0) 20 7946 0912'),
             'store_email' => SystemSetting::get('store_email', 'support@eb4u.co.uk'),
-            'store_address' => SystemSetting::get('store_address', '142 Regent Street, London, W1B 5SE, United Kingdom'),
+            'store_address' => SystemSetting::get('store_address', 'Near, 103 Inwood Rd, Hounslow TW3 1XA'),
         ];
 
         return view('admin.settings.index', compact('settings'));

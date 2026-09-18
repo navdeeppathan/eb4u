@@ -344,7 +344,7 @@
                     3
                 </div>
                 <h3 class="text-base font-bold text-white mb-2">Easy Online Payment</h3>
-                <p class="text-xs text-slate-400 leading-relaxed">Pay securely online to hold your bike. Collect your E-Bike at our London Regent Street store.</p>
+                <p class="text-xs text-slate-400 leading-relaxed">Pay securely online to hold your bike. Collect your E-Bike at our store ({{ \App\Models\SystemSetting::get('store_address', 'Near, 103 Inwood Rd, Hounslow TW3 1XA') }}).</p>
             </div>
 
             <div class="bg-darkBlack-950 border border-white/10 p-6 rounded-3xl text-center relative group hover:border-brandOrange-500 transition-all">

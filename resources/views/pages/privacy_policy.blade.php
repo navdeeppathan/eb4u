@@ -34,7 +34,7 @@
                 Introduction & Data Controller
             </h2>
             <p class="text-xs md:text-sm text-textSec leading-relaxed">
-                Welcome to <strong>eb4u Ltd</strong> ("eb4u", "we", "our", or "us"). Registered in England & Wales (Company No. 12849201) with registered head offices at 142 Regent Street, London, W1B 5SE, United Kingdom. We are committed to safeguarding the privacy and safety of our customers' personal data.
+                Welcome to <strong>eb4u Ltd</strong> ("eb4u", "we", "our", or "us"). Registered in England & Wales (Company No. 12849201) with registered offices at {{ \App\Models\SystemSetting::get('store_address', 'Near, 103 Inwood Rd, Hounslow TW3 1XA') }}. We are committed to safeguarding the privacy and safety of our customers' personal data.
             </p>
             <p class="text-xs md:text-sm text-textSec leading-relaxed">
                 This Privacy Policy explains how we collect, store, process, share, and protect your personal information when you visit our website (<strong>eb4u.co.uk</strong>), purchase electric bikes or accessories, or book short-term and monthly e-bike rentals.
@@ -114,7 +114,7 @@
         <div class="p-6 bg-[#f5f7fb] rounded-2xl border border-borderLight flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
                 <h3 class="font-grotesk text-sm font-bold text-darkSlate-900">Questions about your privacy?</h3>
-                <p class="text-xs text-textSec mt-0.5">Contact our UK Data Protection Officer at privacy@eb4u.co.uk or visit our Regent Street Store in London.</p>
+                <p class="text-xs text-textSec mt-0.5">Contact our UK Data Protection Officer at privacy@eb4u.co.uk or visit our store in Hounslow.</p>
             </div>
             <a href="{{ route('cms.contact') }}" class="px-6 py-3 bg-brandOrange-500 hover:bg-brandOrange-600 text-white font-bold text-xs rounded-xl shadow-sm whitespace-nowrap transition-colors">
                 Contact Data Team

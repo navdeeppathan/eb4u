@@ -90,14 +90,14 @@
             <p class="p" style="font-size: 12px;">
                 <strong>What would you like to do?</strong><br>
                 1. <strong>Extend Online:</strong> You can add extra days to your lease directly in your Customer Dashboard.<br>
-                2. <strong>Return to Hub:</strong> Return your bike to our flagship store at 142 Regent Street, London, W1B 5SE to receive your instant security deposit refund.
+                2. <strong>Return to Hub:</strong> Return your bike to our store at {{ \App\Models\SystemSetting::get('store_address', 'Near, 103 Inwood Rd, Hounslow TW3 1XA') }} to receive your instant security deposit refund.
             </p>
         </div>
 
         <!-- Footer -->
         <div class="footer">
             &copy; {{ date('Y') }} eb4u Ltd. Registered in England & Wales (No. 12849201).<br>
-            142 Regent Street, London, W1B 5SE, UK | support@eb4u.co.uk
+            {{ \App\Models\SystemSetting::get('store_address', 'Near, 103 Inwood Rd, Hounslow TW3 1XA') }} | support@eb4u.co.uk
         </div>
     </div>
 

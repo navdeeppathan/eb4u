@@ -77,7 +77,7 @@
                             </div>
                             <div>
                                 <h4 class="font-bold text-darkSlate-900 text-sm">Flagship Store Pickup</h4>
-                                <p class="text-xs text-textSec font-medium mt-0.5">142 Regent Street, London, W1B 5SE, United Kingdom</p>
+                                <p class="text-xs text-textSec font-medium mt-0.5">{{ \App\Models\SystemSetting::get('store_address', 'Near, 103 Inwood Rd, Hounslow TW3 1XA') }}</p>
                                 <p class="text-[11px] text-textMuted mt-1"><i class="fa-solid fa-clock text-brandOrange-500 mr-1"></i> Pickup Hours: Mon - Sat (9:00 AM - 6:00 PM)</p>
                             </div>
                         </div>

@@ -104,7 +104,7 @@ class ApiCheckoutController extends Controller
                     'postcode' => $request->postcode ?: 'W8 6AG',
                     'country' => 'United Kingdom',
                 ],
-                'pickup_location' => $fulfillmentType === 'pickup' ? 'Flagship Store - 142 Regent Street, London' : null,
+                'pickup_location' => $fulfillmentType === 'pickup' ? SystemSetting::get('store_address', 'Near, 103 Inwood Rd, Hounslow TW3 1XA') : null,
                 'customer_notes' => $request->customer_notes,
             ]);
 
