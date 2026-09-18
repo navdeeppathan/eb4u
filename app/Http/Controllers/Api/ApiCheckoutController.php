@@ -72,9 +72,16 @@ class ApiCheckoutController extends Controller
                 }
             }
 
-            $payNow = $total;
-            $remaining = 0.00;
-            $paymentStatus = 'paid';
+            $selectedPaymentMethod = $request->input('payment_method', 'card');
+            if ($selectedPaymentMethod === 'cash_on_pickup') {
+                $payNow = 0.00;
+                $remaining = $total;
+                $paymentStatus = 'unpaid';
+            } else {
+                $payNow = $total;
+                $remaining = 0.00;
+                $paymentStatus = 'paid';
+            }
 
             $orderNumber = 'UK-' . strtoupper($orderType === 'rental' ? 'RNT' : 'ORD') . '-' . date('Y') . '-' . rand(1000, 9999);
 
@@ -157,15 +164,27 @@ class ApiCheckoutController extends Controller
             }
 
             // Record Payment
-            Payment::create([
-                'order_id' => $order->id,
-                'transaction_id' => 'TXN-' . strtoupper(Str::random(10)),
-                'payment_method' => 'card',
-                'amount' => $payNow,
-                'type' => $paymentType === 'advance' ? 'advance' : 'full',
-                'status' => 'completed',
-                'notes' => "Flutter Mobile App Checkout (£{$payNow})",
-            ]);
+            if ($selectedPaymentMethod === 'cash_on_pickup') {
+                Payment::create([
+                    'order_id' => $order->id,
+                    'transaction_id' => 'CASH-PENDING-' . strtoupper(Str::random(8)),
+                    'payment_method' => 'cash_on_pickup',
+                    'amount' => 0.00,
+                    'type' => 'full',
+                    'status' => 'pending',
+                    'notes' => 'Pay at Store selected. Awaiting cash or card payment collection at store counter on pickup.',
+                ]);
+            } else {
+                Payment::create([
+                    'order_id' => $order->id,
+                    'transaction_id' => 'TXN-' . strtoupper(Str::random(10)),
+                    'payment_method' => 'card',
+                    'amount' => $payNow,
+                    'type' => 'full',
+                    'status' => 'completed',
+                    'notes' => "Successful online card payment (£{$payNow})",
+                ]);
+            }
 
             // Clear Cart
             CartItem::whereIn('session_id', [$sessionId, $request->header('X-Session-ID')])->delete();

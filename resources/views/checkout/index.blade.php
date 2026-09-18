@@ -160,15 +160,40 @@
                 <!-- Step 4: Payment & Order Finalization -->
                 <div x-show="step === 4" class="bg-white p-6 rounded-3xl border border-borderLight shadow-xs space-y-6">
                     <div class="flex justify-between items-center pb-3 border-b border-borderLight">
-                        <h3 class="font-grotesk text-sm font-bold text-darkSlate-900 uppercase tracking-wider">Step 4: Payment & Finalization</h3>
+                        <h3 class="font-grotesk text-sm font-bold text-darkSlate-900 uppercase tracking-wider">Step 4: Payment Method & Finalization</h3>
                         <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full"><i class="fa-solid fa-shield-check"></i> Instant Approval</span>
                     </div>
 
                     <input type="hidden" name="payment_type" value="full">
+                    <input type="hidden" name="payment_method" :value="paymentMethod">
+
+                    <!-- Select Payment Method Tabs -->
+                    <div class="space-y-3">
+                        <label class="block text-xs font-bold text-darkSlate-900 uppercase tracking-wider">Select How You Wish to Pay</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Option 1: Card Online -->
+                            <label @click="paymentMethod = 'card'" :class="paymentMethod === 'card' ? 'border-brandOrange-500 bg-brandOrange-50/20 ring-2 ring-brandOrange-500/20' : 'border-borderLight bg-[#f5f7fb] hover:border-slate-300'" class="p-4 rounded-2xl border cursor-pointer transition-all flex items-start space-x-3">
+                                <input type="radio" name="pay_choice" value="card" x-model="paymentMethod" class="mt-0.5 text-brandOrange-500 focus:ring-brandOrange-500">
+                                <div>
+                                    <span class="font-grotesk font-bold text-xs text-darkSlate-900 block"><i class="fa-solid fa-credit-card text-brandOrange-500 mr-1.5"></i> Debit / Credit Card</span>
+                                    <span class="text-[11px] text-textMuted leading-tight block mt-0.5">Pay online instantly with encrypted 3D secure card checkout.</span>
+                                </div>
+                            </label>
+
+                            <!-- Option 2: Pay at Store (Cash/Counter) -->
+                            <label @click="paymentMethod = 'cash_on_pickup'" :class="paymentMethod === 'cash_on_pickup' ? 'border-brandOrange-500 bg-brandOrange-50/20 ring-2 ring-brandOrange-500/20' : 'border-borderLight bg-[#f5f7fb] hover:border-slate-300'" class="p-4 rounded-2xl border cursor-pointer transition-all flex items-start space-x-3">
+                                <input type="radio" name="pay_choice" value="cash_on_pickup" x-model="paymentMethod" class="mt-0.5 text-brandOrange-500 focus:ring-brandOrange-500">
+                                <div>
+                                    <span class="font-grotesk font-bold text-xs text-darkSlate-900 block"><i class="fa-solid fa-store text-emerald-600 mr-1.5"></i> Pay at Store (Cash / Counter)</span>
+                                    <span class="text-[11px] text-textMuted leading-tight block mt-0.5">Pay cash or card at counter when collecting bike at store.</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
 
                     <!-- Credit/Debit Card Form -->
-                    <div class="bg-[#f5f7fb] p-4 rounded-2xl border border-borderLight space-y-3">
-                        <h4 class="font-grotesk text-xs font-bold uppercase text-darkSlate-900"><i class="fa-solid fa-credit-card mr-1 text-brandOrange-500"></i> Debit / Credit Card</h4>
+                    <div x-show="paymentMethod === 'card'" class="bg-[#f5f7fb] p-4 rounded-2xl border border-borderLight space-y-3">
+                        <h4 class="font-grotesk text-xs font-bold uppercase text-darkSlate-900"><i class="fa-solid fa-credit-card mr-1 text-brandOrange-500"></i> Debit / Credit Card Details</h4>
                         
                         <div>
                             <label class="block text-[10px] font-semibold uppercase text-textSec mb-1">Cardholder Name</label>
@@ -190,10 +215,26 @@
                         </div>
                     </div>
 
+                    <!-- Pay at Store Notice Box -->
+                    <div x-show="paymentMethod === 'cash_on_pickup'" class="bg-emerald-50 border border-emerald-200 p-5 rounded-2xl space-y-3 text-xs text-emerald-950">
+                        <div class="flex items-center gap-2 font-black text-sm text-emerald-900">
+                            <i class="fa-solid fa-store text-emerald-600 text-lg"></i>
+                            <span>Pay in Store / Cash on Pickup Selected</span>
+                        </div>
+                        <p class="leading-relaxed font-medium">
+                            Your order will be reserved immediately. Full payment of <strong>£{{ number_format($total, 2) }}</strong> will be collected in cash or by card at our store counter upon collection.
+                        </p>
+                        <div class="bg-white p-3 rounded-xl border border-emerald-200 text-slate-700 space-y-1">
+                            <span class="font-bold text-emerald-800 block"><i class="fa-solid fa-location-dot text-brandOrange-500 mr-1"></i> Pickup Location & Store Counter:</span>
+                            <span>{{ \App\Models\SystemSetting::get('store_address', 'Near, 103 Inwood Rd, Hounslow TW3 1XA') }}</span>
+                        </div>
+                    </div>
+
                     <div class="pt-4 flex justify-between items-center">
                         <button type="button" @click="step = 3" class="py-2.5 px-5 bg-[#f5f7fb] text-darkSlate-900 font-semibold text-xs rounded-xl border border-borderLight">Back</button>
                         <button type="submit" :disabled="submitting" class="py-3.5 px-7 bg-brandOrange-500 hover:bg-brandOrange-600 text-white text-xs font-bold rounded-xl shadow-lg transition-all flex items-center justify-center">
-                            <span x-show="!submitting"><i class="fa-solid fa-lock mr-2"></i> Confirm & Authorize Payment</span>
+                            <span x-show="!submitting && paymentMethod === 'card'"><i class="fa-solid fa-lock mr-2"></i> Confirm & Authorize Payment</span>
+                            <span x-show="!submitting && paymentMethod === 'cash_on_pickup'"><i class="fa-solid fa-store mr-2"></i> Confirm Order (Pay at Store)</span>
                             <span x-show="submitting"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Processing Order...</span>
                         </button>
                     </div>
@@ -247,6 +288,7 @@
         return {
             step: 1,
             fulfillment: 'delivery',
+            paymentMethod: 'card',
             submitting: false,
             hasRental: {{ $hasRental ? 'true' : 'false' }},
             idFileName: '',

@@ -261,4 +261,62 @@ class AdminOrderController extends Controller
 
         return back()->with('success', "Bulk expiration reminders (In-App + Email) dispatched to {$sentCount} active renters!");
     }
+
+    public function recordPayment(Request $request, int $id)
+    {
+        $order = Order::with('payments')->findOrFail($id);
+        
+        $request->validate([
+            'amount' => 'required|numeric|min:0.01',
+            'payment_method' => 'required|string',
+            'notes' => 'nullable|string',
+        ]);
+
+        $amountPaid = (float) $request->amount;
+        $method = $request->payment_method;
+        $notes = $request->notes ?: "In-store payment collected at counter ({$method})";
+
+        Payment::create([
+            'order_id' => $order->id,
+            'transaction_id' => 'CNTR-' . strtoupper(Str::random(8)),
+            'payment_method' => $method,
+            'amount' => $amountPaid,
+            'type' => 'full',
+            'status' => 'completed',
+            'notes' => $notes,
+        ]);
+
+        $totalPaidSoFar = (float) Payment::where('order_id', $order->id)
+            ->where('status', 'completed')
+            ->sum('amount');
+
+        $remaining = max(0.00, round((float)$order->total_amount - $totalPaidSoFar, 2));
+        $newPaymentStatus = 'unpaid';
+
+        if ($remaining <= 0.00) {
+            $newPaymentStatus = 'paid';
+        } elseif ($totalPaidSoFar > 0.00) {
+            $newPaymentStatus = 'partially_paid';
+        }
+
+        $order->update([
+            'payment_status' => $newPaymentStatus,
+            'advance_amount' => $totalPaidSoFar,
+            'remaining_amount' => $remaining,
+        ]);
+
+        if ($order->user_id) {
+            Notification::send(
+                $order->user_id,
+                'payment_received',
+                'In-Store Payment Received',
+                "We have received your payment of £" . number_format($amountPaid, 2) . " for Order #{$order->order_number}. Thank you!",
+                route('customer.order_detail', $order->order_number),
+                'fa-receipt',
+                ['order_id' => $order->id]
+            );
+        }
+
+        return back()->with('success', "In-store payment of £" . number_format($amountPaid, 2) . " recorded successfully for Order #{$order->order_number}!");
+    }
 }

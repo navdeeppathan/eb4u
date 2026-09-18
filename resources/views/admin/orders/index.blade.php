@@ -222,10 +222,25 @@
                             <!-- Total & Balance -->
                             <td class="p-4 whitespace-nowrap">
                                 <span class="font-black text-darkSlate-900 block text-xs">£{{ number_format($ord->total_amount, 2) }}</span>
-                                <span class="text-[10px] text-emerald-700 font-bold block">Paid: £{{ number_format($ord->advance_amount, 2) }}</span>
-                                @if($ord->remaining_amount > 0)
-                                    <span class="text-[10px] text-brandOrange-600 font-bold block">Due: £{{ number_format($ord->remaining_amount, 2) }}</span>
-                                @endif
+                                <div class="flex items-center gap-1 mt-0.5">
+                                    @if($ord->payment_status === 'paid')
+                                        <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[9px] font-black uppercase">PAID</span>
+                                    @elseif($ord->payment_status === 'partially_paid')
+                                        <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-[9px] font-black uppercase">PARTIAL (£{{ number_format($ord->advance_amount, 2) }})</span>
+                                    @else
+                                        <span class="px-2 py-0.5 rounded bg-rose-100 text-rose-800 text-[9px] font-black uppercase">UNPAID</span>
+                                    @endif
+
+                                    @php
+                                        $firstPm = $ord->payments ? $ord->payments->first() : null;
+                                        $methodName = $firstPm ? $firstPm->payment_method : 'card';
+                                    @endphp
+                                    @if(in_array($methodName, ['cash_on_pickup', 'cash']))
+                                        <span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 text-[9px] font-bold uppercase"><i class="fa-solid fa-money-bill-wave"></i> Pay at Store</span>
+                                    @else
+                                        <span class="px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-[9px] font-bold uppercase"><i class="fa-solid fa-credit-card"></i> Card</span>
+                                    @endif
+                                </div>
                             </td>
 
                             <!-- Order Status Badge -->

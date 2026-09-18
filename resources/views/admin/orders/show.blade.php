@@ -182,6 +182,140 @@
         </div>
     @endif
 
+    <!-- Payment & Cash Collection Management Card -->
+    @php
+        $completedTotal = (float) $order->payments->where('status', 'completed')->sum('amount');
+        $dueAmount = max(0.00, round((float)$order->total_amount - $completedTotal, 2));
+    @endphp
+    <div class="bg-white p-6 rounded-3xl border border-borderLight shadow-xs space-y-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-borderLight gap-3">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg font-bold">
+                    <i class="fa-solid fa-sterling-sign"></i>
+                </div>
+                <div>
+                    <h3 class="font-grotesk text-sm font-extrabold uppercase text-darkSlate-900">Payment & In-Store Cash Collection</h3>
+                    <p class="text-xs text-textMuted">Track order payments, view transaction logs, and record counter payments.</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-2">
+                @if($order->payment_status === 'paid')
+                    <span class="px-3.5 py-1.5 rounded-full text-xs font-black uppercase bg-emerald-100 text-emerald-800 border border-emerald-300">
+                        <i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> FULLY PAID (£{{ number_format($completedTotal, 2) }})
+                    </span>
+                @elseif($order->payment_status === 'partially_paid')
+                    <span class="px-3.5 py-1.5 rounded-full text-xs font-black uppercase bg-amber-100 text-amber-800 border border-amber-300">
+                        <i class="fa-solid fa-clock mr-1"></i> PARTIALLY PAID (£{{ number_format($completedTotal, 2) }} / £{{ number_format($order->total_amount, 2) }})
+                    </span>
+                @else
+                    <span class="px-3.5 py-1.5 rounded-full text-xs font-black uppercase bg-rose-100 text-rose-800 border border-rose-300">
+                        <i class="fa-solid fa-circle-exclamation text-rose-600 mr-1"></i> UNPAID (Due: £{{ number_format($dueAmount, 2) }})
+                    </span>
+                @endif
+            </div>
+        </div>
+
+        <!-- Financial Summary Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+            <div class="p-4 rounded-2xl bg-[#f5f7fb] border border-borderLight">
+                <span class="text-[10px] font-bold uppercase text-textMuted block">Total Order Amount</span>
+                <span class="font-grotesk font-extrabold text-lg text-darkSlate-900">£{{ number_format($order->total_amount, 2) }}</span>
+            </div>
+            <div class="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200">
+                <span class="text-[10px] font-bold uppercase text-emerald-800 block">Total Amount Paid</span>
+                <span class="font-grotesk font-extrabold text-lg text-emerald-700">£{{ number_format($completedTotal, 2) }}</span>
+            </div>
+            <div class="p-4 rounded-2xl {{ $dueAmount > 0 ? 'bg-rose-50/60 border-rose-200' : 'bg-slate-50 border-slate-200' }}">
+                <span class="text-[10px] font-bold uppercase {{ $dueAmount > 0 ? 'text-rose-800' : 'text-slate-500' }} block">Remaining Balance Due</span>
+                <span class="font-grotesk font-extrabold text-lg {{ $dueAmount > 0 ? 'text-rose-700' : 'text-slate-700' }}">£{{ number_format($dueAmount, 2) }}</span>
+            </div>
+        </div>
+
+        <!-- Record In-Store Payment Form -->
+        <div class="bg-darkBlack-950 p-5 rounded-2xl border border-darkBlack-800 text-white space-y-4">
+            <h4 class="font-grotesk text-xs font-extrabold uppercase tracking-wider text-brandOrange-400 flex items-center gap-1.5">
+                <i class="fa-solid fa-cash-register"></i> Record Counter Payment (Cash / Card at Store)
+            </h4>
+
+            <form action="{{ route('admin.orders.record_payment', $order->id) }}" method="POST" class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+                @csrf
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">Payment Method</label>
+                    <select name="payment_method" required class="w-full bg-darkBlack-900 border border-darkBlack-700 rounded-xl p-2.5 font-bold text-white focus:ring-2 focus:ring-brandOrange-500">
+                        <option value="cash" selected>💵 Cash at Counter</option>
+                        <option value="card_counter">💳 Card at Counter Terminal</option>
+                        <option value="bank_transfer">🏛️ Bank Transfer</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">Amount Collected (£)</label>
+                    <input type="number" step="0.01" name="amount" value="{{ number_format($dueAmount, 2, '.', '') }}" required class="w-full bg-darkBlack-900 border border-darkBlack-700 rounded-xl p-2.5 font-grotesk font-bold text-white focus:ring-2 focus:ring-brandOrange-500">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">Notes / Receipt Ref</label>
+                    <input type="text" name="notes" placeholder="e.g. Paid cash at store counter" class="w-full bg-darkBlack-900 border border-darkBlack-700 rounded-xl p-2.5 font-medium text-white focus:ring-2 focus:ring-brandOrange-500">
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="w-full py-2.5 px-4 bg-brandOrange-500 hover:bg-brandOrange-600 text-white font-bold rounded-xl shadow-md transition-all uppercase text-xs flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-plus-circle"></i> Record Payment
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Payment History Table -->
+        <div class="space-y-3">
+            <h4 class="font-grotesk text-xs font-bold uppercase text-darkSlate-900">Transaction & Payment History</h4>
+            <div class="overflow-x-auto rounded-2xl border border-borderLight">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-[#f5f7fb] text-textMuted uppercase font-bold text-[10px]">
+                        <tr>
+                            <th class="p-3">Date & Time</th>
+                            <th class="p-3">Method</th>
+                            <th class="p-3">Transaction Ref</th>
+                            <th class="p-3">Amount</th>
+                            <th class="p-3">Status</th>
+                            <th class="p-3">Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-borderLight text-slate-700 font-medium">
+                        @forelse($order->payments as $pm)
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 whitespace-nowrap">{{ $pm->created_at->format('d M Y H:i') }}</td>
+                                <td class="p-3 font-bold uppercase">
+                                    @if(in_array($pm->payment_method, ['cash_on_pickup', 'cash']))
+                                        <span class="text-emerald-700"><i class="fa-solid fa-money-bill-wave mr-1"></i> Cash</span>
+                                    @elseif($pm->payment_method === 'card_counter')
+                                        <span class="text-blue-700"><i class="fa-solid fa-cash-register mr-1"></i> Card Counter</span>
+                                    @else
+                                        <span class="text-slate-800"><i class="fa-solid fa-credit-card mr-1"></i> {{ ucfirst($pm->payment_method) }}</span>
+                                    @endif
+                                </td>
+                                <td class="p-3 font-mono text-[11px] font-bold text-darkSlate-900">{{ $pm->transaction_id }}</td>
+                                <td class="p-3 font-grotesk font-extrabold text-darkSlate-900">£{{ number_format($pm->amount, 2) }}</td>
+                                <td class="p-3">
+                                    @if($pm->status === 'completed')
+                                        <span class="px-2.5 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase">Completed</span>
+                                    @elseif($pm->status === 'pending')
+                                        <span class="px-2.5 py-0.5 rounded-md bg-amber-100 text-amber-800 text-[10px] font-bold uppercase">Pending Pickup</span>
+                                    @else
+                                        <span class="px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-bold uppercase">{{ ucfirst($pm->status) }}</span>
+                                    @endif
+                                </td>
+                                <td class="p-3 text-textMuted text-[11px]">{{ $pm->notes ?? '-' }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="p-4 text-center text-textMuted">No payment transactions recorded yet.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <!-- Order Items & Physical Unit Assignment -->
     <div class="bg-white p-6 rounded-3xl border border-borderLight shadow-xs space-y-4">
         <h3 class="font-grotesk text-xs font-extrabold uppercase text-darkSlate-900 tracking-wider pb-3 border-b border-borderLight">Order Items & Physical E-Bike Allocation</h3>
