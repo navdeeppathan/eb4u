@@ -16,9 +16,6 @@
                 <input type="number" step="0.01" name="default_security_deposit" value="{{ $settings['default_security_deposit'] }}" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-black">
             </div>
 
-            <div>
-                <label class="block font-bold text-slate-700 mb-1">Standard UK Delivery Charge (£)</label>
-                <input type="number" step="0.01" name="default_delivery_charge" value="{{ $settings['default_delivery_charge'] }}" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-bold">
             </div>
 
             <div>

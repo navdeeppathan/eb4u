@@ -101,7 +101,7 @@
             
             <!-- Mobile View -->
             <div class="flex sm:hidden w-full justify-between items-center text-[10px] font-medium">
-                <span class="truncate pr-2"><i class="fa-solid fa-truck-fast text-brandOrange-500 mr-1"></i> Free UK Delivery > £500</span>
+                <span class="truncate pr-2"><i class="fa-solid fa-store text-brandOrange-500 mr-1"></i> Store Pickup Only (142 Regent St, London)</span>
                 <a href="tel:+442079460912" class="whitespace-nowrap text-brandOrange-400 font-bold hover:underline">
                     <i class="fa-solid fa-phone mr-1"></i> +44 20 7946 0912
                 </a>
@@ -110,7 +110,7 @@
             <!-- Tablet & Desktop View -->
             <div class="hidden sm:flex items-center justify-between w-full text-xs">
                 <div class="flex items-center space-x-4">
-                    <span class="whitespace-nowrap"><i class="fa-solid fa-truck-fast text-brandOrange-500 mr-1"></i> Free UK Delivery on orders over £500</span>
+                    <span class="whitespace-nowrap"><i class="fa-solid fa-store text-brandOrange-500 mr-1"></i> In-Store Pickup Available | Flagship Store: 142 Regent Street, London</span>
                     <span class="hidden md:inline text-slate-700">|</span>
                     <span class="hidden md:inline whitespace-nowrap"><i class="fa-solid fa-shield-halved text-brandOrange-500 mr-1"></i> Official UK Warranty & Battery Safety</span>
                 </div>

@@ -48,7 +48,7 @@ class ApiCheckoutController extends Controller
             $customerName = $request->customer_name;
             $customerEmail = $request->customer_email;
             $customerPhone = $request->customer_phone;
-            $fulfillmentType = $request->fulfillment_type ?: 'delivery';
+            $fulfillmentType = 'pickup';
             $paymentType = 'full';
 
             $subtotal = (float) $cartItems->sum(fn($i) => $i->subtotal);
@@ -56,7 +56,7 @@ class ApiCheckoutController extends Controller
             $discount = 0.00;
             $taxable = max(0, $subtotal - $discount);
             $tax = round($taxable * 0.20, 2);
-            $delivery = ($fulfillmentType === 'pickup' || $subtotal >= 500) ? 0.00 : 15.00;
+            $delivery = 0.00;
             $total = $taxable + $tax + $delivery + $depositTotal;
 
             $hasRental = $cartItems->contains('item_type', 'rental');

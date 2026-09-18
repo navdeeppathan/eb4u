@@ -111,7 +111,7 @@
             <div class="p-4 bg-amber-50 rounded-2xl border border-amber-200 flex items-start gap-3">
                 <i class="fa-solid fa-triangle-exclamation text-amber-600 mt-1"></i>
                 <p class="text-xs text-amber-900 leading-relaxed font-medium">
-                    <strong>Mandatory Verification Policy:</strong> E-bike collection or delivery will be strictly withheld until valid Proof of ID (Passport, Visa/BRP, or UK License) and Proof of Address are verified by eb4u.
+                    <strong>Mandatory Verification Policy:</strong> E-bike collection in store will be strictly withheld until valid Proof of ID (Passport, Visa/BRP, or UK License) and Proof of Address are verified by eb4u.
                 </p>
             </div>
         </div>

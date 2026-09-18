@@ -31,7 +31,6 @@ class DatabaseSeeder extends Seeder
     {
         // 1. Create Default Settings
         SystemSetting::set('default_security_deposit', 150.00);
-        SystemSetting::set('default_delivery_charge', 15.00);
         SystemSetting::set('default_late_fee_per_day', 25.00);
         SystemSetting::set('vat_rate_percentage', 20.00);
         SystemSetting::set('store_name', 'E-Bike 4 U (UK)');
@@ -579,7 +578,8 @@ class DatabaseSeeder extends Seeder
             'tax_amount' => 33.80,
             'delivery_fee' => 0.00,
             'total_amount' => 169.00,
-            'fulfillment_type' => 'delivery',
+            'fulfillment_type' => 'pickup',
+            'pickup_location' => 'Flagship Store - 142 Regent Street, London',
             'shipping_address' => [
                 'name' => 'James Harrison',
                 'address_line_1' => '24 Kensington High Street',
@@ -656,7 +656,7 @@ class DatabaseSeeder extends Seeder
         $policies = [
             'about-us' => [
                 'title' => 'About E-Bike 4 U',
-                'content' => 'E-Bike 4 U is Britain\'s leading specialized e-commerce and rental platform for premium electric bicycles and cycling accessories. Headquartered in London, we provide top-tier German and British e-bikes with flexible daily, weekly, and monthly rental plans, alongside full retail sales and UK-wide delivery.'
+                'content' => 'E-Bike 4 U is Britain\'s leading specialized e-commerce and rental platform for premium electric bicycles and cycling accessories. Headquartered in London, we provide top-tier German and British e-bikes with flexible daily, weekly, and monthly rental plans, alongside full retail sales and store pickup in London.'
             ],
             'privacy-policy' => [
                 'title' => 'Privacy Policy',
@@ -672,11 +672,11 @@ class DatabaseSeeder extends Seeder
             ],
             'refund-policy' => [
                 'title' => 'Refund & Cancellation Policy',
-                'content' => 'Rental cancellations made at least 48 hours prior to start date receive a 100% refund of advance payments.'
+                'content' => 'Rental cancellations made at least 48 hours prior to start date receive a full refund of online payments.'
             ],
             'shipping-policy' => [
-                'title' => 'Shipping & Delivery Policy',
-                'content' => 'We offer UK mainland delivery within 2-3 business days. E-Bikes arrive 95% assembled in heavy duty protective eco-boxes.'
+                'title' => 'Store Pickup Policy',
+                'content' => 'All orders (sales & rentals) are collected directly at our London flagship store (142 Regent Street, London). Please bring valid photo ID and proof of address when picking up.'
             ],
         ];
 

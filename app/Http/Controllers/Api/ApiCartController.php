@@ -30,7 +30,7 @@ class ApiCartController extends Controller
         $discount = session()->has('applied_coupon') ? (float) session('applied_coupon.amount') : 0.00;
         $taxable = max(0, $subtotal - $discount);
         $tax = round($taxable * 0.20, 2);
-        $delivery = ($subtotal >= 500 || $subtotal == 0) ? 0.00 : 15.00;
+        $delivery = 0.00;
         $total = $taxable + $tax + $delivery + $depositTotal;
 
         $itemsFormatted = $cartItems->map(function ($c) {

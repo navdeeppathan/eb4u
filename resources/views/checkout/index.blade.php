@@ -64,44 +64,25 @@
                     </div>
                 </div>
 
-                <!-- Step 2: Address & Fulfillment -->
+                <!-- Step 2: Store Pickup Info -->
                 <div x-show="step === 2" class="bg-white p-6 rounded-3xl border border-borderLight shadow-xs space-y-4">
-                    <h3 class="font-grotesk text-sm font-bold text-darkSlate-900 uppercase tracking-wider pb-3 border-b border-borderLight">Step 2: Fulfillment & Shipping</h3>
+                    <h3 class="font-grotesk text-sm font-bold text-darkSlate-900 uppercase tracking-wider pb-3 border-b border-borderLight">Step 2: Store Pickup Location</h3>
 
-                    <div class="space-y-3">
-                        <label class="font-grotesk block text-xs font-bold text-darkSlate-900 uppercase">Fulfillment Mode</label>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <label class="border p-4 rounded-2xl cursor-pointer flex items-center space-x-3 transition-colors" :class="fulfillment === 'delivery' ? 'border-brandOrange-500 bg-brandOrange-50/50' : 'border-borderLight'">
-                                <input type="radio" name="fulfillment_type" value="delivery" x-model="fulfillment" class="text-brandOrange-500">
-                                <div>
-                                    <span class="block text-xs font-bold text-darkSlate-900"><i class="fa-solid fa-truck-fast text-brandOrange-500 mr-1"></i> UK Delivery (FREE)</span>
-                                    <span class="block text-[10px] text-textMuted font-medium">Delivered assembled in 2-3 days</span>
-                                </div>
-                            </label>
-                            <label class="border p-4 rounded-2xl cursor-pointer flex items-center space-x-3 transition-colors" :class="fulfillment === 'pickup' ? 'border-brandOrange-500 bg-brandOrange-50/50' : 'border-borderLight'">
-                                <input type="radio" name="fulfillment_type" value="pickup" x-model="fulfillment" class="text-brandOrange-500">
-                                <div>
-                                    <span class="block text-xs font-bold text-darkSlate-900"><i class="fa-solid fa-store text-brandOrange-500 mr-1"></i> Store Pickup (FREE)</span>
-                                    <span class="block text-[10px] text-textMuted font-medium">142 Regent Street, London</span>
-                                </div>
-                            </label>
+                    <input type="hidden" name="fulfillment_type" value="pickup">
+
+                    <div class="bg-brandOrange-50/50 border border-brandOrange-200 p-4 rounded-2xl space-y-3">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-brandOrange-500 text-white flex items-center justify-center font-bold text-lg shrink-0 mt-0.5">
+                                <i class="fa-solid fa-store"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-darkSlate-900 text-sm">Flagship Store Pickup</h4>
+                                <p class="text-xs text-textSec font-medium mt-0.5">142 Regent Street, London, W1B 5SE, United Kingdom</p>
+                                <p class="text-[11px] text-textMuted mt-1"><i class="fa-solid fa-clock text-brandOrange-500 mr-1"></i> Pickup Hours: Mon - Sat (9:00 AM - 6:00 PM)</p>
+                            </div>
                         </div>
-                    </div>
-
-                    <div x-show="fulfillment === 'delivery'" class="space-y-4 pt-2">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="sm:col-span-2">
-                                <label class="block text-xs font-semibold text-textSec mb-1">Street Address</label>
-                                <input type="text" name="address_line_1" value="24 Kensington High Street" class="w-full text-xs bg-[#f5f7fb] border border-borderLight rounded-xl p-3 font-semibold text-darkSlate-900">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-textSec mb-1">City / Town</label>
-                                <input type="text" name="city" value="London" class="w-full text-xs bg-[#f5f7fb] border border-borderLight rounded-xl p-3 font-semibold text-darkSlate-900">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-textSec mb-1">UK Postcode</label>
-                                <input type="text" name="postcode" value="W8 6AG" class="w-full text-xs bg-[#f5f7fb] border border-borderLight rounded-xl p-3 font-semibold uppercase text-darkSlate-900">
-                            </div>
+                        <div class="bg-white p-3 rounded-xl border border-brandOrange-100 text-xs text-textSec leading-relaxed">
+                            <i class="fa-solid fa-circle-info text-brandOrange-500 mr-1"></i> Please bring your <strong>Proof of ID</strong> and <strong>Proof of Address</strong> when collecting your E-Bike in store.
                         </div>
                     </div>
 

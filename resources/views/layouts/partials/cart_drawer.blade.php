@@ -71,7 +71,7 @@
                     <span class="font-bold text-slate-900">£<span x-text="subtotal"></span></span>
                 </div>
                 <div class="flex justify-between text-xs text-slate-600 font-medium">
-                    <span>UK Delivery</span>
+                    <span>Store Pickup</span>
                     <span class="font-bold text-emerald-600">FREE</span>
                 </div>
                 <div class="border-t border-slate-200 pt-2.5 flex justify-between">

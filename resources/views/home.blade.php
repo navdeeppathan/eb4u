@@ -45,8 +45,8 @@
                     <span class="text-xs text-slate-400 font-medium">Rider Rating</span>
                 </div>
                 <div>
-                    <span class="block text-xl font-black text-brandOrange-500">Free</span>
-                    <span class="text-xs text-slate-400 font-medium">UK Delivery > £500</span>
+                    <span class="block text-xl font-black text-brandOrange-500">London</span>
+                    <span class="text-xs text-slate-400 font-medium">Store Pickup Only</span>
                 </div>
                 <div>
                     <span class="block text-xl font-black text-white">2-Year</span>
@@ -344,7 +344,7 @@
                     3
                 </div>
                 <h3 class="text-base font-bold text-white mb-2">Easy Online Payment</h3>
-                <p class="text-xs text-slate-400 leading-relaxed">Pay securely online to hold your bike. Select store pickup or home delivery.</p>
+                <p class="text-xs text-slate-400 leading-relaxed">Pay securely online to hold your bike. Collect your E-Bike at our London Regent Street store.</p>
             </div>
 
             <div class="bg-darkBlack-950 border border-white/10 p-6 rounded-3xl text-center relative group hover:border-brandOrange-500 transition-all">

@@ -36,7 +36,7 @@ class CheckoutController extends Controller
         $discount = session()->has('applied_coupon') ? (float) session('applied_coupon.amount') : 0.00;
         $taxable = max(0, $subtotal - $discount);
         $tax = round($taxable * 0.20, 2);
-        $delivery = $subtotal >= 500 || $subtotal == 0 ? 0.00 : 15.00;
+        $delivery = 0.00; // Store Pickup Only (Free)
         $total = $taxable + $tax + $delivery + $depositTotal;
 
         $hasRental = $cartItems->contains('item_type', 'rental');
@@ -125,7 +125,7 @@ class CheckoutController extends Controller
             $customerName = $request->customer_name ?: ($user->name ?? 'James Harrison');
             $customerEmail = $request->customer_email ?: ($user->email ?? 'james@example.co.uk');
             $customerPhone = $request->customer_phone ?: ($user->phone ?? '+44 7700 900077');
-            $fulfillmentType = $request->fulfillment_type ?: 'delivery';
+            $fulfillmentType = 'pickup';
             $paymentType = 'full';
 
             $subtotal = (float) $cartItems->sum(fn($i) => $i->subtotal);
@@ -133,7 +133,7 @@ class CheckoutController extends Controller
             $discount = session()->has('applied_coupon') ? (float) session('applied_coupon.amount') : 0.00;
             $taxable = max(0, $subtotal - $discount);
             $tax = round($taxable * 0.20, 2);
-            $delivery = ($fulfillmentType === 'pickup' || $subtotal >= 500) ? 0.00 : 15.00;
+            $delivery = 0.00;
             $total = $taxable + $tax + $delivery + $depositTotal;
 
             $hasPurchase = $cartItems->contains('item_type', 'purchase');

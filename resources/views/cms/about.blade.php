@@ -209,8 +209,8 @@
                     </h3>
 
                     <p class="text-xs text-textSec leading-relaxed">
-                        Bikes supplied through our UK home delivery service are
-                        pre-assembled and safety checked before dispatch.
+                        Bikes supplied through our London store pickup service are
+                        pre-assembled and safety checked before handover.
                     </p>
 
                 </div>

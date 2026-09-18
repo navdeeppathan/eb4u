@@ -12,7 +12,6 @@ class AdminSettingsController extends Controller
     {
         $settings = [
             'default_security_deposit' => SystemSetting::get('default_security_deposit', 150.00),
-            'default_delivery_charge' => SystemSetting::get('default_delivery_charge', 15.00),
             'default_late_fee_per_day' => SystemSetting::get('default_late_fee_per_day', 25.00),
             'vat_rate_percentage' => SystemSetting::get('vat_rate_percentage', 20.00),
             'store_name' => SystemSetting::get('store_name', 'E-Bike 4 U (UK)'),
@@ -28,13 +27,11 @@ class AdminSettingsController extends Controller
     {
         $request->validate([
             'default_security_deposit' => 'required|numeric|min:0',
-            'default_delivery_charge' => 'required|numeric|min:0',
             'default_late_fee_per_day' => 'required|numeric|min:0',
             'store_name' => 'required|string|max:255',
         ]);
 
         SystemSetting::set('default_security_deposit', (float) $request->default_security_deposit);
-        SystemSetting::set('default_delivery_charge', (float) $request->default_delivery_charge);
         SystemSetting::set('default_late_fee_per_day', (float) $request->default_late_fee_per_day);
         SystemSetting::set('store_name', $request->store_name);
         SystemSetting::set('store_phone', $request->store_phone);

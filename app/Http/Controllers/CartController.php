@@ -223,10 +223,7 @@ class CartController extends Controller
 
         $taxable = max(0, $subtotal - $discount);
         $tax = round($taxable * 0.20, 2); // UK 20% VAT
-        $delivery = $subtotal > 0 ? 15.00 : 0.00; // £15 standard UK delivery, free over £500
-        if ($subtotal >= 500) {
-            $delivery = 0.00;
-        }
+        $delivery = 0.00; // Store Pickup Only (Free)
 
         $total = $taxable + $tax + $delivery + $securityDeposit;
 

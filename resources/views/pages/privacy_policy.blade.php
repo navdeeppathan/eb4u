@@ -49,8 +49,8 @@
             </p>
             <ul class="list-disc list-inside text-xs md:text-sm text-textSec space-y-1.5 pl-2 font-medium">
                 <li><strong>Identity Data:</strong> Full name, date of birth, and proof of identification (driver's licence or passport required for high-value e-bike rentals).</li>
-                <li><strong>Contact Data:</strong> UK billing address, delivery address, email address, and mobile phone number for SMS delivery tracking.</li>
-                <li><strong>Transaction & Rental Data:</strong> Details of bikes purchased, accessories ordered, rental duration dates, pickup/delivery choices, and security deposit allocations.</li>
+                <li><strong>Contact Data:</strong> UK billing address, email address, and mobile phone number for order updates.</li>
+                <li><strong>Transaction & Rental Data:</strong> Details of bikes purchased, accessories ordered, rental duration dates, pickup schedule, and security deposit allocations.</li>
                 <li><strong>Payment Data:</strong> Payment card details processed securely via PCI-DSS compliant UK payment gateways. We never store raw credit card numbers on our servers.</li>
                 <li><strong>Technical Data:</strong> IP address, browser type, device information, and browsing patterns collected via essential cookies.</li>
             </ul>
@@ -67,8 +67,8 @@
             </p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                 <div class="p-4 bg-[#f5f7fb] rounded-2xl border border-borderLight">
-                    <h4 class="font-grotesk text-xs font-bold text-darkSlate-900 mb-1"><i class="fa-solid fa-truck-fast text-brandOrange-500 mr-1.5"></i> Order & Rental Fulfillment</h4>
-                    <p class="text-xs text-textSec">To process transactions, assemble your electric bike, manage physical fleet allocations, and dispatch home delivery packages across the UK.</p>
+                    <h4 class="font-grotesk text-xs font-bold text-darkSlate-900 mb-1"><i class="fa-solid fa-store text-brandOrange-500 mr-1.5"></i> Order & Rental Fulfillment</h4>
+                    <p class="text-xs text-textSec">To process transactions, assemble your electric bike, manage physical fleet allocations, and facilitate store pickup at our London location.</p>
                 </div>
                 <div class="p-4 bg-[#f5f7fb] rounded-2xl border border-borderLight">
                     <h4 class="font-grotesk text-xs font-bold text-darkSlate-900 mb-1"><i class="fa-solid fa-rotate-left text-brandOrange-500 mr-1.5"></i> Security Deposit Refunds</h4>
