@@ -46,6 +46,17 @@ class CartItem extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function getDailyRateAttribute(): float
+    {
+        if (!empty($this->weekly_rate) && (float)$this->weekly_rate > 0) {
+            return (float) round((float)$this->weekly_rate / 7, 2);
+        }
+        if ($this->product && !empty($this->product->rental_price_weekly) && (float)$this->product->rental_price_weekly > 0) {
+            return (float) round((float)$this->product->rental_price_weekly / 7, 2);
+        }
+        return 35.00;
+    }
+
     public function getSubtotalAttribute(): float
     {
         if ($this->item_type === 'rental') {

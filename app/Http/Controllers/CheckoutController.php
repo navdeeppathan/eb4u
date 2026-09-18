@@ -197,21 +197,31 @@ class CheckoutController extends Controller
                     }
                 }
 
+                $unitPrice = 0.00;
+                if ($cItem->item_type === 'rental') {
+                    $unitPrice = $cItem->daily_rate ?: ($cItem->weekly_rate ? round((float)$cItem->weekly_rate / 7, 2) : 35.00);
+                } else {
+                    $effPrice = $cItem->product ? $cItem->product->effective_price : 0.00;
+                    $unitPrice = $cItem->variant ? ($effPrice + $cItem->variant->price_modifier) : $effPrice;
+                }
+
+                $rentalRate = $cItem->item_type === 'rental' ? $unitPrice : null;
+
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $cItem->product_id,
                     'variant_id' => $cItem->variant_id,
                     'ebike_unit_id' => $assignedUnit,
                     'item_type' => $cItem->item_type,
-                    'product_name' => $cItem->product->name,
+                    'product_name' => $cItem->product->name ?? 'E-Bike',
                     'variant_name' => $cItem->variant ? $cItem->variant->name : null,
-                    'unit_price' => $cItem->item_type === 'rental' ? $cItem->daily_rate : $cItem->product->effective_price,
+                    'unit_price' => (float) ($unitPrice ?: 0.00),
                     'quantity' => $cItem->quantity,
                     'subtotal' => $cItem->subtotal,
                     'rental_start_date' => $cItem->rental_start_date,
                     'rental_end_date' => $cItem->rental_end_date,
                     'rental_days' => $cItem->rental_days,
-                    'rental_rate' => $cItem->daily_rate,
+                    'rental_rate' => $rentalRate,
                     'security_deposit' => $cItem->security_deposit ?? 0.00,
                 ]);
             }
