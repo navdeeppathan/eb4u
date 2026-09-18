@@ -59,15 +59,9 @@
                 <span class="text-emerald-400">£{{ number_format($order->total_amount, 2) }}</span>
             </div>
             <div class="flex justify-between text-emerald-300 pt-1 font-bold">
-                <span>Amount Paid Online Today:</span>
+                <span>Amount Paid Online:</span>
                 <span>£{{ number_format($order->advance_amount, 2) }}</span>
             </div>
-            @if($order->remaining_amount > 0)
-                <div class="flex justify-between text-amber-300 font-bold">
-                    <span>Remaining Balance:</span>
-                    <span>£{{ number_format($order->remaining_amount, 2) }}</span>
-                </div>
-            @endif
         </div>
 
         <!-- Customer Action Buttons -->

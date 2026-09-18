@@ -30,8 +30,6 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // 1. Create Default Settings
-        SystemSetting::set('rental_advance_percentage', 30);
-        SystemSetting::set('rental_full_payment_enabled', true);
         SystemSetting::set('default_security_deposit', 150.00);
         SystemSetting::set('default_delivery_charge', 15.00);
         SystemSetting::set('default_late_fee_per_day', 25.00);
@@ -478,11 +476,11 @@ class DatabaseSeeder extends Seeder
             'user_id' => $customer->id,
             'type' => 'rental',
             'status' => 'active',
-            'payment_status' => 'partially_paid',
-            'payment_type' => 'advance',
-            'advance_percentage' => 30.00,
-            'advance_amount' => 73.50,
-            'remaining_amount' => 171.50,
+            'payment_status' => 'paid',
+            'payment_type' => 'full',
+            'advance_percentage' => 100.00,
+            'advance_amount' => 245.00,
+            'remaining_amount' => 0.00,
             'subtotal' => 245.00, // 7 days @ £35/day
             'tax_amount' => 49.00,
             'delivery_fee' => 0.00,
@@ -521,12 +519,12 @@ class DatabaseSeeder extends Seeder
 
         Payment::create([
             'order_id' => $rentalOrder->id,
-            'transaction_id' => 'TXN-ADV-' . strtoupper(Str::random(8)),
+            'transaction_id' => 'TXN-FULL-' . strtoupper(Str::random(8)),
             'payment_method' => 'card',
-            'amount' => 73.50,
-            'type' => 'advance',
+            'amount' => 245.00,
+            'type' => 'full',
             'status' => 'completed',
-            'notes' => '30% Advance paid online.',
+            'notes' => 'Paid online.',
         ]);
 
         // Sample Product Damage & Customer Liability Logs
@@ -639,7 +637,7 @@ class DatabaseSeeder extends Seeder
         Faq::create([
             'category' => 'Rental',
             'question' => 'How does E-Bike rental work?',
-            'answer' => 'Select your preferred E-Bike model, choose your rental dates, check real-time availability, select home delivery or store pickup, pay either 30% advance or full amount online, and receive your fully serviced E-Bike!',
+            'answer' => 'Select your preferred E-Bike model, choose your rental dates, check real-time availability, select home delivery or store pickup, pay online, and receive your fully serviced E-Bike!',
         ]);
 
         Faq::create([

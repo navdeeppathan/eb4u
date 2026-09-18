@@ -148,10 +148,6 @@
                                         <span>Refundable Deposit:</span>
                                         <span>£<span x-text="rentalResult.security_deposit"></span></span>
                                     </div>
-                                    <div class="border-t border-borderLight pt-2 flex justify-between font-bold text-darkSlate-900">
-                                        <span>Pay 30% Advance Now:</span>
-                                        <span class="font-grotesk text-brandOrange-500 font-extrabold">£<span x-text="rentalResult.advance_30_percent"></span></span>
-                                    </div>
                                 </div>
                             </template>
 

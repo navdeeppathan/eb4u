@@ -10,11 +10,6 @@
         <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider pb-3 border-b">E-Bike Rental Payment Controls</h3>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-                <label class="block font-bold text-slate-700 mb-1">Rental Advance Percentage (%)</label>
-                <input type="number" step="0.01" name="rental_advance_percentage" value="{{ $settings['rental_advance_percentage'] }}" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-black">
-                <span class="text-[10px] text-slate-400">Default advance amount required online at checkout (e.g. 30%)</span>
-            </div>
 
             <div>
                 <label class="block font-bold text-slate-700 mb-1">Default Security Deposit (£)</label>

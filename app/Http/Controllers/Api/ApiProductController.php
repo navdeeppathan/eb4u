@@ -192,9 +192,6 @@ class ApiProductController extends Controller
         $weeklyRate = (float) ($product->rental_price_weekly ?? 180.00);
         $subtotal = round($weeklyRate * $weeks, 2);
         $deposit = (float) ($product->rental_security_deposit ?? 250.00);
-        $advancePct = 30;
-        $advance30 = round($subtotal * ($advancePct / 100) + $deposit, 2);
-
         return response()->json([
             'success' => true,
             'is_available' => $isAvailable,
@@ -203,8 +200,6 @@ class ApiProductController extends Controller
             'weekly_rate' => $weeklyRate,
             'subtotal' => $subtotal,
             'security_deposit' => $deposit,
-            'advance_percentage' => $advancePct,
-            'advance_30_percent' => $advance30,
             'message' => $isAvailable ? 'E-Bike is available for selected rental dates!' : 'Vehicle is fully booked for these dates.',
         ]);
     }

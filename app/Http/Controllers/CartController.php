@@ -230,9 +230,6 @@ class CartController extends Controller
 
         $total = $taxable + $tax + $delivery + $securityDeposit;
 
-        // Advance 30% calculation if selected
-        $advance30 = round(($taxable + $tax + $delivery) * 0.30 + $securityDeposit, 2);
-
         return [
             'subtotal' => $subtotal,
             'discount' => $discount,
@@ -240,8 +237,6 @@ class CartController extends Controller
             'delivery' => $delivery,
             'security_deposit' => $securityDeposit,
             'total' => $total,
-            'advance_30' => $advance30,
-            'remaining_balance' => round($total - $advance30, 2),
         ];
     }
 }

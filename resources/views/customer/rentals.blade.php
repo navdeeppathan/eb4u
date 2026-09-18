@@ -82,9 +82,7 @@
                     <div>
                         <span class="text-slate-600">Total Rental Cost: <strong class="text-slate-900">£{{ number_format($rental->total_amount, 2) }}</strong></span>
                         <span class="mx-2">|</span>
-                        <span class="text-emerald-700 font-bold">Paid: <strong>£{{ number_format($rental->advance_amount, 2) }}</strong></span>
-                        <span class="mx-2">|</span>
-                        <span class="text-brandOrange-600 font-bold">Remaining Balance: <strong>£{{ number_format($rental->remaining_amount, 2) }}</strong></span>
+                        <span class="text-emerald-700 font-bold">Paid Online: <strong>£{{ number_format($rental->advance_amount, 2) }}</strong></span>
                     </div>
 
                     <!-- Action Buttons -->

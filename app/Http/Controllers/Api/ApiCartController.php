@@ -33,9 +33,6 @@ class ApiCartController extends Controller
         $delivery = ($subtotal >= 500 || $subtotal == 0) ? 0.00 : 15.00;
         $total = $taxable + $tax + $delivery + $depositTotal;
 
-        $advancePct = SystemSetting::get('rental_advance_percentage', 30);
-        $advanceAmount = round(($taxable + $tax + $delivery) * ($advancePct / 100) + $depositTotal, 2);
-
         $itemsFormatted = $cartItems->map(function ($c) {
             return [
                 'id' => $c->id,
@@ -66,7 +63,6 @@ class ApiCartController extends Controller
             'deposit_total' => $depositTotal,
             'discount' => $discount,
             'total' => $total,
-            'advance_30_percent' => $advanceAmount,
             'items' => $itemsFormatted,
         ]);
     }

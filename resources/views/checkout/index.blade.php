@@ -183,28 +183,7 @@
                         <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full"><i class="fa-solid fa-shield-check"></i> Instant Approval</span>
                     </div>
 
-                    <!-- Payment Plan Toggle -->
-                    <div class="space-y-3">
-                        <label class="font-grotesk block text-xs font-bold text-darkSlate-900 uppercase">Payment Option</label>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <label class="border p-4 rounded-2xl cursor-pointer flex items-center space-x-3 transition-colors" :class="paymentType === 'advance' ? 'border-brandOrange-500 bg-brandOrange-50/50' : 'border-borderLight'">
-                                <input type="radio" name="payment_type" value="advance" x-model="paymentType" class="text-brandOrange-500">
-                                <div>
-                                    <span class="block text-xs font-bold text-darkSlate-900">Pay {{ $advancePct }}% Advance Now</span>
-                                    <span class="font-grotesk block text-xs font-extrabold text-brandOrange-500">Pay £{{ number_format($advanceAmount, 2) }} Today</span>
-                                    <span class="block text-[10px] text-textMuted font-medium">Remaining £{{ number_format($remainingAmount, 2) }} due on return/delivery</span>
-                                </div>
-                            </label>
-                            <label class="border p-4 rounded-2xl cursor-pointer flex items-center space-x-3 transition-colors" :class="paymentType === 'full' ? 'border-brandOrange-500 bg-brandOrange-50/50' : 'border-borderLight'">
-                                <input type="radio" name="payment_type" value="full" x-model="paymentType" class="text-brandOrange-500">
-                                <div>
-                                    <span class="block text-xs font-bold text-darkSlate-900">Pay Full Amount Now</span>
-                                    <span class="font-grotesk block text-xs font-extrabold text-brandOrange-500">Pay £{{ number_format($total, 2) }} Today</span>
-                                    <span class="block text-[10px] text-textMuted font-medium">Fully paid order invoice</span>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
+                    <input type="hidden" name="payment_type" value="full">
 
                     <!-- Credit/Debit Card Form -->
                     <div class="bg-[#f5f7fb] p-4 rounded-2xl border border-borderLight space-y-3">
@@ -274,13 +253,6 @@
                             <span>Total</span>
                             <span class="font-grotesk text-brandOrange-500 text-lg font-extrabold">£{{ number_format($total, 2) }}</span>
                         </div>
-
-                        <div x-show="paymentType === 'advance'" class="bg-[#f5f7fb] p-3 rounded-2xl border border-borderLight text-xs">
-                            <div class="flex justify-between font-bold text-darkSlate-900">
-                                <span>Pay Today (30%):</span>
-                                <span class="font-grotesk text-brandOrange-500 font-extrabold">£{{ number_format($advanceAmount, 2) }}</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -294,7 +266,6 @@
         return {
             step: 1,
             fulfillment: 'delivery',
-            paymentType: 'advance',
             submitting: false,
             hasRental: {{ $hasRental ? 'true' : 'false' }},
             idFileName: '',

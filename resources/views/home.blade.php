@@ -22,7 +22,7 @@
             </h1>
 
             <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-xl font-normal">
-                Buy, rent, or try delivery electric bikes across the UK. Flexible daily, weekly & monthly rentals with 30% advance booking and instant security deposit protection.
+                Buy, rent, or try delivery electric bikes across the UK. Flexible daily, weekly & monthly rentals with instant security deposit protection.
             </p>
 
             <div class="flex flex-wrap gap-4 pt-2">
@@ -343,8 +343,8 @@
                 <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-brandOrange-500 text-white font-black text-xl flex items-center justify-center shadow-lg">
                     3
                 </div>
-                <h3 class="text-base font-bold text-white mb-2">30% Advance or Full</h3>
-                <p class="text-xs text-slate-400 leading-relaxed">Pay just 30% advance to hold your bike or pay full amount online. Select store pickup or home delivery.</p>
+                <h3 class="text-base font-bold text-white mb-2">Easy Online Payment</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">Pay securely online to hold your bike. Select store pickup or home delivery.</p>
             </div>
 
             <div class="bg-darkBlack-950 border border-white/10 p-6 rounded-3xl text-center relative group hover:border-brandOrange-500 transition-all">

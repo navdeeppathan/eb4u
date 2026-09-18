@@ -73,8 +73,6 @@ class ProductController extends Controller
             'weekly_rate' => number_format($weeklyRate, 2),
             'subtotal' => number_format($rentalSubtotal, 2),
             'security_deposit' => number_format($deposit, 2),
-            'advance_30_percent' => number_format($rentalSubtotal * 0.3, 2),
-            'remaining_balance' => number_format($rentalSubtotal * 0.7, 2),
             'message' => $isAvailable
                 ? "{$availableUnitsCount} physical E-Bike(s) available for these dates!"
                 : "Sorry, all units of this E-Bike are reserved or under maintenance for the selected dates."

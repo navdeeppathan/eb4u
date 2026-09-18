@@ -49,7 +49,7 @@ class ApiCheckoutController extends Controller
             $customerEmail = $request->customer_email;
             $customerPhone = $request->customer_phone;
             $fulfillmentType = $request->fulfillment_type ?: 'delivery';
-            $paymentType = $request->payment_type ?: 'advance';
+            $paymentType = 'full';
 
             $subtotal = (float) $cartItems->sum(fn($i) => $i->subtotal);
             $depositTotal = (float) $cartItems->where('item_type', 'rental')->sum(fn($i) => $i->security_deposit * $i->quantity);
@@ -72,17 +72,9 @@ class ApiCheckoutController extends Controller
                 }
             }
 
-            $advancePct = SystemSetting::get('rental_advance_percentage', 30);
-            
-            if ($paymentType === 'advance' && $hasRental) {
-                $payNow = round(($taxable + $tax + $delivery) * ($advancePct / 100) + $depositTotal, 2);
-                $remaining = max(0, round($total - $payNow, 2));
-                $paymentStatus = 'partially_paid';
-            } else {
-                $payNow = $total;
-                $remaining = 0.00;
-                $paymentStatus = 'paid';
-            }
+            $payNow = $total;
+            $remaining = 0.00;
+            $paymentStatus = 'paid';
 
             $orderNumber = 'UK-' . strtoupper($orderType === 'rental' ? 'RNT' : 'ORD') . '-' . date('Y') . '-' . rand(1000, 9999);
 
@@ -93,7 +85,7 @@ class ApiCheckoutController extends Controller
                 'status' => $hasRental ? 'active' : 'confirmed',
                 'payment_status' => $paymentStatus,
                 'payment_type' => $paymentType,
-                'advance_percentage' => $paymentType === 'advance' ? $advancePct : 100.00,
+                'advance_percentage' => 100.00,
                 'advance_amount' => $payNow,
                 'remaining_amount' => $remaining,
                 'subtotal' => $subtotal,
