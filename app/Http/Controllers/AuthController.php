@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 
 class AuthController extends Controller
 {
@@ -69,5 +70,26 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('home')->with('success', 'You have been logged out.');
+    }
+
+    public function ssoLogin(Request $request)
+    {
+        $code = $request->query('code');
+        $redirect = $request->query('redirect', route('customer.dashboard'));
+
+        if (!$code || !Cache::has("webview_sso_{$code}")) {
+            return redirect()->route('login')->withErrors([
+                'email' => 'Your mobile login session has expired or is invalid. Please log in again.',
+            ]);
+        }
+
+        // Retrieve user ID and immediately burn the one-time code
+        $userId = Cache::pull("webview_sso_{$code}");
+
+        // Log into Laravel standard web session
+        Auth::loginUsingId($userId, true);
+        $request->session()->regenerate();
+
+        return redirect($redirect);
     }
 }

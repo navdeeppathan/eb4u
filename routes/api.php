@@ -43,9 +43,10 @@ Route::prefix('cart')->group(function () {
 /* 4. Protected Sanctum Routes (Requires Bearer Token) */
 Route::middleware('auth:sanctum')->group(function () {
     
-    /* Auth Profile & Logout */
+    /* Auth Profile, Logout & WebView SSO Bridge */
     Route::get('/auth/me', [ApiAuthController::class, 'me']);
     Route::post('/auth/logout', [ApiAuthController::class, 'logout']);
+    Route::post('/auth/webview-token', [ApiAuthController::class, 'generateWebviewToken']);
 
     /* Checkout & Order Processing */
     Route::post('/checkout/process', [ApiCheckoutController::class, 'process']);

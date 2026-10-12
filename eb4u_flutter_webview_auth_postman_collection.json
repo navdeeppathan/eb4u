@@ -1,0 +1,325 @@
+{
+	"info": {
+		"_postman_id": "eb4u-webview-auth-sso-v1",
+		"name": "eb4u - Flutter Native Auth & WebView SSO Bridge",
+		"description": "Postman Collection for managing native Flutter Authentication (Sanctum Tokens) and seamless Single Sign-On (SSO) session handoff to the WebView.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "webBaseUrl",
+			"value": "http://127.0.0.1:8000",
+			"type": "string"
+		},
+		{
+			"key": "apiBaseUrl",
+			"value": "http://127.0.0.1:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "authToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ssoCode",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "testEmail",
+			"value": "customer.test@example.com",
+			"type": "string"
+		},
+		{
+			"key": "testPassword",
+			"value": "password123",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Step 1: Register New Customer (Native Mobile)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"if (jsonData.token) {",
+							"    pm.collectionVariables.set(\"authToken\", jsonData.token);",
+							"    console.log(\"Saved authToken:\", jsonData.token);",
+							"}",
+							"pm.test(\"Status code is 201 or 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Alex Turner\",\n  \"email\": \"{{testEmail}}\",\n  \"password\": \"{{testPassword}}\",\n  \"phone\": \"+44 7700 900555\"\n}"
+				},
+				"url": {
+					"raw": "{{apiBaseUrl}}/auth/register",
+					"host": ["{{apiBaseUrl}}"],
+					"path": ["auth", "register"]
+				},
+				"description": "Registers a new customer natively from Flutter and automatically saves the returned Sanctum Bearer token to the collection variable `authToken`."
+			},
+			"response": []
+		},
+		{
+			"name": "Step 2: Login Customer (Native Mobile)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"if (jsonData.token) {",
+							"    pm.collectionVariables.set(\"authToken\", jsonData.token);",
+							"    console.log(\"Saved authToken:\", jsonData.token);",
+							"}",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response has success true\", function () {",
+							"    pm.expect(jsonData.success).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"{{testEmail}}\",\n  \"password\": \"{{testPassword}}\"\n}"
+				},
+				"url": {
+					"raw": "{{apiBaseUrl}}/auth/login",
+					"host": ["{{apiBaseUrl}}"],
+					"path": ["auth", "login"]
+				},
+				"description": "Logs in the customer using native Flutter inputs. Saves the issued Sanctum token to `authToken`."
+			},
+			"response": []
+		},
+		{
+			"name": "Step 3: Get Authenticated Profile (Verify Bearer Auth)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{apiBaseUrl}}/auth/me",
+					"host": ["{{apiBaseUrl}}"],
+					"path": ["auth", "me"]
+				},
+				"description": "Validates the native Bearer token and returns the current customer profile details."
+			},
+			"response": []
+		},
+		{
+			"name": "Step 4: Generate WebView SSO One-Time Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"if (jsonData.sso_code) {",
+							"    pm.collectionVariables.set(\"ssoCode\", jsonData.sso_code);",
+							"    console.log(\"Saved ssoCode:\", jsonData.sso_code);",
+							"}",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"SSO code exists\", function () {",
+							"    pm.expect(jsonData.sso_code).to.be.a('string');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{apiBaseUrl}}/auth/webview-token",
+					"host": ["{{apiBaseUrl}}"],
+					"path": ["auth", "webview-token"]
+				},
+				"description": "Called by Flutter right before launching the WebView. Issues a short-lived 60-second one-time code and stores it in `ssoCode`."
+			},
+			"response": []
+		},
+		{
+			"name": "Step 5: Web SSO Exchange & Session Cookie Creation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 or 302 Redirect\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 302]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "text/html,application/xhtml+xml,application/xml"
+					}
+				],
+				"url": {
+					"raw": "{{webBaseUrl}}/app/sso?code={{ssoCode}}&redirect=/customer/dashboard",
+					"host": ["{{webBaseUrl}}"],
+					"path": ["app", "sso"],
+					"query": [
+						{
+							"key": "code",
+							"value": "{{ssoCode}}"
+						},
+						{
+							"key": "redirect",
+							"value": "/customer/dashboard"
+						}
+					]
+				},
+				"description": "Simulates opening the WebView URL. The server verifies and consumes the SSO code, sets standard Laravel session cookies in the browser/client, and redirects to the dashboard."
+			},
+			"response": []
+		},
+		{
+			"name": "Step 6: Access Protected Web Route in WebView (Cookie Auth)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "text/html,application/xhtml+xml,application/xml"
+					}
+				],
+				"url": {
+					"raw": "{{webBaseUrl}}/customer/dashboard",
+					"host": ["{{webBaseUrl}}"],
+					"path": ["customer", "dashboard"]
+				},
+				"description": "Proves that the WebView now holds active session cookies without needing any Bearer headers. The user is logged into the web portal."
+			},
+			"response": []
+		},
+		{
+			"name": "Step 7: Native Logout (Revoke API Bearer Token)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{apiBaseUrl}}/auth/logout",
+					"host": ["{{apiBaseUrl}}"],
+					"path": ["auth", "logout"]
+				},
+				"description": "Revokes the Sanctum Bearer token for the mobile app."
+			},
+			"response": []
+		}
+	]
+}

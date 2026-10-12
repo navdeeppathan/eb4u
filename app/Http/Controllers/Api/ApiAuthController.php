@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 class ApiAuthController extends Controller
 {
@@ -100,6 +102,25 @@ class ApiAuthController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Logged out successfully.'
+        ]);
+    }
+
+    public function generateWebviewToken(Request $request)
+    {
+        $user = $request->user();
+        $code = Str::random(64);
+
+        // Store one-time SSO code in cache for 60 seconds
+        Cache::put("webview_sso_{$code}", $user->id, now()->addSeconds(60));
+
+        $ssoUrl = url("/app/sso?code={$code}&redirect=/customer/dashboard");
+
+        return response()->json([
+            'success' => true,
+            'message' => 'SSO one-time code generated successfully.',
+            'sso_code' => $code,
+            'expires_in' => 60,
+            'webview_url' => $ssoUrl,
         ]);
     }
 }

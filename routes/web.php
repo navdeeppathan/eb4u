@@ -75,6 +75,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+Route::get('/app/sso', [AuthController::class, 'ssoLogin'])->name('app.sso');
 
 /*
 |--------------------------------------------------------------------------
